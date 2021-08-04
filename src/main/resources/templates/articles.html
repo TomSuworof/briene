@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/static/css/articles_style.css" rel="stylesheet" type="text/css" media="all" />
+    <meta charset="UTF-8">
+    <title>Articles</title>
+</head>
+<body>
+<div class="header row">
+    <div class="header-logo col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <h1>Articles</h1>
+    </div>
+    <div class="header-button-personal-area col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <form action="/personal_area">
+            <button>Personal area</button>
+        </form>
+    </div>
+</div>
+<div class="header-main-actions">
+    <div class="header-main-link">
+        <a href="/">Main</a>
+    </div>
+<!--    <div class="header-search">-->
+<!--        <form action="/dashboard/search" method="get">-->
+<!--            <div class="search-input">-->
+<!--                <label>-->
+<!--                    <input id="query_holder" th:value="${query}" type="text" name="query" placeholder="Write query">-->
+<!--                </label>-->
+<!--            </div>-->
+<!--            <div class="search-button">-->
+<!--                <button type="submit">Search</button>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
+    <div class="header-add-file">
+        <div th:if="${isEditor}" class="header-add-file-form">
+            <a href="/article_editor">Editor</a>
+            <br>
+            <form action="/articles/load" method="post" enctype="multipart/form-data">
+                <div class="header-add-file-form-title">
+                    <label>
+                        <input type="text" name="title" required>
+                    </label>
+                </div>
+                <div class="header-add-file-form-file">
+                    <input type="file" name="file" required>
+                </div>
+                <div class="header-add-file-form-button">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    <p th:text="${error}"></p>
+</div>
+<div>
+    <div>
+        <div th:if="${isEditor}">
+            <div class="articles-types">
+                <a href="/articles">All</a>
+                <a href="/articles?type=published">Published</a>
+                <a href="/articles?type=drafts">Drafts</a>
+            </div>
+        </div>
+        <div th:each="article : ${articles}">
+            <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>
+            <div th:if="${isEditor}" class="article-action-buttons">
+                <p th:text="${article.getState()}"></p>
+                <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
+                <a th:href="'/articles/delete/' + ${article.getId()}">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

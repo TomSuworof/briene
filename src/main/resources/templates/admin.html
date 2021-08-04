@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/static/css/admin_style.css" rel="stylesheet" type="text/css" media="all" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+<div class="header-main-link">
+    <a href="/">Main</a>
+</div>
+<div>
+    <h1>Users</h1>
+</div>
+<div>
+    <p th:text="${error}"></p>
+</div>
+<div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="user : ${allUsers}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td>
+                <ul th:each="role: ${user.getRoles()}">
+                    <li th:text="${role.getName()}"></li>
+                </ul>
+            </td>
+            <td>
+                <form action="/admin" method="post">
+                    <input type="hidden" name="userId" th:value="${user.getId()}"/>
+                    <input type="hidden" name="action" value="delete"/>
+                    <button type="submit" class="simple-red-button">Delete (block)</button>
+                </form>
+                <form action="/admin" method="post">
+                    <input type="hidden" name="userId" th:value="${user.getId()}"/>
+                    <input type="hidden" name="action" value="make_editor"/>
+                    <button type="submit" class="simple-red-button">Make editor</button>
+                </form>
+                <form action="/admin" method="post">
+                    <input type="hidden" name="userId" th:value="${user.getId()}"/>
+                    <input type="hidden" name="action" value="make_user"/>
+                    <button type="submit" class="simple-red-button">Make user</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

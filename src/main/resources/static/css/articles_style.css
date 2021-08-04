@@ -1,0 +1,54 @@
+body {
+    padding: 10px;
+}
+
+.header {
+    width: 100%;
+}
+
+.header-logo, .header-button-personal-area {
+    display: inline-block;
+}
+
+.header-button-personal-area {
+    text-align: right;
+}
+
+/*.header-main-link, .header-search, .header-add-file {*/
+/*    display: inline-block;*/
+/*}*/
+
+.header-main-link {
+}
+
+.header-search {
+}
+
+.header-add-file {
+    text-align: right;
+}
+
+.header-add-file-form-title, .header-add-file-form-file, .header-add-file-form-button {
+    display: inline-block;
+}
+
+.search-input, .search-button {
+    display: inline-block;
+}
+
+.row {
+    width: 100%;
+}
+
+.file-container {
+    border: 1px solid black;
+    width: fit-content;
+}
+
+.article-title {
+    overflow-wrap: break-word;
+}
+
+.article-action-buttons {
+    display: inline-block;
+}

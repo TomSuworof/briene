@@ -1,0 +1,17 @@
+body {
+    padding: 10px;
+}
+
+.editor-wrapper {
+    padding: 2% 10% 0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+
+}
+
+.editor-preview {
+    background: white;
+}
+
+.CodeMirror {
+    height: 550px; /*todo поставить так, чтобы счётчик упирался в низ окна*/
+}

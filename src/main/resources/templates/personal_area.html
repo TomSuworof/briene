@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/static/css/personal_area_style.css" rel="stylesheet" type="text/css" media="all" />
+    <meta charset="UTF-8">
+    <title>Personal area</title>
+</head>
+<body>
+<div>
+    <a href="/">Main</a>
+</div>
+<div>
+    <form method="POST" th:modelAttribute="userForm">
+        <div>Username:
+            <br>
+            <label>
+                <input type="text" name="username" th:value="${currentUser.getUsername()}" placeholder="Username" disabled>
+            </label>
+        </div>
+        <div>Email:
+            <br>
+            <label>
+                <input type="email" name="email" th:value="${currentUser.getEmail()}" placeholder="Email">
+            </label>
+        </div>
+        <div>
+            Password:
+            <br>
+            <div>
+                <label>
+                    <input type="password" name="password" placeholder="Current password">
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input id="psw" type="password" name="passwordNew" placeholder="New password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+                </label>
+<!--            <div id="message">-->
+<!--                <h3>Password must contain the following:</h3>-->
+<!--                <p id="letter" class="invalid">A <b>lowercase</b> letter</p>-->
+<!--                <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>-->
+<!--                <p id="number" class="invalid">A <b>number</b></p>-->
+<!--                <p id="length" class="invalid">Minimum <b>8 characters</b></p>-->
+<!--            </div>-->
+            </div>
+            <div>
+                <label>
+                    <input type="password" name="passwordNewConfirm" placeholder="Confirm your new password">
+                </label>
+            </div>
+            <div class="reminder">
+                <p>Enter current password for submission</p>
+                <p th:text="${error}"></p>
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+<div th:if="${show_admin_page}">
+    <form action="/admin">
+        <button>Admin</button>
+    </form>
+</div>
+<div>
+    <form action="/logout">
+        <button>Logout</button>
+    </form>
+</div>
+</body>
+</html>
