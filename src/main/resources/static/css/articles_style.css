@@ -24,12 +24,8 @@ body {
 .header-search {
 }
 
-.header-add-file {
+.header-add-article {
     text-align: right;
-}
-
-.header-add-file-form-title, .header-add-file-form-file, .header-add-file-form-button {
-    display: inline-block;
 }
 
 .search-input, .search-button {

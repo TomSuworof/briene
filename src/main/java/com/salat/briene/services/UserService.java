@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
         }
 
         user.setId((long) user.hashCode());
-        user.setRoles(Set.of(new Role(3L, "ROLE_USER")));
+        user.setRoles(Set.of(new Role(2L, "ROLE_USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -92,9 +92,9 @@ public class UserService implements UserDetailsService {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         switch (role) {
-            case "editor" -> userFromDB.setRoles(Collections.singleton(new Role(2L, "ROLE_EDITOR")));
-            case "user" -> userFromDB.setRoles(Collections.singleton(new Role(3L, "ROLE_USER")));
             case "blocked" -> userFromDB.setRoles(Collections.singleton(new Role(0L, "ROLE_BLOCKED")));
+            case "admin" -> userFromDB.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN")));
+            case "user" -> userFromDB.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
         }
 //        mailService.send(userFromDB.getEmail(), "role_change", role);
         userRepository.save(userFromDB);
@@ -113,13 +113,11 @@ public class UserService implements UserDetailsService {
     public boolean isUser(User user, String role) {
         if (user == null) {
             return false;
+        } else if (role.equals("blocked") && user.getRoles().contains(new Role((long) 0, "ROLE_BLOCKED"))) {
+            return true;
         } else if (role.equals("admin") && user.getRoles().contains(new Role((long) 1, "ROLE_ADMIN"))) {
             return true;
-        } else if (role.equals("editor") && user.getRoles().contains(new Role((long) 2, "ROLE_EDITOR"))) {
-            return true;
-        } else if (role.equals("user") && user.getRoles().contains(new Role((long) 3, "ROLE_USER"))) {
-            return true;
-        } else if (role.equals("blocked") && user.getRoles().contains(new Role((long) 0, "ROLE_BLOCKED"))) {
+        } else if (role.equals("user") && user.getRoles().contains(new Role((long) 2, "ROLE_USER"))) {
             return true;
         } else {
             return false;

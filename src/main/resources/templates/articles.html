@@ -34,23 +34,9 @@
 <!--            </div>-->
 <!--        </form>-->
 <!--    </div>-->
-    <div class="header-add-file">
-        <div th:if="${isEditor}" class="header-add-file-form">
+    <div th:if="${canUseEditor}" class="header-add-article">
+        <div class="header-add-article-editor">
             <a href="/article_editor">Editor</a>
-            <br>
-            <form action="/articles/load" method="post" enctype="multipart/form-data">
-                <div class="header-add-file-form-title">
-                    <label>
-                        <input type="text" name="title" required>
-                    </label>
-                </div>
-                <div class="header-add-file-form-file">
-                    <input type="file" name="file" required>
-                </div>
-                <div class="header-add-file-form-button">
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -59,16 +45,14 @@
 </div>
 <div>
     <div>
-        <div th:if="${isEditor}">
-            <div class="articles-types">
-                <a href="/articles">All</a>
-                <a href="/articles?type=published">Published</a>
-                <a href="/articles?type=drafts">Drafts</a>
-            </div>
+        <div th:if="${isAdmin}" class="articles-types">
+            <a href="/articles">All</a>
+            <a href="/articles?type=published">Published</a>
+            <a href="/articles?type=drafts">Drafts</a>
         </div>
         <div th:each="article : ${articles}">
             <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>
-            <div th:if="${isEditor}" class="article-action-buttons">
+            <div th:if="${isAdmin}" class="article-action-buttons">
                 <p th:text="${article.getState()}"></p>
                 <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
                 <a th:href="'/articles/delete/' + ${article.getId()}">Delete</a>

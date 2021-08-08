@@ -5,14 +5,19 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="/static/css/article_style.css" rel="stylesheet" type="text/css" media="all" />
     <meta charset="UTF-8">
-    <title th:text="${title}"></title>
+    <title th:text="${article.getTitle()}"></title>
 </head>
 <body>
 <div class="header-main-actions">
     <div class="header-main-link">
         <a href="/">Main</a>
     </div>
+    <div th:if="${canEdit}" class="article-action-buttons">
+        <p th:text="${article.getState()}"></p>
+        <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
+        <a th:href="'/articles/delete/' + ${article.getId()}">Delete</a>
+    </div>
 </div>
-<div th:utext="${content}" class="article-content"></div>
+<div th:utext="${article.makeHTML()}" class="article-content"></div>
 </body>
 </html>

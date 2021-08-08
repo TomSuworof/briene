@@ -15,7 +15,7 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/admin")
-    public String returnAdminPage(Model model) {
+    public String getAdminPage(Model model) {
         model.addAttribute("allUsers", userService.getAllUsers());
         return "admin";
     }
@@ -25,7 +25,7 @@ public class AdminController {
         try {
             switch (action) {
                 case "delete" -> userService.changeRole(userId, "blocked");
-                case "make_editor" -> userService.changeRole(userId, "editor");
+                case "make_admin" -> userService.changeRole(userId, "admin");
                 case "make_user" -> userService.changeRole(userId, "user");
             }
             return "redirect: /admin";

@@ -12,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -28,27 +26,18 @@ public class ArticlesController {
     public String getArticles(@RequestParam(required = false) String type, Model model) {
         try {
             User currentUser = userService.getUserFromContext();
-            if (userService.isUser(currentUser, "editor")) {
-                model.addAttribute("isEditor", true);
-                model.addAttribute("articles", articleService.getArticlesByType(type));
-                return "articles";
+            if (userService.isUser(currentUser, "admin")) {
+                model.addAttribute("isAdmin", true);
+                model.addAttribute("articles", articleService.getArticlesByState(type));
+            } else {
+                model.addAttribute("articles", articleService.getArticlesByState("published"));
             }
+            model.addAttribute("canUseEditor", true);
+            return "articles";
         } catch (AnonymousUserException ignored) {
         }
-        model.addAttribute("articles", articleService.getArticlesByType("published"));
+        model.addAttribute("articles", articleService.getArticlesByState("published"));
         return "articles";
-    }
-
-    @PostMapping("/articles/load")
-    public String loadFile(@RequestParam String title, @RequestParam MultipartFile loadedFile, Model model) {
-        try {
-            articleService.saveFile(title, loadedFile);
-            return "redirect:/articles";
-        } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("error", "Error loading article");
-            return "articles";
-        }
     }
 
     @GetMapping("/articles/{id}")
@@ -56,15 +45,18 @@ public class ArticlesController {
         try {
             Article article = articleService.getArticleById(id);
 
-            if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
-                User currentUser = userService.getUserFromContext();
-                if (userService.isUser(currentUser, "editor")) {
-                    throw new ArticleNotFoundException();
-                }
+            if (article.getState().equals(ArticleState.ARTICLE_PUBLISHED)) {
+                model.addAttribute("article", article);
             }
 
-            model.addAttribute("title", article.getTitle());
-            model.addAttribute("content", article.makeHTML());
+            try {
+                User currentUser = userService.getUserFromContext();
+                if (articleService.canUserEditArticle(currentUser, article)) {
+                    model.addAttribute("canEdit", true);
+                }
+            } catch (AnonymousUserException ignored) {
+            }
+
             return "article";
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,9 +68,16 @@ public class ArticlesController {
     @GetMapping("/articles/delete/{id}")
     public String deleteArticle(@PathVariable Long id, Model model) {
         try {
-            articleService.deleteArticle(id);
-            return "redirect:/articles";
-        } catch (ArticleNotFoundException e) {
+            Article article = articleService.getArticleById(id);
+
+            User currentUser = userService.getUserFromContext();
+            if (userService.isUser(currentUser, "admin") || article.getAuthor().equals(currentUser)) {
+                articleService.deleteArticle(id);
+                return "redirect:/articles";
+            } else {
+                throw new ArticleNotFoundException();
+            }
+        } catch (ArticleNotFoundException | AnonymousUserException e) {
             e.printStackTrace();
             model.addAttribute("error", "Cannot delete article");
             return "articles";

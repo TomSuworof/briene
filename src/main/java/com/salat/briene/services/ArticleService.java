@@ -2,38 +2,21 @@ package com.salat.briene.services;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleFoundException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
-import com.salat.briene.exceptions.IllegalArticleExtensionException;
 import com.salat.briene.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
+    private final UserService userService;
     private final ArticleRepository articleRepository;
-
-    private boolean isMarkdown(MultipartFile file) {
-        return Objects.requireNonNull(file.getOriginalFilename()).matches("(.*).md");
-        // return Objects.equals(file.getContentType(), "md");
-    }
-
-    public void saveFile(String title, MultipartFile file) throws IOException {
-        Article article = new Article(title, file);
-        if (!isMarkdown(file)) {
-            throw new IllegalArticleExtensionException();
-        }
-        article.setState(ArticleState.ARTICLE_PUBLISHED);
-        saveArticle(article);
-    }
 
     public void saveArticle(Article newArticle) throws ArticleFoundException {
         newArticle.setId((long) newArticle.hashCode());
@@ -70,13 +53,13 @@ public class ArticleService {
         }
     }
 
-    public List<Article> getArticlesByType(String articleType) {
-        if (articleType == null) {
+    public List<Article> getArticlesByState(String articleState) {
+        if (articleState == null) {
             return getAllArticles();
         }
 
         ArticleState state;
-        switch (articleType) {
+        switch (articleState) {
             case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
             case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
             default -> {
@@ -84,12 +67,14 @@ public class ArticleService {
             }
         }
 
-        return getAllArticles().stream()
-                .filter(article -> article.getState().equals(state))
-                .collect(Collectors.toList());
+        return articleRepository.findArticlesByState(state);
     }
 
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
+    }
+
+    public boolean canUserEditArticle(User user, Article article) {
+        return userService.isUser(user, "admin") || article.getAuthor().equals(user);
     }
 }
