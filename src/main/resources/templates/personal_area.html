@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="reminder">
-        <p th:text="${error}"></p>
+        <p th:text="${passwordError}"></p>
     </div>
     <div class="updating-user-info">
         <div class="updating-base-info">
@@ -108,6 +108,27 @@
                     <button type="submit" onclick="return checkFields()">Submit</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="articles-block">
+        <div>
+            <h2>Articles</h2>
+        </div>
+        <div class="reminder">
+            <p th:text="${articlesError}"></p>
+        </div>
+        <div class="articles-types">
+            <a href="/personal_area">All</a>
+            <a href="/personal_area/articles?type=published">Published</a>
+            <a href="/personal_area/articles?type=drafts">Drafts</a>
+        </div>
+        <div th:each="article : ${articles}" class="article-container">
+            <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>
+            <div class="article-action-buttons">
+                <p th:text="${article.getState()}"></p>
+                <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
+                <a th:href="'/personal_area/articles/delete/' + ${article.getId()}">Delete</a>
+            </div>
         </div>
     </div>
 </div>

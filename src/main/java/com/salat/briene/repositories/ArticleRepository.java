@@ -18,5 +18,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findArticlesByState(ArticleState state);
 
+    List<Article> findArticlesByAuthor(User author);
+
     List<Article> findArticlesByAuthorAndState(User author, ArticleState state);
 }

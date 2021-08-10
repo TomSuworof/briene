@@ -36,7 +36,7 @@ public class ArticleService {
         }
     }
 
-    public void deleteArticle(Long articleId) throws ArticleNotFoundException {
+    public void deleteArticleById(Long articleId) throws ArticleNotFoundException {
         if (articleRepository.findById(articleId).isPresent()) {
             articleRepository.deleteById(articleId);
         } else {
@@ -70,9 +70,13 @@ public class ArticleService {
         return articleRepository.findArticlesByState(state);
     }
 
-    public List<Article> getArticlesOfAuthor(User author, String articleState) {
+    private List<Article> getAllArticles() {
+        return articleRepository.findAll();
+    }
+
+    public List<Article> getArticlesOfAuthorAndState(User author, String articleState) {
         if (articleState == null) {
-            return getAllArticles();
+            return getArticlesByAuthor(author);
         }
 
         ArticleState state;
@@ -80,15 +84,15 @@ public class ArticleService {
             case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
             case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
             default -> {
-                return getAllArticles();
+                return getArticlesByAuthor(author);
             }
         }
 
         return articleRepository.findArticlesByAuthorAndState(author, state);
     }
 
-    public List<Article> getAllArticles() {
-        return articleRepository.findAll();
+    private List<Article> getArticlesByAuthor(User author) {
+        return articleRepository.findArticlesByAuthor(author);
     }
 
     public boolean canUserEditArticle(User user, Article article) {

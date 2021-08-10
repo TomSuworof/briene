@@ -23,7 +23,7 @@ public class AuthorsController {
     public String getAuthorPage(@PathVariable String authorName, Model model) {
         try {
             User author = (User) userService.loadUserByUsername(authorName);
-            List<Article> articles = articleService.getArticlesOfAuthor(author, "published");
+            List<Article> articles = articleService.getArticlesOfAuthorAndState(author, "published");
 
             model.addAttribute("author", author);
             model.addAttribute("articles", articles);

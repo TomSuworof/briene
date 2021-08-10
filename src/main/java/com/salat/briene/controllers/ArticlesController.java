@@ -72,7 +72,7 @@ public class ArticlesController {
 
             User currentUser = userService.getUserFromContext();
             if (userService.isUser(currentUser, "admin") || article.getAuthor().equals(currentUser)) {
-                articleService.deleteArticle(id);
+                articleService.deleteArticleById(id);
                 return "redirect:/articles";
             } else {
                 throw new ArticleNotFoundException();

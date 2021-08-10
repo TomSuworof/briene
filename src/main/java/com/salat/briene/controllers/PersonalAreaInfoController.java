@@ -1,7 +1,9 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,17 +14,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class PersonalAreaController {
+public class PersonalAreaInfoController {
+    private final ArticleService articleService;
     private final UserService userService;
 
     @GetMapping("/personal_area")
     public String returnPersonalPage(Model model) {
         User currentUser = userService.getUserFromContext();
+        List<Article> articles = articleService.getArticlesOfAuthorAndState(currentUser, null);
+
         model.addAttribute("currentUser", currentUser);
+        model.addAttribute("articles", articles);
         model.addAttribute("show_admin_page", userService.isUser(currentUser, "admin"));
         return "personal_area";
     }
@@ -41,11 +48,11 @@ public class PersonalAreaController {
                 return "redirect:/logout";
             } catch (UserNotFoundException e) {
                 e.printStackTrace();
-                model.addAttribute("error", "Something went wrong");
+                model.addAttribute("passwordError", "Something went wrong");
                 return "personal_area";
             }
         } else {
-            model.addAttribute("error", "Wrong password");
+            model.addAttribute("passwordError", "Wrong password");
             return "personal_area";
         }
     }

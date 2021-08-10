@@ -15,3 +15,7 @@
 .article-container {
     margin: 0 0 10pt;
 }
+
+.article-title {
+    overflow-wrap: break-word;
+}

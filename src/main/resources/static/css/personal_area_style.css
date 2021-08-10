@@ -16,13 +16,7 @@
 }
 
 .personal-area-page-content {
-    width: 80%;
-    margin: auto;
-    text-align: center;
-}
-
-.updating-user-info {
-    justify-content: center;
+    padding: 1% 10% 0;
 }
 
 .updating-base-info {
@@ -34,4 +28,20 @@
 .updating-password, .setting-password {
     width: max-content;
     text-align: left;
+}
+
+.articles-block {
+    margin: 50pt 0 0;
+}
+
+.article-container {
+    margin: 0 0 10pt;
+}
+
+.article-title {
+    overflow-wrap: break-word;
+}
+
+.article-action-buttons {
+    display: inline-block;
 }
