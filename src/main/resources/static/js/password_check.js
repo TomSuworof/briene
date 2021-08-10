@@ -4,6 +4,13 @@ const capital = document.getElementById("capital");
 const number = document.getElementById("number");
 const length = document.getElementById("length");
 
+const psw = document.getElementById("psw");
+const pswConfirm = document.getElementById("pswConfirm");
+const match = document.getElementById("match");
+
+let passwordIsStrong = false;
+let passwordsMatch = false;
+
 // When the user clicks on the password field, show the message box
 myInput.onfocus = function() {
     document.getElementById("message").style.display = "block";
@@ -53,5 +60,51 @@ myInput.onkeyup = function() {
     } else {
         length.classList.remove("valid");
         length.classList.add("invalid");
+    }
+
+    passwordIsStrong = (
+        myInput.value.match(lowerCaseLetters) &&
+        myInput.value.match(upperCaseLetters) &&
+        myInput.value.match(numbers) &&
+        myInput.value.length >= 8
+    );
+
+    if (passwordIsStrong) {
+        document.getElementById("message").style.display = "none";
+    }
+}
+
+
+pswConfirm.onfocus = function () {
+    document.getElementById("password-matching").style.display = "block";
+}
+
+pswConfirm.onkeyup = function () {
+    if (psw.value === pswConfirm.value) {
+        match.classList.remove("invalid");
+        match.classList.add("valid");
+        passwordsMatch = true;
+    } else {
+        match.classList.remove("valid");
+        match.classList.add("invalid");
+        passwordsMatch = false;
+    }
+}
+
+pswConfirm.onblur = function () {
+    document.getElementById("password-matching").style.display = "none";
+}
+
+function checkFields() {
+    if (passwordsMatch) {
+        if (passwordIsStrong) {
+            return true;
+        } else {
+            alert("Password is not strong enough");
+            return false;
+        }
+    } else {
+        alert("Passwords do not match");
+        return false;
     }
 }

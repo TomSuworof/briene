@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -57,28 +58,26 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void updateUser(User userFromForm, boolean passwordWasChanged) throws UserNotFoundException {
-        User userFromDB = userRepository.findById(userFromForm.getId()).orElseThrow(UserNotFoundException::new);
+    public void updateUser(Long userId, Map<String, String> userData) throws UserNotFoundException {
+        User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        deleteUser(userFromForm.getId());
+        userFromDB.setEmail(userData.getOrDefault("email", userFromDB.getEmail()));
 
-        userFromDB.setEmail(userFromForm.getEmail());
-
-        if (passwordWasChanged) {
-            updateWithPassword(userFromDB, userFromForm.getPasswordNew());
-        } else {
-            updateWithoutPassword(userFromDB);
+        if (userData.containsKey("password")) {
+            userFromDB.setPassword(passwordEncoder.encode(userData.get("password")));
         }
-    }
 
-    private void updateWithPassword(User userUpdated, String passwordNew) {
-        userUpdated.setPassword(passwordEncoder.encode(passwordNew));
-        userRepository.save(userUpdated);
+        userRepository.save(userFromDB);
     }
-
-    private void updateWithoutPassword(User userUpdated) {
-        userRepository.save(userUpdated);
-    }
+//
+//    private void updateWithPassword(User userUpdated, String passwordNew) {
+//        userUpdated.setPassword(passwordEncoder.encode(passwordNew));
+//        userRepository.save(userUpdated);
+//    }
+//
+//    private void updateWithoutPassword(User userUpdated) {
+//        userRepository.save(userUpdated);
+//    }
 
     private void deleteUser(Long userId) throws UserNotFoundException {
         if (userRepository.findById(userId).isPresent()) {

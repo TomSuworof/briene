@@ -19,14 +19,22 @@
 <div>
     <p th:text="${error}"></p>
 </div>
-<div class="editor-wrapper">
+<div class="editor-page-content">
     <form action="/article_editor/load">
-        <label>
-            <input class="title" type="text" placeholder="Title" name="title" th:value="${titleValue}" required/>
-        </label>
-        <textarea id="editor" placeholder="Content here ..." name="content" th:text="${contentValue}"></textarea>
-        <input type="submit" name="action" th:value="Publish"/>
-        <input type="submit" name="action" th:value="Save"/>
+        <div class="editor-wrapper">
+            <div>
+                <label for="title"></label>
+                <input id="title" class="title" type="text" placeholder="Title" name="title" th:value="${titleValue}" required/>
+            </div>
+            <div>
+                <label for="editor"></label>
+                <textarea id="editor" placeholder="Content here ..." name="content" th:text="${contentValue}"></textarea>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <input type="submit" name="action" th:value="Publish"/>
+            <input type="submit" name="action" th:value="Save"/>
+        </div>
     </form>
 </div>
 

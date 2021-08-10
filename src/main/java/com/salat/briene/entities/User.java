@@ -32,15 +32,6 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    @Transient
-    private String passwordConfirm;
-
-    @Transient
-    private String passwordNew;
-
-    @Transient
-    private String passwordNewConfirm;
-
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 

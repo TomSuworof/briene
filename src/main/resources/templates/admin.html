@@ -8,47 +8,57 @@
     <title>Admin</title>
 </head>
 <body>
-<div class="header-main-link">
-    <a href="/">Main</a>
+<div class="header-main-actions">
+    <div class="header-main-link">
+        <a href="/">Main</a>
+    </div>
+    <div>
+        <p th:text="${error}"></p>
+    </div>
 </div>
-<div>
-    <h1>Users</h1>
-</div>
-<div>
-    <p th:text="${error}"></p>
-</div>
-<div>
-    <table>
+<div class="admin-dashboard">
+    <div class="admin-dashboard-title">
+        <h1>Users</h1>
+    </div>
+    <table class="admin-dashboard-table">
         <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Roles</th>
-            <th>Actions</th>
+            <th class="user-column">ID</th>
+            <th class="user-column">Username</th>
+            <th class="user-column">Roles</th>
+            <th class="user-column-actions">Actions</th>
         </tr>
-        <tr th:each="user : ${allUsers}">
-            <td th:text="${user.getId()}"></td>
-            <td th:text="${user.getUsername()}"></td>
-            <td>
+        <tr class="user-row" th:each="user : ${allUsers}">
+            <td class="user-column" th:text="${user.getId()}"></td>
+            <td class="user-column" th:text="${user.getUsername()}"></td>
+            <td class="user-column">
                 <ul th:each="role: ${user.getRoles()}">
                     <li th:text="${role.getName()}"></li>
                 </ul>
             </td>
-            <td>
-                <form action="/admin" method="post">
-                    <input type="hidden" name="userId" th:value="${user.getId()}"/>
-                    <input type="hidden" name="action" value="delete"/>
-                    <button type="submit" class="simple-red-button">Delete (block)</button>
-                </form>
-                <form action="/admin" method="post">
-                    <input type="hidden" name="userId" th:value="${user.getId()}"/>
-                    <input type="hidden" name="action" value="make_admin"/>
-                    <button type="submit" class="simple-red-button">Make admin</button>
-                </form>
-                <form action="/admin" method="post">
-                    <input type="hidden" name="userId" th:value="${user.getId()}"/>
-                    <input type="hidden" name="action" value="make_user"/>
-                    <button type="submit" class="simple-red-button">Make user</button>
-                </form>
+            <td class="user-column-actions">
+                <div class="user-actions">
+                    <div class="user-action">
+                        <form action="/admin" method="post">
+                            <input type="hidden" name="userId" th:value="${user.getId()}"/>
+                            <input type="hidden" name="action" value="delete"/>
+                            <button type="submit" class="simple-red-button">Delete (block)</button>
+                        </form>
+                    </div>
+                    <div class="user-action">
+                        <form action="/admin" method="post">
+                            <input type="hidden" name="userId" th:value="${user.getId()}"/>
+                            <input type="hidden" name="action" value="make_admin"/>
+                            <button type="submit" class="simple-red-button">Make admin</button>
+                        </form>
+                    </div>
+                    <div class="user-action">
+                        <form action="/admin" method="post">
+                            <input type="hidden" name="userId" th:value="${user.getId()}"/>
+                            <input type="hidden" name="action" value="make_user"/>
+                            <button type="submit" class="simple-red-button">Make user</button>
+                        </form>
+                    </div>
+                </div>
             </td>
         </tr>
     </table>

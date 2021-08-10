@@ -9,6 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,27 +27,39 @@ public class PersonalAreaController {
         return "personal_area";
     }
 
-    @PostMapping("/personal_area")
+    @PostMapping("/personal_area/update_base_info")
     public String updateUserFromForm(@ModelAttribute("userForm") User userFromForm, Model model) {
         User currentUser = userService.getUserFromContext();
         model.addAttribute("currentUser", currentUser);
 
         if (userService.isCurrentPasswordSameAs(userFromForm.getPassword())) {
-            userFromForm.setId(currentUser.getId());
-            userFromForm.setUsername(currentUser.getUsername());
-            boolean passwordWasChanged;
-            if (userFromForm.getPasswordNew().isEmpty() && userFromForm.getPasswordNewConfirm().isEmpty()) {
-                passwordWasChanged = false;
-            } else {
-                if (userFromForm.getPasswordNew().equals(userFromForm.getPasswordNewConfirm())) {
-                    passwordWasChanged = true;
-                } else {
-                    model.addAttribute("error", "Passwords do not match");
-                    return "personal_area";
-                }
-            }
             try {
-                userService.updateUser(userFromForm, passwordWasChanged);
+                Map<String, String> newUserData = new HashMap<>(){{
+                    put("email", userFromForm.getEmail());
+                }};
+                userService.updateUser(currentUser.getId(), newUserData);
+                return "redirect:/logout";
+            } catch (UserNotFoundException e) {
+                e.printStackTrace();
+                model.addAttribute("error", "Something went wrong");
+                return "personal_area";
+            }
+        } else {
+            model.addAttribute("error", "Wrong password");
+            return "personal_area";
+        }
+    }
+
+    @PostMapping("/personal_area/update_password")
+    public String updateUserPassword(@RequestParam String passwordOld, @RequestParam String passwordNew, Model model) {
+        User currentUser = userService.getUserFromContext();
+
+        if (userService.isCurrentPasswordSameAs(passwordOld)) {
+            try {
+                Map<String, String> newUserData = new HashMap<>(){{
+                    put("email", passwordNew);
+                }};
+                userService.updateUser(currentUser.getId(), newUserData);
                 return "redirect:/logout";
             } catch (UserNotFoundException e) {
                 e.printStackTrace();

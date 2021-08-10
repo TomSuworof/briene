@@ -1,3 +1,33 @@
-body {
+.header-main-actions {
     padding: 10px;
+}
+
+.admin-dashboard {
+    padding: 3% 10% 0;
+}
+
+.admin-dashboard-table {
+    align-self: center;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.user-row {
+    border-top: thin solid;
+    padding: 2% 0 0;
+}
+
+.user-column {
+    text-align: center;
+    border-right: thin solid;
+}
+
+.user-column-actions {
+    text-align: center;
+}
+
+.user-action {
+    float: left;
+    margin: 1%;
+    display: inline;
 }

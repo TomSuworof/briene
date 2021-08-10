@@ -1,17 +1,30 @@
-body {
+body, html {
+    height: 100%;
+}
+
+.header-main-actions {
     padding: 10px;
 }
 
-.editor-wrapper {
+.action-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+label {
+    display: none;
+}
+
+.editor-page-content {
     padding: 2% 10% 0;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-
 }
 
 .editor-preview {
     background: white;
 }
 
-.CodeMirror {
-    height: 550px; /*todo поставить так, чтобы счётчик упирался в низ окна*/
+.CodeMirror, .cm-s-paper {
+
 }

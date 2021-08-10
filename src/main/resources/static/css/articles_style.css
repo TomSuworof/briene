@@ -1,44 +1,17 @@
-body {
+.header-main-actions {
     padding: 10px;
 }
 
+.articles-page-content {
+    padding: 1% 5% 0;
+}
+
 .header {
-    width: 100%;
+    justify-content: space-between;
 }
 
-.header-logo, .header-button-personal-area {
+.header-button-editor, .header-button-personal-area {
     display: inline-block;
-}
-
-.header-button-personal-area {
-    text-align: right;
-}
-
-/*.header-main-link, .header-search, .header-add-file {*/
-/*    display: inline-block;*/
-/*}*/
-
-.header-main-link {
-}
-
-.header-search {
-}
-
-.header-add-article {
-    text-align: right;
-}
-
-.search-input, .search-button {
-    display: inline-block;
-}
-
-.row {
-    width: 100%;
-}
-
-.file-container {
-    border: 1px solid black;
-    width: fit-content;
 }
 
 .article-title {

@@ -1,3 +1,37 @@
-body {
+.header-main-actions {
     padding: 10px;
+}
+
+.header {
+    justify-content: space-between;
+    margin: 0 0 50pt;
+}
+
+.header-admin-button, .header-logout-button {
+    display: inline-block;
+}
+
+.reminder {
+    color: red;
+}
+
+.personal-area-page-content {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.updating-user-info {
+    justify-content: center;
+}
+
+.updating-base-info {
+    width: max-content;
+    text-align: left;
+    margin: 0 0 50pt;
+}
+
+.updating-password, .setting-password {
+    width: max-content;
+    text-align: left;
 }

@@ -59,17 +59,23 @@ public class PasswordResetService {
         return emailAnswer.toString();
     }
 
-    public void setNewPasswordOf(String passwordNew, String userId) throws PasswordResetRequestNotFoundException, UserNotFoundException {
-        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(userId);
+    public void setNewPasswordOf(String passwordNew, String requestId) throws PasswordResetRequestNotFoundException, UserNotFoundException {
+        Optional<PasswordResetRequest> passwordResetRequestOpt = passwordResetRepository.findById(requestId);
 
-        if (passwordResetRequest.isEmpty()) {
+        if (passwordResetRequestOpt.isEmpty()) {
             throw new PasswordResetRequestNotFoundException();
         }
 
-        User userForNewPassword = (User) userService.loadUserByUsername(passwordResetRequest.get().getUsername());
-        userForNewPassword.setPasswordNew(passwordNew);
-        passwordResetRepository.delete(passwordResetRequest.get());
-        userService.updateUser(userForNewPassword, true);
+        PasswordResetRequest passwordResetRequest = passwordResetRequestOpt.get();
+
+        Map<String, String> newData = new HashMap<>(){{
+            put("password", passwordNew);
+        }};
+
+        Long userId = ((User) userService.loadUserByUsername(passwordResetRequest.getUsername())).getId();
+
+        passwordResetRepository.delete(passwordResetRequest);
+        userService.updateUser(userId, newData);
     }
 
     public String getSecretQuestionOf(String userId) throws PasswordResetRequestNotFoundException, UserNotFoundException {

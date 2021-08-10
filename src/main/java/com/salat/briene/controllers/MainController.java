@@ -36,4 +36,9 @@ public class MainController {
     public String getFavicon() {
         return "forward:/public/img/favicon.png";
     }
+
+    @GetMapping("/experimental")
+    public String getVue() {
+        return "index_vue";
+    }
 }
