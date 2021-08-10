@@ -1,8 +1,12 @@
-.article-content {
-    padding: 10%;
-}
-
 .header-main-actions {
     display: inline-block;
     padding: 10px;
+}
+
+.article-page-content {
+    padding: 0 10% 0;
+}
+
+.article-author {
+    margin: 0 0 10pt;
 }

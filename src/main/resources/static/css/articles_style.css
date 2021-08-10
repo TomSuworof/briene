@@ -3,7 +3,7 @@
 }
 
 .articles-page-content {
-    padding: 1% 5% 0;
+    padding: 1% 10% 0;
 }
 
 .header {
@@ -20,4 +20,8 @@
 
 .article-action-buttons {
     display: inline-block;
+}
+
+.article-container {
+    margin: 0 0 10pt;
 }

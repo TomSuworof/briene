@@ -41,7 +41,7 @@
                 <a href="/articles?type=published">Published</a>
                 <a href="/articles?type=drafts">Drafts</a>
             </div>
-            <div th:each="article : ${articles}">
+            <div th:each="article : ${articles}" class="article-container">
                 <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>
                 <div th:if="${isAdmin}" class="article-action-buttons">
                     <p th:text="${article.getState()}"></p>

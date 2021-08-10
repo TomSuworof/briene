@@ -1,0 +1,9 @@
+.header-main-actions {
+    padding: 10px;
+}
+
+.error-page-content {
+    padding: 10%;
+    display: flex;
+    justify-content: center;
+}

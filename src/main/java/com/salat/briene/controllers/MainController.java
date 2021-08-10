@@ -37,6 +37,11 @@ public class MainController {
         return "forward:/public/img/favicon.png";
     }
 
+    @GetMapping("/error")
+    public String getErrorPage() {
+        return "error";
+    }
+
     @GetMapping("/experimental")
     public String getVue() {
         return "index_vue";

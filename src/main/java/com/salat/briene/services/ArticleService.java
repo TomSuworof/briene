@@ -70,6 +70,23 @@ public class ArticleService {
         return articleRepository.findArticlesByState(state);
     }
 
+    public List<Article> getArticlesOfAuthor(User author, String articleState) {
+        if (articleState == null) {
+            return getAllArticles();
+        }
+
+        ArticleState state;
+        switch (articleState) {
+            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
+            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
+            default -> {
+                return getAllArticles();
+            }
+        }
+
+        return articleRepository.findArticlesByAuthorAndState(author, state);
+    }
+
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }

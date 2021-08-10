@@ -18,6 +18,13 @@
         <a th:href="'/articles/delete/' + ${article.getId()}">Delete</a>
     </div>
 </div>
-<div th:utext="${article.makeHTML()}" class="article-content"></div>
+<div class="article-page-content">
+    <div class="article-author">
+        <a th:text="${article.getAuthor().getUsername()}"
+           th:href="'/authors/' + ${article.getAuthor().getUsername()}"
+        ></a>
+    </div>
+    <div th:utext="${article.makeHTML()}" class="article-content"></div>
+</div>
 </body>
 </html>

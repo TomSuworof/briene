@@ -57,7 +57,7 @@ public class PersonalAreaController {
         if (userService.isCurrentPasswordSameAs(passwordOld)) {
             try {
                 Map<String, String> newUserData = new HashMap<>(){{
-                    put("email", passwordNew);
+                    put("password", passwordNew);
                 }};
                 userService.updateUser(currentUser.getId(), newUserData);
                 return "redirect:/logout";

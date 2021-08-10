@@ -39,10 +39,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/article_editor/**").fullyAuthenticated()
                 // Доступ для зарегистрированных пользователей (USER, ADMIN)
                 .antMatchers("/personal_area/**").fullyAuthenticated()
-                .antMatchers("/articles/**").permitAll()
+                .antMatchers("/articles/**", "/authors/**").permitAll()
                 // Доступ разрешен всем пользователей
                 .antMatchers("/",
                         "/favicon.ico",
+                        "/error",
                         "/terms_of_use",
                         "/static/**").permitAll()
                 //Все остальные страницы требуют аутентификации
