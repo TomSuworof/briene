@@ -1,5 +1,6 @@
 package com.salat.briene.services;
 
+import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.entities.Role;
 import com.salat.briene.exceptions.AnonymousUserException;
@@ -8,16 +9,14 @@ import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,20 +27,22 @@ public class UserService implements UserDetailsService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
-        UserDetails userFromDB = userRepository.findByUsername(username);
+    public User loadUserByUsername(String username) throws UserNotFoundException {
+        User userFromDB = userRepository.findByUsername(username);
+
         if (userFromDB == null) {
             throw new UserNotFoundException();
         }
+
         return userFromDB;
     }
 
     public User getUserFromContext() throws AnonymousUserException {
-        Object currentUserDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (currentUserDetails.equals("anonymousUser")) {
+        Authentication currentUserDetails = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUserDetails instanceof AnonymousAuthenticationToken) {
             throw new AnonymousUserException();
         } else {
-            return (User) currentUserDetails;
+            return (User) currentUserDetails.getPrincipal();
         }
     }
 
@@ -58,26 +59,23 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void updateUser(Long userId, Map<String, String> userData) throws UserNotFoundException {
+    public void updateUser(Long userId, Map<String, ?> userData) throws UserNotFoundException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        userFromDB.setEmail(userData.getOrDefault("email", userFromDB.getEmail()));
+        if (userData.containsKey("email")) {
+            userFromDB.setEmail((String) userData.get("email"));
+        }
+
+        if (userData.containsKey("bookmarks")) {
+            userFromDB.setBookmarkedArticles((Set<Article>) userData.get("bookmarks"));
+        }
 
         if (userData.containsKey("password")) {
-            userFromDB.setPassword(passwordEncoder.encode(userData.get("password")));
+            userFromDB.setPassword(passwordEncoder.encode((String) userData.get("password")));
         }
 
         userRepository.save(userFromDB);
     }
-//
-//    private void updateWithPassword(User userUpdated, String passwordNew) {
-//        userUpdated.setPassword(passwordEncoder.encode(passwordNew));
-//        userRepository.save(userUpdated);
-//    }
-//
-//    private void updateWithoutPassword(User userUpdated) {
-//        userRepository.save(userUpdated);
-//    }
 
     private void deleteUser(Long userId) throws UserNotFoundException {
         if (userRepository.findById(userId).isPresent()) {
@@ -91,9 +89,17 @@ public class UserService implements UserDetailsService {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         switch (role) {
-            case "blocked" -> userFromDB.setRoles(Collections.singleton(new Role(0L, "ROLE_BLOCKED")));
-            case "admin" -> userFromDB.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN")));
-            case "user" -> userFromDB.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
+            case "blocked" -> userFromDB.setRoles(new HashSet<>(){{
+                add(new Role(0L, "ROLE_BLOCKED"));
+            }});
+
+            case "admin" -> userFromDB.setRoles(new HashSet<>(){{
+                add(new Role(1L, "ROLE_ADMIN"));
+            }});
+
+            case "user" -> userFromDB.setRoles(new HashSet<>(){{
+                add(new Role(2L, "ROLE_USER"));
+            }});
         }
 //        mailService.send(userFromDB.getEmail(), "role_change", role);
         userRepository.save(userFromDB);

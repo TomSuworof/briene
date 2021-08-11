@@ -9,6 +9,7 @@ import com.salat.briene.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class ArticleService {
 
     public void saveArticle(Article newArticle) throws ArticleFoundException {
         newArticle.setId((long) newArticle.hashCode());
+        newArticle.setPublicationDate(new Date());
 
         Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
 
@@ -74,7 +76,7 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public List<Article> getArticlesOfAuthorAndState(User author, String articleState) {
+    public List<Article> getArticlesByAuthorAndState(User author, String articleState) {
         if (articleState == null) {
             return getArticlesByAuthor(author);
         }

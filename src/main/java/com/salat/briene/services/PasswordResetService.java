@@ -22,7 +22,7 @@ public class PasswordResetService {
     public void sendPasswordResetLinkTo(String username) throws UserNotFoundException {
             String id = UUID.randomUUID().toString();
             Date created = new Date();
-            User requiredUser = (User) userService.loadUserByUsername(username);
+            User requiredUser = userService.loadUserByUsername(username);
             email = requiredUser.getEmail();
             passwordResetRepository.save(new PasswordResetRequest(id, username, created));
 
@@ -72,7 +72,7 @@ public class PasswordResetService {
             put("password", passwordNew);
         }};
 
-        Long userId = ((User) userService.loadUserByUsername(passwordResetRequest.getUsername())).getId();
+        Long userId = userService.loadUserByUsername(passwordResetRequest.getUsername()).getId();
 
         passwordResetRepository.delete(passwordResetRequest);
         userService.updateUser(userId, newData);
@@ -82,7 +82,7 @@ public class PasswordResetService {
         Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(userId);
 
         if (passwordResetRequest.isPresent()) {
-            User userForNewPassword = (User) userService.loadUserByUsername(passwordResetRequest.get().getUsername());
+            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
             return userForNewPassword.getSecretQuestion();
         } else {
             throw new PasswordResetRequestNotFoundException();
@@ -93,7 +93,7 @@ public class PasswordResetService {
         Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(id);
 
         if (passwordResetRequest.isPresent()) {
-            User userForNewPassword = (User) userService.loadUserByUsername(passwordResetRequest.get().getUsername());
+            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
             return userForNewPassword.getSecretAnswer();
         } else {
             throw new PasswordResetRequestNotFoundException();

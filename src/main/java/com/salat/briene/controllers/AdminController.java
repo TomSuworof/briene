@@ -28,7 +28,7 @@ public class AdminController {
                 case "make_admin" -> userService.changeRole(userId, "admin");
                 case "make_user" -> userService.changeRole(userId, "user");
             }
-            return "redirect: /admin";
+            return "redirect:/admin";
         } catch (UserNotFoundException e) {
             e.printStackTrace();
             model.addAttribute("error", "Error changing role");

@@ -22,8 +22,8 @@ public class AuthorsController {
     @GetMapping("/authors/{authorName}")
     public String getAuthorPage(@PathVariable String authorName, Model model) {
         try {
-            User author = (User) userService.loadUserByUsername(authorName);
-            List<Article> articles = articleService.getArticlesOfAuthorAndState(author, "published");
+            User author = userService.loadUserByUsername(authorName);
+            List<Article> articles = articleService.getArticlesByAuthorAndState(author, "published");
 
             model.addAttribute("author", author);
             model.addAttribute("articles", articles);

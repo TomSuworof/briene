@@ -110,6 +110,14 @@
             </form>
         </div>
     </div>
+    <div class="articles-bookmarks">
+        <div>
+            <h2>Bookmarks</h2>
+        </div>
+        <div th:each="article : ${bookmarks}" class="article-container">
+            <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>
+        </div>
+    </div>
     <div class="articles-block">
         <div>
             <h2>Articles</h2>

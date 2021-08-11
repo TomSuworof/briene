@@ -9,7 +9,7 @@ spring:
       hibernate:
         jdbc:
           lob:
-            non_contextual_creation: 'true'
+            non_contextual_creation: true
   mail:
     host: ${MAIL_HOST}
     port: 465

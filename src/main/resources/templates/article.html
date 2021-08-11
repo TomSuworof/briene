@@ -15,14 +15,27 @@
     <div th:if="${canEdit}" class="article-action-buttons">
         <p th:text="${article.getState()}"></p>
         <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
-        <a th:href="'/articles/delete/' + ${article.getId()}">Delete</a>
+        <a th:href="'/articles/' + ${article.getId()} + '/delete'">Delete</a>
+    </div>
+    <div class="bookmarking">
+        <div th:if="${inBookmarks}">
+            <a th:href="'/articles/' + ${article.getId()} + '/remove_from_bookmarks'">Remove from bookmarks</a>
+        </div>
+        <div th:unless="${inBookmarks}">
+            <a th:href="'/articles/' + ${article.getId()} + '/add_to_bookmarks'">Add to bookmarks</a>
+        </div>
     </div>
 </div>
 <div class="article-page-content">
-    <div class="article-author">
-        <a th:text="${article.getAuthor().getUsername()}"
-           th:href="'/authors/' + ${article.getAuthor().getUsername()}"
-        ></a>
+    <div class="article-about row">
+        <div class="article-author">
+            <a th:text="${article.getAuthor().getUsername()}"
+               th:href="'/authors/' + ${article.getAuthor().getUsername()}"
+            ></a>
+        </div>
+        <div class="article-publication-date">
+            <p th:text="${publicationDate}"></p>
+        </div>
     </div>
     <div th:utext="${article.makeHTML()}" class="article-content"></div>
 </div>

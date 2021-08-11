@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -32,6 +34,12 @@ public class Article {
 
     @Column
     private ArticleState state;
+
+    @Column
+    private Date publicationDate;
+
+    @ManyToMany(mappedBy = "bookmarkedArticles")
+    private Set<User> bookmarkedBy;
 
     public String makeHTML() {
         MutableDataSet options = new MutableDataSet();

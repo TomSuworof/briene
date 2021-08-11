@@ -1,9 +1,7 @@
 package com.salat.briene.controllers;
 
-import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.UserNotFoundException;
-import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,25 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class PersonalAreaInfoController {
-    private final ArticleService articleService;
     private final UserService userService;
-
-    @GetMapping("/personal_area")
-    public String returnPersonalPage(Model model) {
-        User currentUser = userService.getUserFromContext();
-        List<Article> articles = articleService.getArticlesOfAuthorAndState(currentUser, null);
-
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("articles", articles);
-        model.addAttribute("show_admin_page", userService.isUser(currentUser, "admin"));
-        return "personal_area";
-    }
 
     @PostMapping("/personal_area/update_base_info")
     public String updateUserFromForm(@ModelAttribute("userForm") User userFromForm, Model model) {

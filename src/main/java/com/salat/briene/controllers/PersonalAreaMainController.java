@@ -1,0 +1,25 @@
+package com.salat.briene.controllers;
+
+import com.salat.briene.entities.User;
+import com.salat.briene.services.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+@RequiredArgsConstructor
+public class PersonalAreaMainController {
+    private final UserService userService;
+
+    @GetMapping("/personal_area")
+    public String returnPersonalPage(Model model) {
+        User currentUser = userService.getUserFromContext();
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("bookmarks", currentUser.getBookmarkedArticles());
+        model.addAttribute("articles", currentUser.getArticles());
+        model.addAttribute("show_admin_page", userService.isUser(currentUser, "admin"));
+        return "personal_area";
+    }
+}

@@ -24,7 +24,7 @@ public class PersonalAreaArticlesController {
     @GetMapping("/personal_area/articles")
     public String getArticles(@RequestParam(required = false) String type, Model model) {
         User currentUser = userService.getUserFromContext();
-        List<Article> articles = articleService.getArticlesOfAuthorAndState(currentUser, type);
+        List<Article> articles = articleService.getArticlesByAuthorAndState(currentUser, type);
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("articles", articles);

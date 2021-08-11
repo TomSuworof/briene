@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,12 +44,14 @@ public class ArticlesController {
     }
 
     @GetMapping("/articles/{id}")
-    public String deleteFile(@PathVariable Long id, Model model) {
+    public String getArticle(@PathVariable Long id, Model model) {
         try {
             Article article = articleService.getArticleById(id);
 
             if (article.getState().equals(ArticleState.ARTICLE_PUBLISHED)) {
                 model.addAttribute("article", article);
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
+                model.addAttribute("publicationDate", formatter.format(article.getPublicationDate()));
             }
 
             try {
@@ -54,6 +59,8 @@ public class ArticlesController {
                 if (articleService.canUserEditArticle(currentUser, article)) {
                     model.addAttribute("canEdit", true);
                 }
+
+                model.addAttribute("inBookmarks", currentUser.getBookmarkedArticles().contains(article));
             } catch (AnonymousUserException ignored) {
             }
 
@@ -65,12 +72,30 @@ public class ArticlesController {
         }
     }
 
-    @GetMapping("/articles/delete/{id}")
-    public String deleteArticle(@PathVariable Long id, Model model) {
+    @GetMapping("/articles/{id}/{action}")
+    public String editBookmarks(@PathVariable Long id, @PathVariable String action, Model model) {
+        switch (action) {
+            case "delete" -> {
+                return deleteArticle(id, model);
+            }
+            case "add_to_bookmarks" -> {
+                return addToBookmarks(id, model);
+            }
+            case "remove_from_bookmarks" -> {
+                return removeFromBookmarks(id, model);
+            }
+            default -> {
+                model.addAttribute("error", "Cannot execute command");
+                return "articles";
+            }
+        }
+    }
+
+    private String deleteArticle(Long id, Model model) {
         try {
             Article article = articleService.getArticleById(id);
-
             User currentUser = userService.getUserFromContext();
+
             if (userService.isUser(currentUser, "admin") || article.getAuthor().equals(currentUser)) {
                 articleService.deleteArticleById(id);
                 return "redirect:/articles";
@@ -82,5 +107,41 @@ public class ArticlesController {
             model.addAttribute("error", "Cannot delete article");
             return "articles";
         }
+    }
+
+    private String addToBookmarks(Long id, Model model) {
+        try {
+            Article article = articleService.getArticleById(id);
+            User currentUser = userService.getUserFromContext();
+
+            Set<Article> bookmarks = currentUser.getBookmarkedArticles();
+            bookmarks.add(article);
+
+            userService.updateUser(currentUser.getId(), new HashMap<>(){{
+                put("bookmarks", bookmarks);
+            }});
+
+        } catch (ArticleNotFoundException | AnonymousUserException ignored) {
+        }
+        model.addAttribute("id", id);
+        return "redirect:/articles/{id}";
+    }
+
+    private String removeFromBookmarks(Long id, Model model) {
+        try {
+            Article article = articleService.getArticleById(id);
+            User currentUser = userService.getUserFromContext();
+
+            Set<Article> bookmarks = currentUser.getBookmarkedArticles();
+            bookmarks.remove(article);
+
+            userService.updateUser(currentUser.getId(), new HashMap<>(){{
+                put("bookmarks", bookmarks);
+            }});
+
+        } catch (ArticleNotFoundException | AnonymousUserException ignored) {
+        }
+        model.addAttribute("id", id);
+        return "redirect:/articles/{id}";
     }
 }

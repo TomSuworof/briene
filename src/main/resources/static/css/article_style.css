@@ -10,3 +10,7 @@
 .article-author {
     margin: 0 0 10pt;
 }
+
+.article-about {
+    justify-content: space-between;
+}
