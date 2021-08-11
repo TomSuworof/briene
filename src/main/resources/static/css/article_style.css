@@ -14,3 +14,12 @@
 .article-about {
     justify-content: space-between;
 }
+
+.control {
+    display: none;
+    position: absolute;
+    height: 40px;
+    width: 80px;
+    background: grey;
+}
+/*todo style fix*/
