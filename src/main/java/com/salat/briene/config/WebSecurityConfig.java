@@ -46,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/error",
                         "/terms_of_use",
                         "/static/**").permitAll()
+                .antMatchers("/api/**", "/experimental/**").permitAll()
                 //Все остальные страницы требуют аутентификации
                 .anyRequest().authenticated()
                 .and()

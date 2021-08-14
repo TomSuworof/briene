@@ -41,9 +41,4 @@ public class MainController {
     public String getErrorPage() {
         return "error";
     }
-
-    @GetMapping("/experimental")
-    public String getVue() {
-        return "index_vue";
-    }
 }

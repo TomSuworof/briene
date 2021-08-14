@@ -41,8 +41,9 @@
                 <a href="/articles?type=published">Published</a>
                 <a href="/articles?type=drafts">Drafts</a>
             </div>
+<!--todo вынести в кабинет админа-->
             <div th:each="article : ${articles}" class="article-container">
-                <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>
+                <h3 class="article-title"><a th:href="'/articles/' + ${article.getId()}" th:text="${article.getTitle()}"></a></h3>
                 <div th:if="${isAdmin}" class="article-action-buttons">
                     <p th:text="${article.getState()}"></p>
                     <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>

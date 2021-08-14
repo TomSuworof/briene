@@ -16,82 +16,40 @@
 
 <div id="app" title="message">
     <h1>{{message}}</h1>
-</div>
 
-<div id="app-2">
-  <span v-bind:title="message">
-    Hover your mouse over me for a few seconds
-    to see my dynamically bound title!
-  </span>
-</div>
-
-<div id="app-4">
-    <ol>
-        <todo-item
-                v-for="item in todos" v-bind:todo="item" v-bind:key="item.id"
-        ></todo-item>
-    </ol>
-</div>
-
-<div id="app-5">
-    <p>{{message}}</p>
     <div>
-        <button v-on:click="reverseMessage">Reverse Message</button>
+      <span v-bind:title="messageAboutTime">
+          Under the <code>/experimental</code> you can find part of service, powered by Vue.JS. Here are some links:
+      </span>
     </div>
-    <span v-if="reversed">
-        Oh yeah, you can!
-    </span>
-</div>
 
+    <div>
+        <ul>
+            <page-link
+                    v-for="link in links" v-bind:link="link"
+            ></page-link>
+        </ul>
+    </div>
+</div>
 </body>
 <script>
 
-let app = new Vue({
-    el: '#app',
-    data: {
-        message: 'Hello, it is Vue'
-    }
-});
+    Vue.component('page-link', {
+        props: ['link'],
+        template: `<li><a v-bind:href="link.url">{{link.text}}</a></li>`
+    });
 
-let app2 = new Vue({
-    el: '#app-2',
-    data: {
-        message: 'You loaded this page on ' + new Date().toLocaleString()
-    }
-})
-
-Vue.component('todo-item', {
-    props: ['todo'],
-    template: '<li>{{todo.text}}</li>'
-});
-
-
-let app4 = new Vue({
-    el: '#app-4',
-    data: {
-        todos: [
-            {id: 1, text: 'Learn JS'},
-            {id: 2, text: 'Learn Vue'},
-            {id: 3, text: 'Build awesome things'}
-        ]
-    }
-});
-
-app4.todos.push({id: 4, text: 'Show this to the world!'});
-
-let app5 = new Vue({
-    el: '#app-5',
-    data: {
-        reversed: false,
-        message: 'Can you reverse me?',
-    },
-    methods: {
-        reverseMessage: function() {
-            this.message = this.message.split('').reverse().join('');
-            this.reversed = !this.reversed;
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello, it is Vue.JS',
+            messageAboutTime: 'You loaded this page on ' + new Date().toLocaleString(),
+            links: [
+                {url: '/experimental', text: 'This page'},
+                {url: '/experimental/articles', text: 'Articles'},
+            ]
         }
-    }
-});
+    });
 
 </script>
 </html>
