@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class ArticleEditorController {
         }
     }
 
-    @GetMapping("/article_editor/load")
+    @PostMapping("/article_editor/load")
     public String publishArticle(
             @RequestParam String title,
             @RequestParam String content,

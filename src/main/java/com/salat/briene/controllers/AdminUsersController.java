@@ -5,22 +5,15 @@ import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminUsersController {
     private final UserService userService;
 
-    @GetMapping("/admin")
-    public String getAdminPage(Model model) {
-        model.addAttribute("allUsers", userService.getAllUsers());
-        return "admin";
-    }
-
-    @PostMapping("/admin")
+    @PostMapping("/admin/users")
     public String changeRole(@RequestParam String action, @RequestParam Long userId, Model model) {
         try {
             switch (action) {

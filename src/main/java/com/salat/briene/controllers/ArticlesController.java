@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -26,19 +25,7 @@ public class ArticlesController {
     private final ArticleService articleService;
 
     @GetMapping("/articles")
-    public String getArticles(@RequestParam(required = false) String type, Model model) {
-        try {
-            User currentUser = userService.getUserFromContext();
-            if (userService.isUser(currentUser, "admin")) {
-                model.addAttribute("isAdmin", true);
-                model.addAttribute("articles", articleService.getArticlesByState(type));
-            } else {
-                model.addAttribute("articles", articleService.getArticlesByState("published"));
-            }
-            model.addAttribute("canUseEditor", true);
-            return "articles";
-        } catch (AnonymousUserException ignored) {
-        }
+    public String getArticles(Model model) {
         model.addAttribute("articles", articleService.getArticlesByState("published"));
         return "articles";
     }
@@ -73,39 +60,19 @@ public class ArticlesController {
     }
 
     @GetMapping("/articles/{id}/{action}")
-    public String editBookmarks(@PathVariable Long id, @PathVariable String action, Model model) {
+    public String editBookmarks(@PathVariable String id, @PathVariable String action, Model model) {
+        Long articleId = Long.parseLong(id);
         switch (action) {
-            case "delete" -> {
-                return deleteArticle(id, model);
-            }
             case "add_to_bookmarks" -> {
-                return addToBookmarks(id, model);
+                return addToBookmarks(articleId, model);
             }
             case "remove_from_bookmarks" -> {
-                return removeFromBookmarks(id, model);
+                return removeFromBookmarks(articleId, model);
             }
             default -> {
                 model.addAttribute("error", "Cannot execute command");
                 return "articles";
             }
-        }
-    }
-
-    private String deleteArticle(Long id, Model model) {
-        try {
-            Article article = articleService.getArticleById(id);
-            User currentUser = userService.getUserFromContext();
-
-            if (userService.isUser(currentUser, "admin") || article.getAuthor().equals(currentUser)) {
-                articleService.deleteArticleById(id);
-                return "redirect:/articles";
-            } else {
-                throw new ArticleNotFoundException();
-            }
-        } catch (ArticleNotFoundException | AnonymousUserException e) {
-            e.printStackTrace();
-            model.addAttribute("error", "Cannot delete article");
-            return "articles";
         }
     }
 

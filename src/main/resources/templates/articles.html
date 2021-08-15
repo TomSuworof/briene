@@ -19,9 +19,9 @@
             <h1>Articles</h1>
         </div>
         <div class="header-buttons">
-            <div th:if="${canUseEditor}" class="header-button-editor">
+            <div class="header-button-editor">
                 <form action="/article_editor">
-                    <button>Editor</button>
+                    <button>New article</button>
                 </form>
             </div>
             <div class="header-button-personal-area">
@@ -35,21 +35,8 @@
         <p th:text="${error}"></p>
     </div>
     <div>
-        <div>
-            <div th:if="${isAdmin}" class="articles-types">
-                <a href="/articles">All</a>
-                <a href="/articles?type=published">Published</a>
-                <a href="/articles?type=drafts">Drafts</a>
-            </div>
-<!--todo вынести в кабинет админа-->
-            <div th:each="article : ${articles}" class="article-container">
-                <h3 class="article-title"><a th:href="'/articles/' + ${article.getId()}" th:text="${article.getTitle()}"></a></h3>
-                <div th:if="${isAdmin}" class="article-action-buttons">
-                    <p th:text="${article.getState()}"></p>
-                    <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
-                    <a th:href="'/articles/delete/' + ${article.getId()}">Delete</a>
-                </div>
-            </div>
+        <div th:each="article : ${articles}" class="article-container">
+            <h3 class="article-title"><a th:href="'/articles/' + ${article.getId()}" th:text="${article.getTitle()}"></a></h3>
         </div>
     </div>
 </div>

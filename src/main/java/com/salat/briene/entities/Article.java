@@ -38,7 +38,7 @@ public class Article {
     @Column
     private Date publicationDate;
 
-    @ManyToMany(mappedBy = "bookmarkedArticles")
+    @ManyToMany(mappedBy = "bookmarkedArticles", cascade = CascadeType.REMOVE)
     private Set<User> bookmarkedBy;
 
     public String makeHTML() {

@@ -31,3 +31,19 @@
     margin: 1%;
     display: inline;
 }
+
+.admin-dashboard-articles {
+    padding: 50pt 0 0;
+}
+
+.article-title {
+    overflow-wrap: break-word;
+}
+
+.article-action-buttons {
+    display: inline-block;
+}
+
+.article-container {
+    margin: 0 0 10pt;
+}

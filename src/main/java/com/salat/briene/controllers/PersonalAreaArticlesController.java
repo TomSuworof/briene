@@ -27,12 +27,13 @@ public class PersonalAreaArticlesController {
         List<Article> articles = articleService.getArticlesByAuthorAndState(currentUser, type);
 
         model.addAttribute("currentUser", currentUser);
+        model.addAttribute("bookmarks", currentUser.getBookmarkedArticles());
         model.addAttribute("articles", articles);
         model.addAttribute("show_admin_page", userService.isUser(currentUser, "admin"));
         return "personal_area";
     }
 
-    @GetMapping("/personal_area/articles/delete/{id}")
+    @GetMapping("/personal_area/articles/{id}/delete")
     public String deleteArticle(@PathVariable Long id, Model model) {
         try {
             Article article = articleService.getArticleById(id);

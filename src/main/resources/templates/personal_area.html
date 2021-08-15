@@ -135,7 +135,7 @@
             <div class="article-action-buttons">
                 <p th:text="${article.getState()}"></p>
                 <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
-                <a th:href="'/personal_area/articles/delete/' + ${article.getId()}">Delete</a>
+                <a th:href="'/personal_area/articles/' + ${article.getId()} + '/delete'">Delete</a>
             </div>
         </div>
     </div>

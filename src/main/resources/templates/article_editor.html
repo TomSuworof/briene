@@ -20,7 +20,7 @@
     <p th:text="${error}"></p>
 </div>
 <div class="editor-page-content">
-    <form action="/article_editor/load">
+    <form action="/article_editor/load" method="post">
         <div class="editor-wrapper">
             <div>
                 <label for="title"></label>
@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="action-buttons">
-            <input type="submit" name="action" th:value="Publish"/>
-            <input type="submit" name="action" th:value="Save"/>
+            <input type="submit" name="action" value="Publish"/>
+            <input type="submit" name="action" value="Save"/>
         </div>
     </form>
 </div>

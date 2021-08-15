@@ -16,7 +16,6 @@
     <div th:if="${canEdit}" class="article-action-buttons">
         <p th:text="${article.getState()}"></p>
         <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>
-        <a th:href="'/articles/' + ${article.getId()} + '/delete'">Delete</a>
     </div>
     <div class="bookmarking">
         <div th:if="${inBookmarks}">
