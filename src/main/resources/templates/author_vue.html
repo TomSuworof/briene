@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="/static/css/articles_style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="/static/css/author_style.css" rel="stylesheet" type="text/css" media="all" />
     <script src="/static/js/http_cdn.jsdelivr.net_npm_vue@2.js"></script>
     <script src="/static/js/http_cdn.jsdelivr.net_npm_axios_dist_axios.js"></script>
     <meta charset="UTF-8">
-    <title>Articles</title>
+    <title th:text="${authorName}">Author</title>
 </head>
 <body>
 <div class="header-main-actions">
@@ -15,27 +15,16 @@
         <a href="/">Main</a>
     </div>
 </div>
-<div class="articles-page-content">
+<div class="author-page-content" id="author">
     <div class="header row">
         <div>
-            <h1>Articles</h1>
-        </div>
-        <div class="header-buttons">
-            <div class="header-button-editor">
-                <form action="/article_editor">
-                    <button>New article</button>
-                </form>
-            </div>
-            <div class="header-button-personal-area">
-                <form action="/personal_area">
-                    <button>Personal area</button>
-                </form>
-            </div>
+            <h1>{{ author.username }}</h1>
+<!--            выбрасывает ошибку TypeError: username is undefined-->
         </div>
     </div>
-    <div id="articles">
+    <div>
         <briene-article
-                v-for="article in articles"
+                v-for="article in author.articles"
                 v-bind:key="article.id"
                 v-bind:article="article"
         ></briene-article>
@@ -55,21 +44,26 @@
     });
 
     new Vue({
-        el: '#articles',
+        el: '#author',
         data() {
             return {
-                articles: [],
+                author: undefined,
             }
         },
         created() {
-            let url = `${ window.location.origin }/api/articles`; // by default it is 'published'
+            let url = `${ window.location.origin }/api/authors/${ document.title }`;
 
             axios
                 .get(url)
                 .then(response => {
-                    this.articles = response.data;
+                    this.author = response.data;
+                    if (this.author.username === undefined) {
+                        window.location.href = `${ window.location.origin }/error`; // redirecting to '/error
+                    }
                 })
-                .catch(err => console.log(err));
+                .catch(err => {
+                    console.log(err);
+                });
         }
     });
 
