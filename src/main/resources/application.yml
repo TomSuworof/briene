@@ -16,3 +16,5 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     protocol: 'smpts'
+
+    # this is vue
