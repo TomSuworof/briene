@@ -4,6 +4,7 @@ import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.AnonymousUserException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +24,18 @@ public class PersonalAreaArticlesController {
 
     @GetMapping("/personal_area/articles")
     public String getArticles(@RequestParam(required = false) String type, Model model) {
-        User currentUser = userService.getUserFromContext();
-        List<Article> articles = articleService.getArticlesByAuthorAndState(currentUser, type);
+        try {
+            User currentUser = userService.getUserFromContext();
+            List<Article> articles = articleService.getArticlesByAuthorAndState(currentUser, type);
 
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("bookmarks", currentUser.getBookmarkedArticles());
-        model.addAttribute("articles", articles);
-        model.addAttribute("show_admin_page", userService.isUser(currentUser, "admin"));
-        return "personal_area";
+            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("bookmarks", currentUser.getBookmarkedArticles());
+            model.addAttribute("articles", articles);
+            model.addAttribute("show_admin_page", currentUser.is("admin"));
+            return "personal_area";
+        } catch (IllegalArticleStateException e) {
+            return "redirect:/error";
+        }
     }
 
     @GetMapping("/personal_area/articles/{id}/delete")
@@ -39,7 +44,7 @@ public class PersonalAreaArticlesController {
             Article article = articleService.getArticleById(id);
 
             User currentUser = userService.getUserFromContext();
-            if (userService.isUser(currentUser, "admin") || article.getAuthor().equals(currentUser)) {
+            if (article.getAuthor().equals(currentUser)) {
                 articleService.deleteArticleById(id);
                 return "redirect:/personal_area";
             } else {

@@ -3,6 +3,7 @@ package com.salat.briene.api;
 import com.google.gson.Gson;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
@@ -25,12 +26,16 @@ public class ApiAuthorController {
     private final UserService userService;
 
     @GetMapping("/authors/{authorName}")
-    public ResponseEntity<String> getAuthorPage(@PathVariable String authorName) throws UserNotFoundException {
-        User userAuthor = userService.loadUserByUsername(authorName);
-        List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, "published");
+    public ResponseEntity<String> getAuthorPage(@PathVariable String authorName) {
+        try {
+            User userAuthor = userService.loadUserByUsername(authorName);
+            List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, "published");
 
-        AuthorContainer author = new AuthorContainer(userAuthor, articles);
-        return ResponseEntity.ok().body(new Gson().toJson(author));
+            AuthorContainer author = new AuthorContainer(userAuthor, articles);
+            return ResponseEntity.ok().body(new Gson().toJson(author));
+        } catch (UserNotFoundException | IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @Getter

@@ -81,4 +81,16 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(username, email);
     }
+
+    public boolean is(String role) {
+        if (role.equals("blocked") && this.getRoles().contains(new Role((long) 0, "ROLE_BLOCKED"))) {
+            return true;
+        } else if (role.equals("admin") && this.getRoles().contains(new Role((long) 1, "ROLE_ADMIN"))) {
+            return true;
+        } else if (role.equals("user") && this.getRoles().contains(new Role((long) 2, "ROLE_USER"))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

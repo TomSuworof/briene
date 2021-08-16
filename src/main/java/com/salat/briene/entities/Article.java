@@ -64,7 +64,7 @@ public class Article {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, title, author, state);
+        int result = Objects.hash(id, title, author, state, publicationDate);
         result = 31 * result + Arrays.hashCode(content);
         return result;
     }

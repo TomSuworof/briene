@@ -2,6 +2,7 @@ package com.salat.briene.controllers;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
@@ -28,7 +29,7 @@ public class AuthorsController {
             model.addAttribute("author", author);
             model.addAttribute("articles", articles);
             return "author";
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException | IllegalArticleStateException e) {
             e.printStackTrace();
             return "redirect:/error";
         }

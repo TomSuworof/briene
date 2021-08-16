@@ -4,6 +4,7 @@ import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.AnonymousUserException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.UserService;
 import com.salat.briene.entities.Article;
 import com.salat.briene.services.ArticleService;
@@ -26,8 +27,12 @@ public class ArticlesController {
 
     @GetMapping("/articles")
     public String getArticles(Model model) {
-        model.addAttribute("articles", articleService.getArticlesByState("published"));
-        return "articles";
+        try {
+            model.addAttribute("articles", articleService.getArticlesByState("published"));
+            return "articles";
+        } catch (IllegalArticleStateException e) {
+            return "redirect:/error";
+        }
     }
 
     @GetMapping("/articles/{id}")

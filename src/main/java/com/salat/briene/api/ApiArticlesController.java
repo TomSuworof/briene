@@ -2,6 +2,7 @@ package com.salat.briene.api;
 
 import com.google.gson.Gson;
 import com.salat.briene.entities.Article;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.ArticleService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,14 @@ public class ApiArticlesController {
 
     @GetMapping("/articles")
     public ResponseEntity<String> getArticles() {
-        List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
-                .stream().map(ArticleContainer::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(new Gson().toJson(publishedArticles));
+        try {
+            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
+                    .stream().map(ArticleContainer::new)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(new Gson().toJson(publishedArticles));
+        } catch (IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @Getter

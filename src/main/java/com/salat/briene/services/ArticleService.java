@@ -5,6 +5,7 @@ import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleFoundException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public void saveArticle(Article newArticle) throws ArticleFoundException {
-        newArticle.setId((long) newArticle.hashCode());
         newArticle.setPublicationDate(new Date());
+        newArticle.setId((long) newArticle.hashCode());
 
         Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
 
@@ -55,18 +56,19 @@ public class ArticleService {
         }
     }
 
-    public List<Article> getArticlesByState(String articleState) {
+    public List<Article> getArticlesByState(String articleState) throws IllegalArticleStateException {
         if (articleState == null) {
-            return getAllArticles();
+            throw new IllegalArticleStateException();
         }
 
         ArticleState state;
         switch (articleState) {
             case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
             case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
-            default -> {
+            case "all" -> {
                 return getAllArticles();
             }
+            default -> throw new IllegalArticleStateException();
         }
 
         return articleRepository.findArticlesByState(state);
@@ -76,18 +78,19 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public List<Article> getArticlesByAuthorAndState(User author, String articleState) {
+    public List<Article> getArticlesByAuthorAndState(User author, String articleState) throws IllegalArticleStateException {
         if (articleState == null) {
-            return getArticlesByAuthor(author);
+            throw new IllegalArticleStateException();
         }
 
         ArticleState state;
         switch (articleState) {
             case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
             case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
-            default -> {
+            case "all" -> {
                 return getArticlesByAuthor(author);
             }
+            default -> throw new IllegalArticleStateException();
         }
 
         return articleRepository.findArticlesByAuthorAndState(author, state);
@@ -98,6 +101,10 @@ public class ArticleService {
     }
 
     public boolean canUserEditArticle(User user, Article article) {
-        return userService.isUser(user, "admin") || article.getAuthor().equals(user);
+        if (user == null) {
+            return false;
+        }
+
+        return user.is("admin") || article.getAuthor().equals(user);
     }
 }

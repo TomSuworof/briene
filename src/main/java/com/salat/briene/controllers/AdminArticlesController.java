@@ -2,6 +2,7 @@ package com.salat.briene.controllers;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,10 +20,14 @@ public class AdminArticlesController {
 
     @GetMapping("/admin/articles")
     public String getArticles(@RequestParam(required = false) String type, Model model) {
-        List<Article> articles = articleService.getArticlesByState(type);
+        try {
+            List<Article> articles = articleService.getArticlesByState(type);
 
-        model.addAttribute("articles", articles);
-        return "personal_area";
+            model.addAttribute("articles", articles);
+            return "admin";
+        } catch (IllegalArticleStateException e) {
+            return "redirect:/error";
+        }
     }
 
     @GetMapping("/admin/articles/{id}/delete")
