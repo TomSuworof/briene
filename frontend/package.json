@@ -1,0 +1,20 @@
+{
+  "name": "frontend",
+  "version": "4.0.0",
+  "private": true,
+  "description": "A Vue.js side of briene",
+  "author": "Tom Suworof",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "clean": "rm -rf node_modules target"
+  },
+  "dependencies": {
+    "axios": "0.21.1",
+    "bootstrap": "5.1.0",
+    "core-js": "3.16.1",
+    "vue": "3.2.2",
+    "vue-router": "4.0.11",
+    "vuex": "4.0.2"
+  }
+}
