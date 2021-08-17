@@ -1,7 +1,8 @@
 package com.salat.briene.api;
 
-import com.google.gson.Gson;
 import com.salat.briene.entities.Article;
+import com.salat.briene.entities.ArticleState;
+import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.ArticleService;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -21,13 +23,29 @@ public class ApiArticlesController {
     private final ArticleService articleService;
 
     @GetMapping("/articles")
-    public ResponseEntity<String> getArticles() {
+    public ResponseEntity<?> getArticles() {
         try {
             List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
                     .stream().map(ArticleContainer::new)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok().body(new Gson().toJson(publishedArticles));
+
+            return ResponseEntity.ok().body(publishedArticles);
         } catch (IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/articles/{id}")
+    public ResponseEntity<?> getArticle(@PathVariable Long id) {
+        try {
+            Article article = articleService.getArticleById(id);
+
+            if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
+                throw new ArticleNotFoundException();
+            } // todo replace if user can see article
+
+            return ResponseEntity.ok().body(article);
+        } catch (ArticleNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

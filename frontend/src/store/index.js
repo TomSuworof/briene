@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import api from '../api/backend-api'
+import api from '../services/ArticlesService'
 
 export default createStore({
     state: {
