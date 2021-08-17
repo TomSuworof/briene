@@ -1,20 +1,29 @@
 spring:
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/briene'
+    password: 'postgres'
+    username: 'postgres'
+    driver-class-name: org.postgresql.Driver
+
   web:
     resources:
       static-locations: 'classpath:/'
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
+
+  flyway:
+    locations: 'classpath:db/migration'
+
   mail:
     host: ${MAIL_HOST}
     port: 465
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     protocol: 'smpts'
-
-    # master
