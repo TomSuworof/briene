@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div class="header-main-actions">
-      <div class="header-main-link">
-        <router-link to="/">Main</router-link>
-      </div>
-    </div>
+
     <div class="articles-page-content">
       <div class="header row">
         <div>
@@ -43,9 +39,10 @@ export default {
       articles: [],
     }
   },
-  created() {
-    ArticlesService.getAll()
+  mounted() {
+    ArticlesService.getPublishedArticles()
       .then(response => {
+        console.log(response)
         this.articles = response.data;
       })
       .catch(e => {
@@ -56,5 +53,20 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  justify-content: space-between;
+}
 
+.header-button-editor, .header-button-personal-area {
+  margin: 0 10pt 0;
+  display: inline-block;
+}
+
+.article-title {
+  overflow-wrap: break-word;
+}
+
+.article-container {
+  margin: 0 0 10pt;
+}
 </style>

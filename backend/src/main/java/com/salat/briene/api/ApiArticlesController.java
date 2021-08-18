@@ -7,16 +7,15 @@ import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.ArticleService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@CrossOrigin(origins = "http://localhost:8081")
+@RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class ApiArticlesController {
@@ -29,7 +28,14 @@ public class ApiArticlesController {
                     .stream().map(ArticleContainer::new)
                     .collect(Collectors.toList());
 
-            return ResponseEntity.ok().body(publishedArticles);
+            return ResponseEntity
+                    .ok()
+                    .headers(new HttpHeaders(){{
+                        add("Access-Control-Allow-Origin", "http://localhost:8081");
+                        add("Access-Control-Allow-Methods", "GET");
+                        add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+                    }}) // somehow does not send
+                    .body(publishedArticles);
         } catch (IllegalArticleStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

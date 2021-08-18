@@ -1,11 +1,11 @@
 import http from '../http-common'
 
 class ArticlesService {
-    getAll() {
+    getPublishedArticles() {
         return http.get('/articles')
     }
 
-    get(id) {
+    getArticleById(id) {
         return http.get(`/articles/${id}`)
     }
 

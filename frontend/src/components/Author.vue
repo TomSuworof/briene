@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div class="header-main-actions">
-      <div class="header-main-link">
-        <router-link to="/">Main</router-link>
-      </div>
-    </div>
     <div class="author-page-content" v-if="author">
       <div class="header row">
         <div>
@@ -39,11 +34,23 @@ export default {
         })
         .catch(err => {
           console.log(err);
+          this.$router.push({ path: '/error' }); // redirecting to '/error'
         });
   }
 }
 </script>
 
 <style scoped>
+.header {
+  justify-content: space-between;
+  margin: 0 0 10pt;
+}
 
+.article-container {
+  margin: 0 0 10pt;
+}
+
+.article-title {
+  overflow-wrap: break-word;
+}
 </style>

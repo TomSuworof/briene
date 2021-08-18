@@ -1,21 +1,18 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from './components/Home';
+import Error from './components/Error';
+import Articles from './components/Articles';
+import Author from './components/Author';
 
-Vue.use(Router);
 
-export default new Router({
-    mode: history,
+const router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
     routes: [
-        {
-            path: '/',
-            alias: '/articles',
-            name: 'articles',
-            component: () => import('./components/Articles')
-        },
-        {
-            path: '/authors/:authorName',
-            name: 'author',
-            component: () => import('./components/Author')
-        }
-    ],
+        { path: '/', component: Home },
+        { path: '/error', component: Error },
+        { path: '/articles', component: Articles },
+        { path: '/authors/:authorName', component: Author }
+    ]
 });
+
+export default router;
