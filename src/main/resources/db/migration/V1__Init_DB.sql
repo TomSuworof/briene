@@ -1,24 +1,24 @@
-create table t_password_reset_requests
+create table if not exists t_password_reset_requests
 (
-    "id"     varchar(255) not null constraint t_password_reset_requests_pkey primary key,
+    id     varchar(255) not null constraint t_password_reset_requests_pkey primary key,
     created  timestamp,
     username varchar(255) not null
 );
 
-create table t_roles
+create table if not exists t_roles
 (
-    "id"   bigint       not null constraint t_roles_pkey primary key,
-    "name" varchar(255) not null
+    id   bigint       not null constraint t_roles_pkey primary key,
+    name varchar(255) not null
 );
 
-insert into t_roles ("id", "name") values
+insert into t_roles (id, name) values
     (0, 'ROLE_BLOCKED'),
     (1, 'ROLE_ADMIN'),
     (2, 'ROLE_USER');
 
-create table t_users
+create table if not exists t_users
 (
-    "id"            bigint       not null constraint t_users_pkey primary key,
+    id            bigint       not null constraint t_users_pkey primary key,
     email           varchar(255) not null,
     password        varchar(255) not null,
     secret_answer   varchar(255) not null,
@@ -26,9 +26,9 @@ create table t_users
     username        varchar(255) not null
 );
 
-create table t_articles
+create table if not exists t_articles
 (
-    "id"             bigint       not null constraint t_articles_pkey primary key,
+    id             bigint       not null constraint t_articles_pkey primary key,
     content          bytea,
     state            integer      not null,
     title            varchar(255) not null,
@@ -36,14 +36,14 @@ create table t_articles
     publication_date timestamp    not null
 );
 
-create table t_users_roles
+create table if not exists t_users_roles
 (
     user_id  bigint not null constraint references_to_not_null_user references t_users not null,
     roles_id bigint not null constraint references_to_not_null_role references t_roles not null,
     constraint t_users_roles_pkey primary key (user_id, roles_id)
 );
 
-create table t_user_bookmarks
+create table if not exists t_user_bookmarks
 (
     bookmarked_by_user_id bigint not null constraint references_to_not_null_bookmarked_by_user references t_users not null,
     bookmarked_article_id bigint not null constraint references_to_not_null_bookmarked_article references t_articles not null,
