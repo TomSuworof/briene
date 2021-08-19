@@ -32,20 +32,20 @@ create table t_articles
     content          bytea,
     state            integer      not null,
     title            varchar(255) not null,
-    author_id        bigint       constraint references_to_not_null_user references t_users not null,
+    author_id        bigint       constraint references_to_not_null_author references t_users not null,
     publication_date timestamp    not null
 );
 
 create table t_users_roles
 (
     user_id  bigint not null constraint references_to_not_null_user references t_users not null,
-    roles_id bigint not null constraint references_to_not_null_user references t_roles not null,
+    roles_id bigint not null constraint references_to_not_null_role references t_roles not null,
     constraint t_users_roles_pkey primary key (user_id, roles_id)
 );
 
 create table t_user_bookmarks
 (
-    bookmarked_by_user_id bigint not null constraint references_to_not_null_user references t_users not null,
-    bookmarked_article_id bigint not null constraint references_to_not_null_user references t_articles not null,
+    bookmarked_by_user_id bigint not null constraint references_to_not_null_bookmarked_by_user references t_users not null,
+    bookmarked_article_id bigint not null constraint references_to_not_null_bookmarked_article references t_articles not null,
     constraint t_user_bookmarks_pkey primary key (bookmarked_article_id, bookmarked_by_user_id)
 );
