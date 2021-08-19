@@ -7,14 +7,13 @@ import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.services.ArticleService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*") // todo security issue
+@CrossOrigin("http://localhost:8081")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -28,14 +27,7 @@ public class ApiArticlesController {
                     .stream().map(ArticleContainer::new)
                     .collect(Collectors.toList());
 
-            return ResponseEntity
-                    .ok()
-                    .headers(new HttpHeaders(){{
-                        add("Access-Control-Allow-Origin", "*"); // todo security issue
-                        add("Access-Control-Allow-Methods", "*");
-                        add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-                    }})
-                    .body(publishedArticles);
+            return ResponseEntity.ok().body(publishedArticles);
         } catch (IllegalArticleStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
