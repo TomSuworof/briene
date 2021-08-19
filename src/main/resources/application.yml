@@ -1,4 +1,6 @@
 spring:
+
+  # specify own properties
   datasource:
     url: 'jdbc:postgresql://localhost:5432/briene'
     password: 'postgres'
@@ -21,6 +23,7 @@ spring:
   flyway:
     locations: 'classpath:db/migration'
 
+  # mail still does not work - no need to specify
   mail:
     host: ${MAIL_HOST}
     port: 465
