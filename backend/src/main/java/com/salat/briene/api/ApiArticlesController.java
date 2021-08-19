@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*") // todo security issue
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -31,10 +31,10 @@ public class ApiArticlesController {
             return ResponseEntity
                     .ok()
                     .headers(new HttpHeaders(){{
-                        add("Access-Control-Allow-Origin", "http://localhost:8081");
-                        add("Access-Control-Allow-Methods", "GET");
+                        add("Access-Control-Allow-Origin", "*"); // todo security issue
+                        add("Access-Control-Allow-Methods", "*");
                         add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-                    }}) // somehow does not send
+                    }})
                     .body(publishedArticles);
         } catch (IllegalArticleStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

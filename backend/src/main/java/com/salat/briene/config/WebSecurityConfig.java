@@ -12,8 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
+                    .cors().configurationSource(corsConfigurationSource())
+                .and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
                 .and()
                     .authorizeRequests()
                         .antMatchers("/api/articles/*").permitAll()
@@ -50,13 +58,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry
-                .addMapping("api/**")
-                .allowedOrigins("http://localhost:8081")
-                .allowedMethods("GET", "POST")
-                .maxAge(-1)   // add maxAge
-                .allowCredentials(true); // completely not working
+    private CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*")); // todo security issue
+        configuration.setAllowedMethods(List.of("*")); // todo security issue
+        configuration.setMaxAge(10L);
+        //configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of(
+                "Accept",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers",
+                "Accept-Language",
+                "Authorization",
+                "Content-Type",
+                "Request-Name",
+                "Request-Surname",
+                "Origin",
+                "X-Request-AppVersion",
+                "X-Request-OsVersion",
+                "X-Request-Device",
+                "X-Requested-With"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
