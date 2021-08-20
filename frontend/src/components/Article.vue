@@ -60,10 +60,10 @@ export default {
     let articleContent = document.getElementById('article-content');
     let control = document.getElementById('control');
 
-    let selectedText;
+    let selectedString = '';
 
     articleContent.addEventListener('mouseup', () => {
-      selectedText = document.getSelection();
+      let selectedText = document.getSelection();
 
       if (!selectedText.toString()) {
         control.style.display = 'none';
@@ -72,16 +72,17 @@ export default {
 
       let rect = selectedText.getRangeAt(0).getBoundingClientRect();
 
-      control.style.top = `calc(${rect.top}px - 50px)`;
-      control.style.left = `calc(${rect.left}px + ${rect.width}px / 2 - 20px)`;
+      control.style.top = `calc(${rect.top}px - 40px)`;
+      control.style.left = `calc(${rect.left}px + ${rect.width}px / 2 - 45px)`;
       control.style.display = 'block';
+
+      selectedString = selectedText.toString();
     });
 
     let makeQuoteFunction = this.makeQuote; // should be outside eventListener, because of 'this' belongs to 'control'
 
     control.addEventListener('mouseup', function () {
-      console.log(selectedText.toString());
-      makeQuoteFunction(selectedText.toString());
+      makeQuoteFunction(selectedString);
       control.style.display = 'none';
     });
   },
@@ -112,14 +113,21 @@ export default {
 }
 
 .article-about {
+  padding: 0 10pt 0;
   justify-content: space-between;
 }
 
 .control {
+  text-align: center;
+  border-radius: 10px;
   display: none;
   position: absolute;
-  height: 40px;
-  width: 80px;
-  background: grey;
+  height: 35px;
+  width: 100px;
+  background: #DDD;
+}
+
+.control:hover {
+  cursor: pointer;
 }
 </style>

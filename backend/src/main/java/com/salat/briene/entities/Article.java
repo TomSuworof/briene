@@ -4,16 +4,17 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "t_articles")
 @NoArgsConstructor
@@ -37,9 +38,6 @@ public class Article {
 
     @Column
     private Date publicationDate;
-
-    @ManyToMany(mappedBy = "bookmarkedArticles", cascade = CascadeType.REMOVE)
-    private Set<User> bookmarkedBy;
 
     public String makeHTML() {
         MutableDataSet options = new MutableDataSet();

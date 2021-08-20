@@ -51,6 +51,7 @@ export default {
 
 <style scoped>
 .header {
+  padding: 0 10pt 0;
   justify-content: space-between;
 }
 

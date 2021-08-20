@@ -20,16 +20,12 @@
 </template>
 
 <script>
-import Editor from '';
+//import Editor from '/static/js/lepture_editor';
 
 export default {
   name: "ArticleEditor",
   created() {
-    let editor = new Editor({
-      element: document.getElementById('editor'),
-    });
-    editor.render();
-  } // fix warnings
+  }
 }
 </script>
 

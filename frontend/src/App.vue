@@ -17,7 +17,6 @@ export default {
 
 <style>
 .header-main-link {
-  position: absolute;
   margin: 10px;
 }
 

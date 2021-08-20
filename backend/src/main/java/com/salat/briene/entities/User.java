@@ -35,14 +35,11 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
-    private Set<Article> articles;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "t_user_bookmarks",
             joinColumns = @JoinColumn(name = "bookmarked_by_user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "bookmarked_article_id", referencedColumnName = "id"))
-    private Set<Article> bookmarkedArticles; // todo swap column names
+    private Set<Article> bookmarkedArticles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -17,7 +17,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
-    private final UserService userService;
     private final ArticleRepository articleRepository;
 
     public void saveArticle(Article newArticle) throws ArticleFoundException {

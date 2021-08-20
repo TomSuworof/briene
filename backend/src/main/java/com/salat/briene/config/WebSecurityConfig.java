@@ -18,8 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
