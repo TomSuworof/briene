@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,17 @@ public class ApiArticlesController {
 
     @GetMapping("/articles")
     public ResponseEntity<?> getArticles() {
+        @Getter
+        class ArticleContainer {
+            private final Long id;
+            private final String title;
+
+            public ArticleContainer(Article article) {
+                this.id = article.getId();
+                this.title = article.getTitle();
+            }
+        }
+
         try {
             List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
                     .stream().map(ArticleContainer::new)
@@ -35,6 +47,23 @@ public class ApiArticlesController {
 
     @GetMapping("/articles/{id}")
     public ResponseEntity<?> getArticle(@PathVariable Long id) {
+        @Getter
+        class ArticleContainer {
+            private final Long id;
+            private final String title;
+            private final String author;
+            private final String htmlContent;
+            private final Date publicationDate;
+
+            public ArticleContainer(Article article) {
+                this.id = article.getId();
+                this.title = article.getTitle();
+                this.author = article.getAuthor().getUsername();
+                this.htmlContent = article.makeHTML();
+                this.publicationDate = article.getPublicationDate();
+            }
+        }
+
         try {
             Article article = articleService.getArticleById(id);
 
@@ -42,20 +71,9 @@ public class ApiArticlesController {
                 throw new ArticleNotFoundException();
             } // todo replace if user can see article
 
-            return ResponseEntity.ok().body(article);
+            return ResponseEntity.ok().body(new ArticleContainer(article));
         } catch (ArticleNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @Getter
-    private static class ArticleContainer {
-        private final Long id;
-        private final String title;
-
-        public ArticleContainer(Article article) {
-            this.id = article.getId();
-            this.title = article.getTitle();
         }
     }
 }
