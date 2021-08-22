@@ -30,15 +30,3 @@ spring:
 logging:
   level:
     org.springframework: debug
-
-keycloak:
-  auth-server-url: 'http://localhost:8080/auth'
-  realm: 'briene'
-  resource: 'briene'
-  bearer-only: true
-  security-constraints:
-    - authRoles:
-        - 'uma_authorization'
-      securityCollections:
-        - patterns:
-            - '/api/*'

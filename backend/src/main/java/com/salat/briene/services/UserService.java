@@ -3,14 +3,11 @@ package com.salat.briene.services;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.entities.Role;
-import com.salat.briene.exceptions.AnonymousUserException;
-import com.salat.briene.exceptions.UserFoundException;
-import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.exceptions.*;
+import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,35 +25,43 @@ public class UserService implements UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UserNotFoundException {
-        User userFromDB = userRepository.findByUsername(username);
-
-        if (userFromDB == null) {
-            throw new UserNotFoundException();
-        }
-
-        return userFromDB;
+        return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-    public User getUserFromContext() throws AnonymousUserException {
-        Authentication currentUserDetails = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUserDetails instanceof AnonymousAuthenticationToken) {
-            throw new AnonymousUserException();
-        } else {
-            return (User) currentUserDetails.getPrincipal();
-        }
-    }
+//    public User getUserFromContext() throws AnonymousUserException {
+//        Authentication currentUserDetails = SecurityContextHolder.getContext().getAuthentication();
+//        if (currentUserDetails instanceof AnonymousAuthenticationToken) {
+//            throw new AnonymousUserException();
+//        } else {
+//            return (User) currentUserDetails.getPrincipal();
+//        }
+//    }
 
-    public void saveUser(User user)  throws UserFoundException {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-
-        if (userFromDB != null) {
-            throw new UserFoundException();
+    public void saveUser(SignupRequest signupRequest)  throws UserFoundException {
+        if (existsByUsername(signupRequest.getUsername())) {
+            throw new UserFoundByUsernameException();
         }
 
-        user.setId((long) user.hashCode());
+        if (existsByEmail(signupRequest.getEmail())) {
+            throw new UserFoundByEmailException();
+        }
+
+        User user = new User();
+        user.setUsername(signupRequest.getUsername());
+        user.setEmail(signupRequest.getEmail());
+        user.setSecretQuestion(signupRequest.getSecretQuestion());
+        user.setSecretAnswer(signupRequest.getSecretAnswer());
+        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRoles(Set.of(new Role(2L, "ROLE_USER")));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    private boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    private boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public void updateUser(Long userId, Map<String, ?> userData) throws UserNotFoundException {

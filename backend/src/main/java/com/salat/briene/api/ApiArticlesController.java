@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 
 @CrossOrigin("http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/articles")
 @RequiredArgsConstructor
 public class ApiArticlesController {
     private final ArticleService articleService;
 
-    @GetMapping("/articles")
+    @GetMapping("/")
     public ResponseEntity<?> getArticles() {
         @Getter
         class ArticleContainer {
@@ -45,7 +45,7 @@ public class ApiArticlesController {
         }
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getArticle(@PathVariable Long id) {
         @Getter
         class ArticleContainer {

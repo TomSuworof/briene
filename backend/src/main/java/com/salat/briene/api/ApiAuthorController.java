@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/authors")
 @RequiredArgsConstructor
 public class ApiAuthorController {
     private final ArticleService articleService;
     private final UserService userService;
 
-    @GetMapping("/authors/{authorName}")
+    @GetMapping("/{authorName}")
     public ResponseEntity<String> getAuthorPage(@PathVariable String authorName) {
         try {
             User userAuthor = userService.loadUserByUsername(authorName);
