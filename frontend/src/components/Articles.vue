@@ -10,7 +10,7 @@
   <!--         todo-->
         </div>
         <div class="header-button-personal-area">
-          <router-link to="/personal_area">Personal area</router-link>
+          <router-link to="/profile">Profile</router-link>
         </div>
   <!--        todo-->
       </div>

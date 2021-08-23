@@ -1,7 +1,6 @@
 package com.salat.briene.config;
 
 import com.salat.briene.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +17,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
-    private final UserService userService;
-    private final AuthEntryPointJwt unauthorizedHandler;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,19 +50,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors().and().csrf().disable()
-                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).
-                and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
+                .csrf().and().cors().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
-                    .authorizeRequests()
-                        .antMatchers("/api/articles/**").permitAll()
-                        .antMatchers("/api/authors/*").permitAll()
-                        //Все остальные страницы требуют аутентификации
-                        .anyRequest().authenticated()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
                 .and()
-                    .logout()
-                    .permitAll()
-                    .logoutSuccessUrl("/");
+                .authorizeRequests()
+                .antMatchers("/api/articles/**").permitAll()
+                .antMatchers("/api/authors/*").permitAll()
+                //Все остальные страницы требуют аутентификации
+                .anyRequest().authenticated()
+                .and()
+                .logout().permitAll().logoutSuccessUrl("/");
     }
 }

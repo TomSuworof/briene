@@ -8,6 +8,7 @@ import com.salat.briene.services.ArticleService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -21,19 +22,25 @@ import java.util.stream.Collectors;
 public class ApiArticlesController {
     private final ArticleService articleService;
 
+    @Getter
+    private static class ArticleContainer {
+        private final Long id;
+        private final String title;
+        private final String author;
+        private final String htmlContent;
+        private final Date publicationDate;
+
+        public ArticleContainer(Article article) {
+            this.id = article.getId();
+            this.title = article.getTitle();
+            this.author = article.getAuthor().getUsername();
+            this.htmlContent = article.makeHTML();
+            this.publicationDate = article.getPublicationDate();
+        }
+    }
+
     @GetMapping("/")
     public ResponseEntity<?> getArticles() {
-        @Getter
-        class ArticleContainer {
-            private final Long id;
-            private final String title;
-
-            public ArticleContainer(Article article) {
-                this.id = article.getId();
-                this.title = article.getTitle();
-            }
-        }
-
         try {
             List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
                     .stream().map(ArticleContainer::new)
@@ -45,35 +52,31 @@ public class ApiArticlesController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getArticle(@PathVariable Long id) {
-        @Getter
-        class ArticleContainer {
-            private final Long id;
-            private final String title;
-            private final String author;
-            private final String htmlContent;
-            private final Date publicationDate;
-
-            public ArticleContainer(Article article) {
-                this.id = article.getId();
-                this.title = article.getTitle();
-                this.author = article.getAuthor().getUsername();
-                this.htmlContent = article.makeHTML();
-                this.publicationDate = article.getPublicationDate();
-            }
-        }
-
-        try {
-            Article article = articleService.getArticleById(id);
-
-            if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
-                throw new ArticleNotFoundException();
-            } // todo replace if user can see article
-
-            return ResponseEntity.ok().body(new ArticleContainer(article));
-        } catch (ArticleNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    // todo for the rest of urls need to know about user, who sent the request
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> getArticle(@PathVariable Long id) {
+//        try {
+//            Article article = articleService.getArticleById(id);
+//
+//            if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
+//                throw new ArticleNotFoundException();
+//            }
+//
+//            return ResponseEntity.ok().body(new ArticleContainer(article));
+//        } catch (ArticleNotFoundException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+//
+//    @PostMapping("/load")
+////    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    public ResponseEntity<?> publishArticle() {
+//        return ResponseEntity.ok().body("Empty response");
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
+//        return ResponseEntity.ok().body("Empty response");
+//    }
 }

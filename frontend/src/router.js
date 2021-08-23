@@ -3,7 +3,9 @@ import Home from '@/components/Home';
 import TermsOfUse from "@/components/TermsOfUse";
 import Error from '@/components/Error';
 
-
+import Login from '@/components/Login';
+import Register from '@/components/Register';
+import Profile from '@/components/Profile';
 
 import Articles from '@/components/Articles';
 import Article from '@/components/Article';
@@ -17,6 +19,10 @@ const router = createRouter({
         { path: '/', component: Home },
         { path: '/terms_of_use', component: TermsOfUse },
         { path: '/error', component: Error },
+
+        { path: '/login', component: Login},
+        { path: '/register', component: Register},
+        { path: '/profile', component: Profile},
 
         { path: '/articles', component: Articles },
         { path: '/articles/:articleId', component: Article },
