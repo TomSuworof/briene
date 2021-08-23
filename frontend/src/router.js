@@ -14,7 +14,8 @@ import ArticleEditor from "@/components/ArticleEditor";
 import Author from '@/components/Author';
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    mode: history,
+    history: createWebHistory(),
     routes: [
         { path: '/', component: Home },
         { path: '/terms_of_use', component: TermsOfUse },

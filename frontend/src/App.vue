@@ -4,7 +4,8 @@
       <router-link to="/">Main</router-link>
     </div>
     <div class="content">
-      <router-view/>
+      <router-view>
+      </router-view>
     </div>
   </div>
 </template>

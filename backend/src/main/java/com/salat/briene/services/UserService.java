@@ -1,5 +1,6 @@
 package com.salat.briene.services;
 
+import com.salat.briene.config.JwtUtils;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.entities.Role;
@@ -21,7 +22,10 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User loadUserByUsername(String username) throws UserNotFoundException {
@@ -36,6 +40,10 @@ public class UserService implements UserDetailsService {
 //            return (User) currentUserDetails.getPrincipal();
 //        }
 //    }
+
+    public User getUserFromToken(String accessToken) throws UserNotFoundException {
+        return loadUserByUsername(jwtUtils.getUsernameFromJwtToken(accessToken));
+    }
 
     public void saveUser(SignupRequest signupRequest)  throws UserFoundException {
         if (existsByUsername(signupRequest.getUsername())) {

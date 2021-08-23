@@ -10,7 +10,7 @@
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input is="Field" id="password" name="password" type="password" class="form-control"/>
+          <input is="Field" id="password" name="password" type="password" placeholder="Password" class="form-control"/>
           <ErrorMessage name="password" class="error-feedback"/>
         </div>
         <div class="form-group">
@@ -24,7 +24,7 @@
             </button>
           </div>
           <div class="sign-up-button">
-            <router-link to="/registration" class="btn btn-block">Sign Up</router-link>
+            <router-link to="/register" class="btn btn-block">Sign Up</router-link>
           </div>
         </div>
 
@@ -66,6 +66,8 @@ export default {
     },
   },
   created() {
+    console.log(this.loggedIn);
+    console.log(window.origin);
     if (this.loggedIn) {
       this.$router.push("/profile");
     }

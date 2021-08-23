@@ -5,8 +5,8 @@ class ArticlesService {
         return http.get('/articles');
     }
 
-    getArticleById(id) {
-        return http.get(`/articles/${id}`);
+    getArticleById(id, accessToken) {
+        return http.get(`/articles/${id}`, {headers: {"Authorization" : `Bearer ${accessToken}`}});
     }
 
     publishArticle(title, content, state) {

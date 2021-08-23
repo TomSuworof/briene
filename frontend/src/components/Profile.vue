@@ -9,13 +9,13 @@
           <router-link to="/admin">Admin</router-link>
         </div>
         <div class="header-logout-button">
-          <router-link to="/logout">Logout</router-link>
+          <a @onclick="logout()">Logout</a>
         </div>
       </div>
     </div>
     <p>
       <strong>Token:</strong>
-      {{currentUser.accessToken.substring(0, 20)}} ... {{currentUser.accessToken.substr(currentUser.accessToken.length - 20)}}
+      {{currentUser.accessToken}}
     </p>
     <p>
       <strong>Id:</strong>
@@ -27,7 +27,7 @@
     </p>
     <strong>Authorities:</strong>
     <ul>
-      <li v-for="role in currentUser.roles" :key="role">{{role}}</li>
+      <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
     </ul>
 <!--    <div class="updating-user-info">-->
 <!--      <div class="updating-base-info">-->
@@ -106,14 +106,16 @@
 <!--        </form>-->
 <!--      </div>-->
 <!--    </div>-->
-<!--    <div class="articles-bookmarks">-->
-<!--      <div>-->
-<!--        <h2>Bookmarks</h2>-->
-<!--      </div>-->
-<!--      <div th:each="article : ${bookmarks}" class="article-container">-->
-<!--        <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div class="articles-bookmarks">
+      <div>
+        <h2>Bookmarks</h2>
+      </div>
+      <div class="article-container" v-for="article in articles" v-bind:key="article.id">
+        <h3 class="article-title">
+          <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+        </h3>
+      </div>
+    </div>
 <!--    <div class="articles-block">-->
 <!--      <div>-->
 <!--        <h2>Articles</h2>-->
@@ -141,6 +143,11 @@
 <script>
 export default {
   name: 'Profile',
+  data() {
+    return {
+      articles: [],
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -150,9 +157,16 @@ export default {
       return false;
     }
   },
-  mounted() {
-    if (!this.currentUser) {
-      this.$router.push('/login');
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/logout");
+    }
+  },
+  created() {
+    if (this.currentUser === null) {
+      console.log('redirecting...');
+      this.$router.push({ path: '/login' });
+      console.log('redirected.');
     }
   }
 };

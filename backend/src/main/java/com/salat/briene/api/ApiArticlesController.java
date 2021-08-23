@@ -2,15 +2,19 @@ package com.salat.briene.api;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
+import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.services.ArticleEditorService;
 import com.salat.briene.services.ArticleService;
+import com.salat.briene.services.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApiArticlesController {
     private final ArticleService articleService;
+    private final ArticleEditorService articleEditorService;
+    private final UserService userService;
 
     @Getter
     private static class ArticleContainer {
@@ -39,7 +45,7 @@ public class ApiArticlesController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getArticles() {
         try {
             List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
@@ -52,31 +58,54 @@ public class ApiArticlesController {
         }
     }
 
-//    // todo for the rest of urls need to know about user, who sent the request
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> getArticle(@PathVariable Long id) {
-//        try {
-//            Article article = articleService.getArticleById(id);
-//
-//            if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
-//                throw new ArticleNotFoundException();
-//            }
-//
-//            return ResponseEntity.ok().body(new ArticleContainer(article));
-//        } catch (ArticleNotFoundException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    @PostMapping("/load")
-////    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public ResponseEntity<?> publishArticle() {
-//        return ResponseEntity.ok().body("Empty response");
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
-//        return ResponseEntity.ok().body("Empty response");
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getArticle(@PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken) {
+        try {
+            Article article = articleService.getArticleById(id);
+
+            if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
+                User userFromToken = userService.getUserFromToken(accessToken);
+
+                if (!articleService.canUserEditArticle(userFromToken, article)) {
+                    throw new ArticleNotFoundException();
+                }
+            }
+
+            return ResponseEntity.ok().body(new ArticleContainer(article));
+        } catch (ArticleNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/load")
+    public ResponseEntity<?> publishArticle(
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam String action,
+            @RequestHeader(name = "Authorization") String accessToken) {
+        try {
+            User userFromToken = userService.getUserFromToken(accessToken);
+            articleEditorService.loadArticle(userFromToken, title, content, action);
+            return ResponseEntity.ok().body("Article was published or saved");
+        } catch (IOException | UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Error occurred while saving article. Try to remove article with same title");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteArticle(@PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken) {
+        try {
+            Article article = articleService.getArticleById(id);
+
+            User userFromToken = userService.getUserFromToken(accessToken);
+            if (article.getAuthor().equals(userFromToken)) {
+                articleService.deleteArticleById(id);
+                return ResponseEntity.ok().body("Article " + id + " was deleted");
+            } else {
+                throw new ArticleNotFoundException();
+            }
+        } catch (ArticleNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Article " + id + " can not be deleted");
+        }
+    }
 }
