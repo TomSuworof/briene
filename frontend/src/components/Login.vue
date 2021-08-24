@@ -3,23 +3,19 @@
     <div>
       <Form @submit="handleLogin" :validation-schema="schema">
         <h2 class="welcome">Log In</h2>
+<!--        Field tag cannot be replaced by input -->
         <div class="form-group">
-          <label for="username">Username</label>
-          <input is="Field" id="username" name="username" type="text" placeholder="Username" class="form-control"/>
+          <Field id="username" name="username" type="text" placeholder="Username" class="form-control"/>
           <ErrorMessage name="username" class="error-feedback"/>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input is="Field" id="password" name="password" type="password" placeholder="Password" class="form-control"/>
+          <Field id="password" name="password" type="password" placeholder="Password" class="form-control"/>
           <ErrorMessage name="password" class="error-feedback"/>
         </div>
         <div class="form-group">
           <div class="log-in-button">
             <button class="btn btn-primary btn-block" :disabled="loading">
-              <span
-                  v-show="loading"
-                  class="spinner-border spinner-border-sm"
-              ></span>
+              <span v-show="loading" class="spinner-border spinner-border-sm"></span>
               <span>Login</span>
             </button>
           </div>
@@ -42,15 +38,15 @@
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
+import { Form, Field } from "vee-validate";
+import * as yup from 'yup';
 
 export default {
   name: "Login",
-  components: {Form, Field, ErrorMessage},
+  components: {Form, Field},
   data() {
     const schema = yup.object().shape({
-      username: yup.string().required("Username is required!"),
+      username: yup.string().required("Username if required!"),
       password: yup.string().required("Password is required!"),
     });
 
@@ -66,8 +62,6 @@ export default {
     },
   },
   created() {
-    console.log(this.loggedIn);
-    console.log(window.origin);
     if (this.loggedIn) {
       this.$router.push("/profile");
     }
@@ -75,7 +69,6 @@ export default {
   methods: {
     handleLogin(user) {
       this.loading = true;
-
       this.$store.dispatch("auth/login", user)
           .then(() => {
             this.$router.push("/profile");

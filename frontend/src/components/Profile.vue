@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-area-page-content">
+  <div class="personal-area-page-content" v-if="currentUser !== null">
     <div class="header row">
       <div>
         <h1>Personal area</h1>
@@ -9,26 +9,28 @@
           <router-link to="/admin">Admin</router-link>
         </div>
         <div class="header-logout-button">
-          <a @onclick="logout()">Logout</a>
+          <a href="" @click="logout">Logout</a>
         </div>
       </div>
     </div>
-    <p>
-      <strong>Token:</strong>
-      {{currentUser.accessToken}}
-    </p>
-    <p>
-      <strong>Id:</strong>
-      {{currentUser.id}}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{currentUser.email}}
-    </p>
-    <strong>Authorities:</strong>
-    <ul>
-      <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
-    </ul>
+    <div>
+      <p>
+        <strong>Token:</strong>
+        {{currentUser.accessToken}}
+      </p>
+      <p>
+        <strong>Id:</strong>
+        {{currentUser.id}}
+      </p>
+      <p>
+        <strong>Email:</strong>
+        {{currentUser.email}}
+      </p>
+      <strong>Authorities:</strong>
+      <ul>
+        <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
+      </ul>
+    </div>
 <!--    <div class="updating-user-info">-->
 <!--      <div class="updating-base-info">-->
 <!--        <div>-->
@@ -153,20 +155,21 @@ export default {
       return this.$store.state.auth.user;
     },
     isAdmin() {
-      //return this.currentUser().roles.contains('ROLE_ADMIN');
+      if (this.currentUser && this.currentUser['roles']) {
+        return this.currentUser['roles'].includes('ROLE_ADMIN');
+      }
       return false;
     }
   },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout");
+      this.$router.push('/login');
     }
   },
-  created() {
+  beforeMount() {
     if (this.currentUser === null) {
-      console.log('redirecting...');
       this.$router.push({ path: '/login' });
-      console.log('redirected.');
     }
   }
 };
@@ -179,11 +182,8 @@ export default {
 }
 
 .header-admin-button, .header-logout-button {
+  margin: 0 10pt 0;
   display: inline-block;
-}
-
-.personal-area-page-content {
-  padding: 1% 10% 0;
 }
 
 .updating-base-info {

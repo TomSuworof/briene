@@ -11,7 +11,7 @@
         <router-link to="/terms_of_use">Terms of use</router-link>
       </div>
       <div>
-        <a href="https://github.com/TomSuworof/briene">Source code</a>
+        <a href="https://github.com/TomSuworof/briene" target="_blank">Source code</a>
       </div>
     </div>
   </div>

@@ -103,6 +103,9 @@ export default {
 
       navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
     }
+  },
+  beforeUnmount() {
+    document.title = 'Briene';
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="terms-of-use-content">
     <ul>
       <li>By clicking the "I agree" button, I express my voluntary, unambiguous and informed consent that my data will be
         transferred by the Briene service to Heroku for storage and processing.</li>

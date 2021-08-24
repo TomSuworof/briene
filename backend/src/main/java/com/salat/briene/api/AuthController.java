@@ -10,20 +10,18 @@ import com.salat.briene.payload.response.JwtResponse;
 import com.salat.briene.payload.response.MessageResponse;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin("http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8081", methods = RequestMethod.POST)
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -31,10 +29,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtils jwtUtils;
-
-    @Autowired
-    PasswordEncoder encoder;
-
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -54,7 +48,8 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.ok(new JwtResponse(
+                jwt,
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),

@@ -14,7 +14,6 @@ import ArticleEditor from "@/components/ArticleEditor";
 import Author from '@/components/Author';
 
 const router = createRouter({
-    mode: history,
     history: createWebHistory(),
     routes: [
         { path: '/', component: Home },
