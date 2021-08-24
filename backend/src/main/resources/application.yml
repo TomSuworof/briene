@@ -9,12 +9,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
+
+  flyway:
+    locations: 'classpath:db/migration'
+
+  # mail still does not work - no need to specify
   mail:
     host: ${MAIL_HOST}
     port: 465
