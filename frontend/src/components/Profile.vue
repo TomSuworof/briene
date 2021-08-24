@@ -9,27 +9,23 @@
           <router-link to="/admin">Admin</router-link>
         </div>
         <div class="header-logout-button">
-          <a href="" @click="logout">Logout</a>
+          <a href="#" @click="logout">Logout</a>
         </div>
       </div>
     </div>
     <div>
       <p>
-        <strong>Token:</strong>
-        {{currentUser.accessToken}}
-      </p>
-      <p>
         <strong>Id:</strong>
         {{currentUser.id}}
+      </p>
+      <p>
+        <strong>Username:</strong>
+        {{currentUser.username}}
       </p>
       <p>
         <strong>Email:</strong>
         {{currentUser.email}}
       </p>
-      <strong>Authorities:</strong>
-      <ul>
-        <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
-      </ul>
     </div>
 <!--    <div class="updating-user-info">-->
 <!--      <div class="updating-base-info">-->
@@ -112,33 +108,37 @@
       <div>
         <h2>Bookmarks</h2>
       </div>
-      <div class="article-container" v-for="article in articles" v-bind:key="article.id">
-        <h3 class="article-title">
-          <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-        </h3>
+      <div v-if="bookmarks.length > 0">
+        <div class="article-container" v-for="article in bookmarks" v-bind:key="article.id">
+          <h3 class="article-title">
+            <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+          </h3>
+        </div>
+      </div>
+      <div v-else-if="bookmarks.length === 0">
+        <p>No bookmarks</p>
       </div>
     </div>
-<!--    <div class="articles-block">-->
-<!--      <div>-->
-<!--        <h2>Articles</h2>-->
-<!--      </div>-->
-<!--      <div class="reminder">-->
-<!--        <p th:text="${articlesError}"></p>-->
-<!--      </div>-->
-<!--      <div class="articles-types">-->
-<!--        <a href="/personal_area/articles?type=all">All</a>-->
-<!--        <a href="/personal_area/articles?type=published">Published</a>-->
-<!--        <a href="/personal_area/articles?type=drafts">Drafts</a>-->
-<!--      </div>-->
-<!--      <div th:each="article : ${articles}" class="article-container">-->
-<!--        <a th:href="'/articles/' + ${article.getId()}"><h3 th:text="${article.getTitle()}" class="article-title"></h3></a>-->
-<!--        <div class="article-action-buttons">-->
-<!--          <p th:text="${article.getState()}"></p>-->
-<!--          <a th:href="'/article_editor/' + ${article.getId()}">Edit</a>-->
-<!--          <a th:href="'/personal_area/articles/' + ${article.getId()} + '/delete'">Delete</a>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div class="articles-block">
+      <div>
+        <h2>Articles</h2>
+      </div>
+      <div class="articles-types">
+        <a href="#" class="article-type" @click="getMyAllArticles">All</a>
+        <a href="#" class="article-type" @click="getMyPublishedArticles">Published</a>
+        <a href="#" class="article-type" @click="getMyDraftsArticles">Drafts</a>
+      </div>
+      <div v-if="articles.length > 0">
+        <div class="article-container" v-for="article in articles" v-bind:key="article.id">
+          <h3 class="article-title">
+            <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+          </h3>
+        </div>
+      </div>
+      <div v-else-if="articles.length === 0">
+        <p>No bookmarks</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -147,6 +147,7 @@ export default {
   name: 'Profile',
   data() {
     return {
+      bookmarks: [],
       articles: [],
     }
   },
@@ -165,6 +166,15 @@ export default {
     logout() {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
+    },
+    getMyAllArticles() {
+
+    },
+    getMyPublishedArticles() {
+
+    },
+    getMyDraftsArticles() {
+
     }
   },
   beforeMount() {
@@ -184,6 +194,10 @@ export default {
 .header-admin-button, .header-logout-button {
   margin: 0 10pt 0;
   display: inline-block;
+}
+
+.article-type {
+  margin: 0 20pt 0 0;
 }
 
 .updating-base-info {
