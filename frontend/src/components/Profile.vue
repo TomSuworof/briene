@@ -13,11 +13,10 @@
         </div>
       </div>
     </div>
-    <div>
-      <p>
-        <strong>Id:</strong>
-        {{currentUser.id}}
-      </p>
+    <div class="user-data-action-edit">
+      <a @click="editUserData" href="#">🖊 Edit my info</a>
+    </div>
+    <div class="user-data">
       <p>
         <strong>Username:</strong>
         {{currentUser.username}}
@@ -27,92 +26,20 @@
         {{currentUser.email}}
       </p>
     </div>
-<!--    <div class="updating-user-info">-->
-<!--      <div class="updating-base-info">-->
-<!--        <div>-->
-<!--          <h2>Base information</h2>-->
-<!--        </div>-->
-<!--        <form method="post" modelAttribute="userForm" action="/personal_area/update_base_info">-->
-<!--          <div>-->
-<!--            <p>Username:</p>-->
-<!--            <label>-->
-<!--              <input type="text" name="username" th:value="${currentUser.getUsername()}" placeholder="Username" disabled>-->
-<!--            </label>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <p>Email:</p>-->
-<!--            <label>-->
-<!--              <input type="email" name="email" th:value="${currentUser.getEmail()}" placeholder="Email">-->
-<!--            </label>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <p>Enter current password to submit changes:</p>-->
-<!--            <div>-->
-<!--              <label>-->
-<!--                <input type="password" name="password" placeholder="Current password">-->
-<!--              </label>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <button type="submit">Submit</button>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--      <div class="updating-password">-->
-<!--        <div>-->
-<!--          <h2>Updating password</h2>-->
-<!--        </div>-->
-<!--        <form method="post" action="/personal_area/update_password">-->
-<!--          <div>-->
-<!--            <p>Enter old password:</p>-->
-<!--            <div>-->
-<!--              <label>-->
-<!--                <input type="password" name="passwordOld" placeholder="Current password">-->
-<!--              </label>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <p>New password:</p>-->
-<!--          </div>-->
-<!--          <div class="setting-password">-->
-<!--            <div>-->
-<!--              <label>-->
-<!--                <input id="psw" type="password" name="passwordNew" placeholder="New password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">-->
-<!--              </label>-->
-<!--            </div>-->
-<!--            <div class="container-for-message">-->
-<!--              <div id="message" class="message">-->
-<!--                <p class="must-contain">Password must contain the following:</p>-->
-<!--                <p id="letter" class="invalid">A <b>lowercase</b> letter</p>-->
-<!--                <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>-->
-<!--                <p id="number" class="invalid">A <b>number</b></p>-->
-<!--                <p id="length" class="invalid">Minimum <b>8 characters</b></p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div>-->
-<!--              <label>-->
-<!--                <input id="pswConfirm" type="password" name="passwordNewConfirm" placeholder="Confirm your new password" required>-->
-<!--              </label>-->
-<!--              <div id="password-matching" class="password-matching">-->
-<!--                <p id="match" class="invalid">Passwords match</p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <button type="submit" onclick="return checkFields()">Submit</button>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
     <div class="articles-bookmarks">
       <div>
         <h2>Bookmarks</h2>
       </div>
       <div v-if="bookmarks.length > 0">
         <div class="article-container" v-for="article in bookmarks" v-bind:key="article.id">
-          <h3 class="article-title">
-            <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-          </h3>
+          <div class="article-title-container">
+            <h3 class="article-title">
+              <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+            </h3>
+          </div>
+          <div class="article-action-container">
+            <a @click="removeFromBookmarks(article.id)" href="#">❌ Remove from bookmarks</a>
+          </div>
         </div>
       </div>
       <div v-else-if="bookmarks.length === 0">
@@ -124,15 +51,25 @@
         <h2>Articles</h2>
       </div>
       <div class="articles-types">
-        <a href="#" class="article-type" @click="getMyAllArticles">All</a>
-        <a href="#" class="article-type" @click="getMyPublishedArticles">Published</a>
-        <a href="#" class="article-type" @click="getMyDraftsArticles">Drafts</a>
+        <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
+        <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
+        <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
       </div>
       <div v-if="articles.length > 0">
         <div class="article-container" v-for="article in articles" v-bind:key="article.id">
-          <h3 class="article-title">
-            <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-          </h3>
+          <div class="article-title-container">
+            <h3 class="article-title">
+              <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+            </h3>
+          </div>
+          <div class="article-action-container">
+            <div class="article-action-edit">
+              <a @click="editArticle(article.id)" href="#">🖊 Edit</a>
+            </div>
+            <div class="article-action-remove">
+              <a @click="removeArticle(article.id)" href="#">❌ Remove</a>
+            </div>
+          </div>
         </div>
       </div>
       <div v-else-if="articles.length === 0">
@@ -143,6 +80,9 @@
 </template>
 
 <script>
+import ArticlesService from "@/services/ArticlesService";
+import BookmarksService from "@/services/BookmarksService";
+
 export default {
   name: 'Profile',
   data() {
@@ -163,19 +103,58 @@ export default {
     }
   },
   methods: {
-    logout() {
+    logout: function() {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
     },
-    getMyAllArticles() {
-
+    editUserData: function() {
+      alert('Not implemented');
     },
-    getMyPublishedArticles() {
-
+    getMyBookmarks: function() {
+      BookmarksService.getBookmarksOfUser(this.currentUser.token)
+          .then(response => {
+            this.bookmarks = response.data;
+          })
+          .catch(err => {
+            console.log(err);
+            this.bookmarks = [];
+          });
     },
-    getMyDraftsArticles() {
-
+    getMyArticles: function(state) {
+      ArticlesService.getMyArticles(state, this.currentUser.token)
+          .then(response => {
+            this.articles = response.data;
+          })
+          .catch(err => {
+            console.log(err);
+            this.articles = [];
+          });
+    },
+    removeFromBookmarks: function(articleId) {
+      BookmarksService.editBookmark(articleId, 'remove', this.currentUser ? this.currentUser.token : undefined)
+          .then(() => {
+            this.getMyBookmarks();
+          })
+          .catch(err => {
+          console.log(err);
+      });
+    },
+    editArticle: function(articleId) {
+      this.$router.push(`/article_editor?articleId=${articleId}`);
+    },
+    removeArticle: function (articleId) {
+      ArticlesService.delete(articleId, this.currentUser.token)
+          .then(() => {
+            this.getMyArticles('all');
+          })
+          .catch(err => {
+            console.log(err);
+          });
     }
+  },
+  created() {
+    this.getMyBookmarks();
+    this.getMyArticles('all');
   },
   beforeMount() {
     if (this.currentUser === null) {
@@ -200,15 +179,9 @@ export default {
   margin: 0 20pt 0 0;
 }
 
-.updating-base-info {
-  width: max-content;
-  text-align: left;
-  margin: 0 0 50pt;
-}
-
-.updating-password, .setting-password {
-  width: max-content;
-  text-align: left;
+.article-action-container, .article-title-container, .article-action-edit, .article-action-remove {
+  display: inline-block;
+  margin: 0 20pt 0 0;
 }
 
 .articles-bookmarks, .articles-block {
@@ -221,9 +194,5 @@ export default {
 
 .article-title {
   overflow-wrap: break-word;
-}
-
-.article-action-buttons {
-  display: inline-block;
 }
 </style>

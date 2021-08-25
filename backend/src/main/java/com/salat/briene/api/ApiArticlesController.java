@@ -43,6 +43,21 @@ public class ApiArticlesController {
         }
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyArticles(@RequestParam String state, Authentication authentication) {
+        try {
+            User currentUser = userService.getUserFromAuthentication(authentication);
+
+            List<ArticleContainer> articles = articleService.getArticlesByAuthorAndState(currentUser, state)
+                    .stream().map(ArticleContainerHTML::new)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok().body(articles);
+        } catch (UserNotFoundException | IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getArticle(
             @RequestParam(required = false) Boolean raw,

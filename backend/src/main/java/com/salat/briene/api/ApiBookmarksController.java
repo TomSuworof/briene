@@ -62,7 +62,7 @@ public class ApiBookmarksController {
 
             Article article = articleService.getArticleById(id);
 
-            switch (action) {
+            switch (action.toLowerCase()) {
                 case "add" -> bookmarks.add(article);
                 case "remove" -> bookmarks.remove(article);
                 default -> throw new ArticleNotFoundException();

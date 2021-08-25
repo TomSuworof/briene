@@ -26,6 +26,16 @@ class ArticlesService {
             });
     }
 
+    getMyArticles(state, token) {
+        return http.get('/articles/my',
+            {
+                headers: {"Authorization" : `Bearer ${token}`},
+                params: {
+                    state: state,
+                }
+            });
+    }
+
     delete(id, token) {
         return http.delete(`/articles/${id}`, { headers: {"Authorization" : `Bearer ${token}`} });
     }

@@ -5,7 +5,7 @@ class ArticlesService {
         return http.get('/authors')
     }
 
-    get(authorName) {
+    getAuthorData(authorName) {
         return http.get(`/authors/${authorName}`)
     }
 }

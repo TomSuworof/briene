@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    AuthorsService.get(this.$route.params.authorName)
+    AuthorsService.getAuthorData(this.$route.params.authorName)
         .then(response => {
           this.author = response.data;
         })
