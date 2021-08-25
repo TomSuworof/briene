@@ -7,12 +7,10 @@
       <div class="header-buttons">
         <div class="header-button-editor">
           <router-link to="/article_editor">New article</router-link>
-  <!--         todo-->
         </div>
         <div class="header-button-personal-area">
           <router-link to="/profile">Profile</router-link>
         </div>
-  <!--        todo-->
       </div>
     </div>
     <div id="articles">
@@ -27,7 +25,7 @@
 
 <script>
 
-import ArticlesService from "../services/ArticlesService";
+import ArticlesService from "@/services/ArticlesService";
 
 export default {
   name: "Articles",
@@ -39,7 +37,6 @@ export default {
   created() {
     ArticlesService.getPublishedArticles()
       .then(response => {
-        console.log(response)
         this.articles = response.data;
       })
       .catch(e => {

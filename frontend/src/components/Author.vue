@@ -34,7 +34,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.$router.push({ path: '/error' }); // redirecting to '/error'
+          this.$router.replace('/error'); // redirecting to '/error'
         });
   }
 }

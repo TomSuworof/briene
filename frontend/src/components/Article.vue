@@ -1,14 +1,12 @@
 <template>
   <div class="article-page-content">
     <div class="bookmarking">
-<!--      <div>-->
-<!--&lt;!&ndash;          th:if="${inBookmarks}">&ndash;&gt;-->
-<!--        <a href="/remove_from_bookmarks">Remove from bookmarks</a>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        th:unless="${inBookmarks}">-->
-      <div>
-        <a href="/add_to_bookmarks">Add to bookmarks</a>
+
+      <div v-if="!inBookmarks">
+        <a @click="addToBookmarks" href="#">Add to bookmarks</a>
+      </div>
+      <div v-if="inBookmarks">
+        <a @click="removeFromBookmarks" href="#">Remove from bookmarks</a>
       </div>
     </div>
     <div class="article-about row">
@@ -22,7 +20,7 @@
     <div class="article-title">
       <h1 id="article-title">{{  article.title }}</h1>
     </div>
-    <div v-html="article.htmlContent" class="article-content" id="article-content"></div>
+    <div v-html="article.content" class="article-content" id="article-content"></div>
     <div class="control" id="control">
       <p id="quote">💬 Quote</p>
     </div>
@@ -32,28 +30,43 @@
 <script>
 import moment from 'moment';
 import ArticlesService from "@/services/ArticlesService";
+import BookmarksService from "@/services/BookmarksService";
 
 export default {
   name: "Article",
   data() {
     return {
-      article: undefined
+      inBookmarks: false,
+      article: ''
     }
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
     finePublicationDate: function() {
       return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm")
     }
   },
   created() {
-    ArticlesService.getArticleById(this.$route.params.articleId)
+    let articleId = this.$route.params.articleId;
+
+    BookmarksService.isArticleInBookmarksOfUser(articleId, this.currentUser ? this.currentUser.token : undefined)
+        .then(response => {
+          this.inBookmarks = response.data;
+        }).catch(err => {
+          console.log(err);
+          this.inBookmarks = false;
+        });
+
+    ArticlesService.getArticleById(articleId, this.currentUser ? this.currentUser.token : undefined)
         .then(response => {
           this.article = response.data;
           document.title = this.article.title;
         })
         .catch(err => {
           console.log(err);
-          this.$router.push({ path: '/error' }); // redirecting to '/error'
+          this.$router.replace('/error'); // redirecting to '/error'
         });
   },
   mounted() {
@@ -102,6 +115,22 @@ export default {
       console.log(quote);
 
       navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
+    },
+    addToBookmarks: function() {
+      this.editBookmarks('add')
+    },
+    removeFromBookmarks: function() {
+      this.editBookmarks('remove');
+    },
+    editBookmarks: function(action) {
+      console.log(action);
+      BookmarksService.editBookmark(this.$route.params.articleId, action, this.currentUser ? this.currentUser.token : undefined)
+          .then(response => {
+            console.log(response);
+            this.inBookmarks = !this.inBookmarks;
+          }).catch(err => {
+            console.log(err);
+          });
     }
   },
   beforeUnmount() {

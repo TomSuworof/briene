@@ -4,11 +4,11 @@
       <div class="editor-wrapper">
         <div class="row">
           <div class="title-wrapper">
-            <input id="title" class="title" type="text" placeholder="Title" name="title" required/>
+            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title"/>
           </div>
           <div class="action-buttons">
-            <input type="submit" name="action" value="Publish"/>
-            <input type="submit" name="action" value="Save"/>
+            <input id="publish" @click="handleButton('publish')" type="button" name="action" value="Publish"/>
+            <input id="save" @click="handleButton('save')" type="button" name="action" value="Save"/>
           </div>
         </div>
         <div class="editor">
@@ -21,6 +21,7 @@
 
 <script>
 import VueSimplemde from 'vue-simplemde'
+import ArticlesService from "@/services/ArticlesService";
 
 export default {
   name: "ArticleEditor",
@@ -29,6 +30,7 @@ export default {
   },
   data() {
     return {
+      title: '',
       content: '',
     }
   },
@@ -37,13 +39,55 @@ export default {
       return this.$store.state.auth.user;
     },
   },
-  methods: {},
-  created() {
-
+  methods: {
+    contentNotEmpty: function() {
+      return this.content !== '';
+    },
+    titleNotEmpty: function() {
+      return this.title !== '';
+    },
+    formIsValid: function() {
+      return this.contentNotEmpty() && this.titleNotEmpty();
+    },
+    showWarningEmpty: function() {
+       alert('Fields can not be empty');
+    },
+    showWarningArticleExists: function() {
+      alert('Such article already exists. Try to make different or remove old one');
+    },
+    handleButton: function(action) {
+      if (this.formIsValid()) {
+        ArticlesService.loadArticle(this.title, this.content, action, this.currentUser.token)
+            .then(() => {
+              this.$router.push('/articles');
+            })
+            .catch(err => {
+              console.log(err);
+              this.showWarningArticleExists();
+            });
+      } else {
+        this.showWarningEmpty();
+      }
+    },
   },
-  beforeMount() {
+  created() {
     if (this.currentUser === null) {
-      this.$router.push({path: '/login'});
+      this.$router.replace('/login');
+    }
+  },
+  mounted() {
+    if (this.$route.query.articleId !== undefined) {
+      // if there is a parameter with id - it is a request for editing existing article
+      let requestedArticleId = this.$route.query.articleId;
+
+      ArticlesService.getRawArticle(requestedArticleId, this.currentUser ? this.currentUser.token : undefined)
+          .then((response) => {
+            this.title = response.data.title;
+            this.content = response.data.content;
+          }).catch(err => {
+            console.log(err);
+            this.$router.replace('/error'); // redirecting to '/error'
+          });
     }
   }
 }

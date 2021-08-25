@@ -136,7 +136,7 @@
         </div>
       </div>
       <div v-else-if="articles.length === 0">
-        <p>No bookmarks</p>
+        <p>No articles</p>
       </div>
     </div>
   </div>
@@ -179,7 +179,7 @@ export default {
   },
   beforeMount() {
     if (this.currentUser === null) {
-      this.$router.push({ path: '/login' });
+      this.$router.push('/login');
     }
   }
 };

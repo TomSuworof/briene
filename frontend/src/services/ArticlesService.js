@@ -5,20 +5,29 @@ class ArticlesService {
         return http.get('/articles');
     }
 
-    getArticleById(id, accessToken) {
-        return http.get(`/articles/${id}`, {headers: {"Authorization" : `Bearer ${accessToken}`}});
+    getArticleById(id, token) {
+        return http.get(`/articles/${id}`, { headers: {"Authorization" : `Bearer ${token}`} });
     }
 
-    publishArticle(title, content, state) {
-        return http.post('/articles/load', {
-            title: title,
-            content: content,
-            state: state,
-        });
+    getRawArticle(id, token) {
+        return http.get(`/articles/${id}?raw=true`, { headers: {"Authorization" : `Bearer ${token}`} });
     }
 
-    delete(id) {
-        return http.delete(`/articles/${id}`);
+    loadArticle(title, content, action, token) {
+        return http.post('/articles/load',
+            {},
+            {
+                headers: {"Authorization" : `Bearer ${token}`},
+                params : {
+                    title: title,
+                    content: content,
+                    action: action
+                }
+            });
+    }
+
+    delete(id, token) {
+        return http.delete(`/articles/${id}`, { headers: {"Authorization" : `Bearer ${token}`} });
     }
 }
 

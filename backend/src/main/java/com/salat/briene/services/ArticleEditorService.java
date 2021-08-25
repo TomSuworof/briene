@@ -17,9 +17,9 @@ public class ArticleEditorService {
         article.setAuthor(author);
         article.setTitle(title);
         article.setContent(content.getBytes());
-        article.setState(switch (action) {
-            case "Publish" -> ArticleState.ARTICLE_PUBLISHED;
-            case "Save" -> ArticleState.ARTICLE_IN_EDITING;
+        article.setState(switch (action.toLowerCase()) {
+            case "publish" -> ArticleState.ARTICLE_PUBLISHED;
+            case "save" -> ArticleState.ARTICLE_IN_EDITING;
             default -> throw new IllegalArgumentException();
         });
         articleService.saveArticle(article);

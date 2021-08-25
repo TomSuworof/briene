@@ -9,6 +9,8 @@ import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,17 +34,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-//    public User getUserFromContext() throws AnonymousUserException {
-//        Authentication currentUserDetails = SecurityContextHolder.getContext().getAuthentication();
-//        if (currentUserDetails instanceof AnonymousAuthenticationToken) {
-//            throw new AnonymousUserException();
-//        } else {
-//            return (User) currentUserDetails.getPrincipal();
-//        }
-//    }
-
-    public User getUserFromToken(String accessToken) throws UserNotFoundException {
-        return loadUserByUsername(jwtUtils.getUsernameFromJwtToken(accessToken));
+    public User getUserFromAuthentication(Authentication authentication) throws UserNotFoundException {
+        if (authentication == null) {
+            throw new UserNotFoundException();
+        }
+        return loadUserByUsername(authentication.getName());
     }
 
     public void saveUser(SignupRequest signupRequest)  throws UserFoundException {
