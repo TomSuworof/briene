@@ -13,18 +13,77 @@
         </div>
       </div>
     </div>
-    <div class="user-data-action-edit">
-      <a @click="editUserData" href="#">🖊 Edit my info</a>
+    <div v-if="showUserData" class="show-user-basic-data">
+      <div class="user-data-action-edit">
+        <a @click="editUserData" href="#">🖊 Edit my info</a>
+      </div>
+      <div class="user-data">
+        <p>
+          <strong>Username: </strong>{{currentUser.username}}
+        </p>
+        <p>
+          <strong>Email: </strong>{{currentUser.email}}
+        </p>
+      </div>
     </div>
-    <div class="user-data">
-      <p>
-        <strong>Username:</strong>
-        {{currentUser.username}}
-      </p>
-      <p>
-        <strong>Email:</strong>
-        {{currentUser.email}}
-      </p>
+    <div v-if="showEditUserData" class="edit-user-data">
+      <div class="edit-user-basic-data">
+        <h2>Basic information</h2>
+        <div class="user-data">
+          <form method="post">
+            <div>
+              <label for="username"><strong>Username: </strong></label>
+              <input id="username" type="text" disabled v-model="newCurrentUser.username"/>
+            </div>
+            <div>
+              <label for="email"><strong>Email: </strong></label>
+              <input id="email" type="email" v-model="newCurrentUser.email"/>
+            </div>
+            <div>
+              <div>
+                <label for="password">Enter current password to submit changes: </label>
+              </div>
+              <input id="password" type="password" name="password" placeholder="Current password">
+            </div>
+            <div>
+              <input @click="submitChangesBaseInfo" type="button" value="Submit">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="edit-user-password">
+        <h2>Updating password</h2>
+        <div class="user-data">
+          <form method="post">
+            <div>
+              <input type="password" name="passwordOld" placeholder="Current password"/>
+            </div>
+            <div class="setting-password">
+              <div>
+                <input id="psw" type="password" v-model="passwordNew" placeholder="New password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+              </div>
+              <div class="container-for-message">
+                <div id="message" class="message">
+                  <p class="must-contain">Password must contain the following:</p>
+                  <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+                  <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                  <p id="number" class="invalid">A <b>number</b></p>
+                  <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+                </div>
+              </div>
+              <div>
+                <input id="pswConfirm" type="password" v-model="passwordNewConfirm" placeholder="Confirm your new password" required>
+                <div id="password-matching" class="password-matching">
+                  <p id="match" class="invalid">Passwords match</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button @click="submitChangesPassword">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     <div class="articles-bookmarks">
       <div>
@@ -82,6 +141,7 @@
 <script>
 import ArticlesService from "@/services/ArticlesService";
 import BookmarksService from "@/services/BookmarksService";
+import * as pswChecker from '../../static/js/password_check'
 
 export default {
   name: 'Profile',
@@ -89,28 +149,54 @@ export default {
     return {
       bookmarks: [],
       articles: [],
+
+      passwordNew: '',
+      passwordNewConfirm: '',
+
+      showUserData: true,
     }
   },
   computed: {
+    showEditUserData() {
+      return !this.showUserData;
+    },
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    newCurrentUser() {
+      return this.currentUser;
     },
     isAdmin() {
       if (this.currentUser && this.currentUser['roles']) {
         return this.currentUser['roles'].includes('ROLE_ADMIN');
       }
       return false;
-    }
+    },
   },
   methods: {
-    logout: function() {
+    logout: function () {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
     },
-    editUserData: function() {
-      alert('Not implemented');
+    editUserData: function () {
+      this.showUserData = !this.showUserData;
+      this.$nextTick(pswChecker.passwordChecking); // waits for rendering
     },
-    getMyBookmarks: function() {
+    submitChangesBaseInfo: function () {
+      this.showUserData = !this.showUserData;
+      console.log(this.newCurrentUser);
+      // send data to server and update currentUser
+    },
+    submitChangesPassword: function () {
+      this.showUserData = !this.showUserData;
+      // console.log(this.passwordNew);
+
+      if (pswChecker.checkFields()) {
+        console.log('everything is ok');
+      }
+      // send data to server and update currentUser
+    },
+    getMyBookmarks: function () {
       BookmarksService.getBookmarksOfUser(this.currentUser.token)
           .then(response => {
             this.bookmarks = response.data;
@@ -120,7 +206,7 @@ export default {
             this.bookmarks = [];
           });
     },
-    getMyArticles: function(state) {
+    getMyArticles: function (state) {
       ArticlesService.getMyArticles(state, this.currentUser.token)
           .then(response => {
             this.articles = response.data;
@@ -130,16 +216,16 @@ export default {
             this.articles = [];
           });
     },
-    removeFromBookmarks: function(articleId) {
+    removeFromBookmarks: function (articleId) {
       BookmarksService.editBookmark(articleId, 'remove', this.currentUser ? this.currentUser.token : undefined)
           .then(() => {
             this.getMyBookmarks();
           })
           .catch(err => {
-          console.log(err);
-      });
+            console.log(err);
+          });
     },
-    editArticle: function(articleId) {
+    editArticle: function (articleId) {
       this.$router.push(`/article_editor?articleId=${articleId}`);
     },
     removeArticle: function (articleId) {
@@ -150,7 +236,7 @@ export default {
           .catch(err => {
             console.log(err);
           });
-    }
+    },
   },
   created() {
     this.getMyBookmarks();
@@ -160,11 +246,13 @@ export default {
     if (this.currentUser === null) {
       this.$router.push('/login');
     }
-  }
+  },
 };
 </script>
 
 <style scoped>
+@import "../../static/css/password_checking_style.css";
+
 .header {
   justify-content: space-between;
   margin: 0 0 50pt;
@@ -184,7 +272,12 @@ export default {
   margin: 0 20pt 0 0;
 }
 
-.articles-bookmarks, .articles-block {
+.show-user-basic-data,
+.edit-user-data,
+.edit-user-basic-data,
+.edit-user-password,
+.articles-bookmarks,
+.articles-block {
   margin: 50pt 0 0;
 }
 

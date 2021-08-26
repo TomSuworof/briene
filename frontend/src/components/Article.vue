@@ -123,6 +123,10 @@ export default {
       this.editBookmarks('remove');
     },
     editBookmarks: function(action) {
+      if (this.currentUser === null) {
+        this.$router.push('/login');
+      }
+
       BookmarksService.editBookmark(this.$route.params.articleId, action, this.currentUser ? this.currentUser.token : undefined)
           .then(response => {
             console.log(response);
