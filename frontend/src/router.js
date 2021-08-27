@@ -11,6 +11,8 @@ import Articles from '@/components/Articles';
 import Article from '@/components/Article';
 import ArticleEditor from "@/components/ArticleEditor";
 
+import Admin from "@/components/Admin";
+
 import Author from '@/components/Author';
 
 const router = createRouter({
@@ -27,6 +29,8 @@ const router = createRouter({
         { path: '/articles', component: Articles },
         { path: '/articles/:articleId', component: Article },
         { path: '/article_editor', component: ArticleEditor, meta: {requiresAuth: true} },
+
+        { path: '/admin', component: Admin, meta: {requiresAuth: true} },
 
         { path: '/authors/:authorName', component: Author }
     ]

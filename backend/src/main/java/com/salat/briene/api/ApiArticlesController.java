@@ -95,9 +95,9 @@ public class ApiArticlesController {
     private ArticleContainer getArticleRaw(Long id, Authentication authentication) throws ArticleNotFoundException {
         Article article = articleService.getArticleById(id);
 
-        User userFromToken = userService.getUserFromAuthentication(authentication);
+        User currentUser = userService.getUserFromAuthentication(authentication);
 
-        if (!articleService.canUserEditArticle(userFromToken, article)) {
+        if (!articleService.canUserEditArticle(currentUser, article)) {
             throw new ArticleNotFoundException();
         }
 
@@ -124,8 +124,8 @@ public class ApiArticlesController {
         try {
             Article article = articleService.getArticleById(id);
 
-            User userFromToken = userService.getUserFromAuthentication(authentication);
-            if (article.getAuthor().equals(userFromToken)) {
+            User currentUser = userService.getUserFromAuthentication(authentication);
+            if (articleService.canUserEditArticle(currentUser, article)) {
                 articleService.deleteArticleById(id);
                 return ResponseEntity.ok().body("Article " + id + " was deleted");
             } else {
