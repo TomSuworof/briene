@@ -242,11 +242,6 @@ export default {
     this.getMyBookmarks();
     this.getMyArticles('all');
   },
-  beforeMount() {
-    if (this.currentUser === null) {
-      this.$router.push('/login');
-    }
-  },
 };
 </script>
 

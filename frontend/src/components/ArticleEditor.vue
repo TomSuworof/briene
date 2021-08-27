@@ -40,22 +40,22 @@ export default {
     },
   },
   methods: {
-    contentNotEmpty: function() {
+    contentNotEmpty: function () {
       return this.content !== '';
     },
-    titleNotEmpty: function() {
+    titleNotEmpty: function () {
       return this.title !== '';
     },
-    formIsValid: function() {
+    formIsValid: function () {
       return this.contentNotEmpty() && this.titleNotEmpty();
     },
-    showWarningEmpty: function() {
-       alert('Fields can not be empty');
+    showWarningEmpty: function () {
+      alert('Fields can not be empty');
     },
-    showWarningArticleExists: function() {
+    showWarningArticleExists: function () {
       alert('Such article already exists. Try to make different or remove old one');
     },
-    handleButton: function(action) {
+    handleButton: function (action) {
       if (this.formIsValid()) {
         ArticlesService.loadArticle(this.title, this.content, action, this.currentUser.token)
             .then(() => {
@@ -71,11 +71,6 @@ export default {
     },
   },
   created() {
-    if (this.currentUser === null) {
-      this.$router.replace('/login');
-    }
-  },
-  mounted() {
     if (this.$route.query.articleId !== undefined) {
       // if there is a parameter with id - it is a request for editing existing article
       let requestedArticleId = this.$route.query.articleId;
@@ -85,12 +80,12 @@ export default {
             this.title = response.data.title;
             this.content = response.data.content;
           }).catch(err => {
-            console.log(err);
-            this.$router.replace('/error'); // redirecting to '/error'
-          });
+        console.log(err);
+        this.$router.replace('/error'); // redirecting to '/error'
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>

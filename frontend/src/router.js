@@ -22,14 +22,29 @@ const router = createRouter({
 
         { path: '/login', component: Login},
         { path: '/register', component: Register},
-        { path: '/profile', component: Profile},
+        { path: '/profile', component: Profile, meta: {requiresAuth: true} },
 
         { path: '/articles', component: Articles },
         { path: '/articles/:articleId', component: Article },
-        { path: '/article_editor', component: ArticleEditor },
+        { path: '/article_editor', component: ArticleEditor, meta: {requiresAuth: true} },
 
         { path: '/authors/:authorName', component: Author }
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+    const loggedIn = localStorage.getItem('user');
+
+    // trying to access a restricted page + not logged in
+    // redirect to login page
+
+    if (requiresAuth && !loggedIn) {
+        next('/login');
+    } else {
+        next();
+    }
 });
 
 export default router;
