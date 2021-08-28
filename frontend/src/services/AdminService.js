@@ -1,28 +1,29 @@
 import http from '../http-common'
+import authHeader from "@/services/AuthHeader";
 
 class AdminService {
-    getAllUsers(token) {
+    getAllUsers() {
         return http.get('admin/users',
             {
-                headers: {"Authorization" : `Bearer ${token}`},
+                headers: authHeader(),
             });
     }
 
-    getAllArticles(state, token) {
+    getAllArticles(state) {
         return http.get('admin/articles',
             {
-                headers: {"Authorization" : `Bearer ${token}`},
+                headers: authHeader(),
                 params: {
                     state: state,
                 }
             });
     }
 
-    editUser(action, id, token) {
+    editUser(action, id) {
         return http.post('admin/edit_user',
             {},
             {
-                headers: {"Authorization" : `Bearer ${token}`},
+                headers: authHeader(),
                 params: {
                     action: action,
                     id: id,

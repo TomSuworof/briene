@@ -34,6 +34,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
+    public User loadUserById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
     public User getUserFromAuthentication(Authentication authentication) throws UserNotFoundException {
         if (authentication == null) {
             throw new UserNotFoundException();
@@ -72,15 +76,15 @@ public class UserService implements UserDetailsService {
     public void updateUser(Long userId, Map<String, ?> userData) throws UserNotFoundException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if (userData.containsKey("email")) {
+        if (userData.containsKey("email") && userData.get("email") != null) {
             userFromDB.setEmail((String) userData.get("email"));
         }
 
-        if (userData.containsKey("bookmarks")) {
+        if (userData.containsKey("bookmarks") && userData.get("bookmarks") != null) {
             userFromDB.setBookmarkedArticles((Set<Article>) userData.get("bookmarks"));
         }
 
-        if (userData.containsKey("password")) {
+        if (userData.containsKey("password") && userData.get("password") != null) {
             userFromDB.setPassword(passwordEncoder.encode((String) userData.get("password")));
         }
 
@@ -115,10 +119,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(userFromDB);
     }
 
-    public boolean isCurrentPasswordSameAs(String passwordAnother) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String currentUserPassword = currentUser.getPassword();
-        return passwordEncoder.matches(passwordAnother, currentUserPassword);
+    public boolean isCurrentPasswordSameAs(Long requiredUserId, String passwordAnother) {
+        User requiredUser = this.loadUserById(requiredUserId);
+        String requiredUserPassword = requiredUser.getPassword();
+        return passwordEncoder.matches(passwordAnother, requiredUserPassword);
     }
 
     public List<User> getAllUsers() {

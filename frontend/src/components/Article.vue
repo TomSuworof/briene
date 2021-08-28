@@ -3,10 +3,10 @@
     <div class="bookmarking">
 
       <div v-if="!inBookmarks">
-        <a @click="addToBookmarks" href="#">Add to bookmarks</a>
+        <a @click="editBookmarks('add')" href="#">Add to bookmarks</a>
       </div>
       <div v-if="inBookmarks">
-        <a @click="removeFromBookmarks" href="#">Remove from bookmarks</a>
+        <a @click="editBookmarks('remove')" href="#">Remove from bookmarks</a>
       </div>
     </div>
     <div class="article-about row">
@@ -51,7 +51,7 @@ export default {
   created() {
     let articleId = this.$route.params.articleId;
 
-    BookmarksService.isArticleInBookmarksOfUser(articleId, this.currentUser ? this.currentUser.token : undefined)
+    BookmarksService.isArticleInBookmarksOfUser(articleId)
         .then(response => {
           this.inBookmarks = response.data;
         }).catch(err => {
@@ -59,7 +59,7 @@ export default {
           this.inBookmarks = false;
         });
 
-    ArticlesService.getArticleById(articleId, this.currentUser ? this.currentUser.token : undefined)
+    ArticlesService.getArticleById(articleId)
         .then(response => {
           this.article = response.data;
           document.title = this.article.title;
@@ -101,33 +101,31 @@ export default {
   },
   methods: {
     makeQuote: function(citedText) {
-      let currentArticleUrl = window.location.href;
+      let citedArticleUrl = window.location.href;
       let citedArticleTitle = document.getElementById("article-title").innerText;
+
+      if (citedArticleUrl.endsWith('/')) {
+        citedArticleUrl = citedArticleUrl.slice(0, -1);
+      }
 
       let quote = `
 <figure>
   <blockquote>
     <q>${citedText}</q>
   </blockquote>
-  <p>- <a href="${currentArticleUrl}/#:~:text=${citedText}"><i>${citedArticleTitle}</i></a></p>
+  <p>- <a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>${citedArticleTitle}</i></a></p>
 </figure>`;
 
       console.log(quote);
 
       navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
     },
-    addToBookmarks: function() {
-      this.editBookmarks('add')
-    },
-    removeFromBookmarks: function() {
-      this.editBookmarks('remove');
-    },
     editBookmarks: function(action) {
       if (this.currentUser === null) {
         this.$router.push('/login');
       }
 
-      BookmarksService.editBookmark(this.$route.params.articleId, action, this.currentUser ? this.currentUser.token : undefined)
+      BookmarksService.editBookmark(this.$route.params.articleId, action)
           .then(response => {
             console.log(response);
             this.inBookmarks = !this.inBookmarks;

@@ -57,7 +57,7 @@ export default {
     },
     handleButton: function (action) {
       if (this.formIsValid()) {
-        ArticlesService.loadArticle(this.title, this.content, action, this.currentUser.token)
+        ArticlesService.loadArticle(this.title, this.content, action)
             .then(() => {
               this.$router.push('/articles');
             })
@@ -75,7 +75,7 @@ export default {
       // if there is a parameter with id - it is a request for editing existing article
       let requestedArticleId = this.$route.query.articleId;
 
-      ArticlesService.getRawArticle(requestedArticleId, this.currentUser ? this.currentUser.token : undefined)
+      ArticlesService.getRawArticle(requestedArticleId)
           .then((response) => {
             this.title = response.data.title;
             this.content = response.data.content;

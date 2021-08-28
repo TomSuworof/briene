@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     getAllUsers: function () {
-      AdminService.getAllUsers(this.currentUser.token)
+      AdminService.getAllUsers()
           .then(response => {
             this.users = response.data;
           }).catch(err => {
@@ -102,7 +102,7 @@ export default {
       });
     },
     getAllArticles: function(state) {
-      AdminService.getAllArticles(state, this.currentUser.token)
+      AdminService.getAllArticles(state)
           .then(response => {
             this.articles = response.data;
           })
@@ -112,7 +112,7 @@ export default {
           });
     },
     editUser: function(action, id) {
-      AdminService.editUser(action, id, this.currentUser.token)
+      AdminService.editUser(action, id)
           .then(response => {
             console.log(response);
             // fetch all users after changing some data
@@ -126,7 +126,7 @@ export default {
       this.$router.push(`/article_editor?articleId=${articleId}`);
     },
     removeArticle: function (articleId) {
-      ArticlesService.delete(articleId, this.currentUser.token)
+      ArticlesService.delete(articleId)
           .then(() => {
             this.getAllArticles('all');
           })

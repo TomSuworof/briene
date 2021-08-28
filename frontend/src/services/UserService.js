@@ -1,16 +1,20 @@
 import http from '../http-common'
-import authHeader from './AuthHeader';
-
-const API_URL = 'http://localhost:8080/api/test/';
+import authHeader from "@/services/AuthHeader";
 
 class UserService {
-    getPersonalArea() {
-        return http.get(API_URL + 'user', { headers: authHeader() });
+    editUser(id, password, newUserData) {
+        return http.post('/users/edit',
+            {},
+            {
+                headers: authHeader(),
+                params: {
+                    id: id,
+                    password: password,
+                    email: newUserData.email,
+                    passwordNew: newUserData.passwordNew,
+                }
+            });
     }
-
-    getAdminBoard() {
-        return http.get(API_URL + 'admin', { headers: authHeader() });
-    }
-} // todo create something useful
+}
 
 export default new UserService();

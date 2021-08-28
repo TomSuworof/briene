@@ -33,17 +33,17 @@
           <form method="post">
             <div>
               <label for="username"><strong>Username: </strong></label>
-              <input id="username" type="text" disabled v-model="newCurrentUser.username"/>
+              <input id="username" type="text" disabled v-model="currentUser.username"/>
             </div>
             <div>
               <label for="email"><strong>Email: </strong></label>
-              <input id="email" type="email" v-model="newCurrentUser.email"/>
+              <input id="email" type="email" v-model="email"/>
             </div>
             <div>
               <div>
                 <label for="password">Enter current password to submit changes: </label>
               </div>
-              <input id="password" type="password" name="password" placeholder="Current password">
+              <input id="password" type="password" v-model="password" required placeholder="Current password">
             </div>
             <div>
               <input @click="submitChangesBaseInfo" type="button" value="Submit">
@@ -56,7 +56,7 @@
         <div class="user-data">
           <form method="post">
             <div>
-              <input type="password" name="passwordOld" placeholder="Current password"/>
+              <input type="password" name="passwordOld" v-model="password" required placeholder="Current password"/>
             </div>
             <div class="setting-password">
               <div>
@@ -142,6 +142,7 @@
 import ArticlesService from "@/services/ArticlesService";
 import BookmarksService from "@/services/BookmarksService";
 import * as pswChecker from '../../static/js/password_check'
+import UserService from "@/services/UserService";
 
 export default {
   name: 'Profile',
@@ -150,8 +151,10 @@ export default {
       bookmarks: [],
       articles: [],
 
-      passwordNew: '',
-      passwordNewConfirm: '',
+      password: undefined,
+      email: undefined,
+      passwordNew: undefined,
+      passwordNewConfirm: undefined,
 
       showUserData: true,
     }
@@ -162,9 +165,6 @@ export default {
     },
     currentUser() {
       return this.$store.state.auth.user;
-    },
-    newCurrentUser() {
-      return this.currentUser;
     },
     isAdmin() {
       if (this.currentUser && this.currentUser['roles']) {
@@ -184,20 +184,37 @@ export default {
     },
     submitChangesBaseInfo: function () {
       this.showUserData = !this.showUserData;
-      console.log(this.newCurrentUser);
       // send data to server and update currentUser
+      UserService.editUser(this.currentUser.id, this.password, {
+        email: this.email,
+      })
+          .then(response => {
+            console.log(response);
+            this.logout();
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
     submitChangesPassword: function () {
       this.showUserData = !this.showUserData;
-      // console.log(this.passwordNew);
 
       if (pswChecker.checkFields()) {
-        console.log('everything is ok');
+        UserService.editUser(this.currentUser.id, this.password, {
+          passwordNew: this.passwordNew,
+        })
+            .then(response => {
+              console.log(response);
+              this.logout();
+            })
+            .catch(err => {
+              console.log(err);
+            });
       }
       // send data to server and update currentUser
     },
     getMyBookmarks: function () {
-      BookmarksService.getBookmarksOfUser(this.currentUser.token)
+      BookmarksService.getBookmarksOfUser()
           .then(response => {
             this.bookmarks = response.data;
           })
@@ -207,7 +224,7 @@ export default {
           });
     },
     getMyArticles: function (state) {
-      ArticlesService.getMyArticles(state, this.currentUser.token)
+      ArticlesService.getMyArticles(state)
           .then(response => {
             this.articles = response.data;
           })
@@ -217,7 +234,7 @@ export default {
           });
     },
     removeFromBookmarks: function (articleId) {
-      BookmarksService.editBookmark(articleId, 'remove', this.currentUser ? this.currentUser.token : undefined)
+      BookmarksService.editBookmark(articleId, 'remove')
           .then(() => {
             this.getMyBookmarks();
           })
@@ -229,7 +246,7 @@ export default {
       this.$router.push(`/article_editor?articleId=${articleId}`);
     },
     removeArticle: function (articleId) {
-      ArticlesService.delete(articleId, this.currentUser.token)
+      ArticlesService.delete(articleId)
           .then(() => {
             this.getMyArticles('all');
           })
@@ -239,6 +256,7 @@ export default {
     },
   },
   created() {
+    this.email = this.currentUser.email;
     this.getMyBookmarks();
     this.getMyArticles('all');
   },
