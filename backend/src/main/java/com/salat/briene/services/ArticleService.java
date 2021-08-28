@@ -55,6 +55,7 @@ public class ArticleService {
         }
     }
 
+
     public List<Article> getArticlesByState(String articleState) throws IllegalArticleStateException {
         if (articleState == null) {
             throw new IllegalArticleStateException();
@@ -77,6 +78,30 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+
+//    public List<Article> getArticlesByStatePaginated(String articleState, Integer limit, Integer offset) throws IllegalArticleStateException {
+//        if (articleState == null) {
+//            throw new IllegalArticleStateException();
+//        }
+//
+//        ArticleState state;
+//        switch (articleState) {
+//            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
+//            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
+//            case "all" -> {
+//                return getAllArticlesPaginated(limit, offset);
+//            }
+//            default -> throw new IllegalArticleStateException();
+//        }
+//
+//        return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit));
+//    }
+//
+//    private List<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
+//        return articleRepository.findAll(PageRequest.of(offset / limit, limit)).stream().toList();
+//    }
+
+
     public List<Article> getArticlesByAuthorAndState(User author, String articleState) throws IllegalArticleStateException {
         if (articleState == null) {
             throw new IllegalArticleStateException();
@@ -98,6 +123,7 @@ public class ArticleService {
     private List<Article> getArticlesByAuthor(User author) {
         return articleRepository.findArticlesByAuthor(author);
     }
+
 
     public boolean canUserEditArticle(User user, Article article) {
         if (user == null) {

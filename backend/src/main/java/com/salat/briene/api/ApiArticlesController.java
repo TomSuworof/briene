@@ -12,6 +12,8 @@ import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleEditorService;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,6 +40,36 @@ public class ApiArticlesController {
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok().body(publishedArticles);
+        } catch (IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
+
+        @Getter
+        @AllArgsConstructor
+        class PageContent {
+            private boolean hasBefore;
+            private List<ArticleContainer> articles;
+            private boolean hasAfter;
+        }
+
+        try {
+            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
+                    .stream().map(ArticleContainerHTML::new)
+                    .collect(Collectors.toList());
+
+            boolean hasBefore = offset > 0 && publishedArticles.size() > 0;
+            boolean hasAfter = (offset + limit) < publishedArticles.size();
+
+            List<ArticleContainer> articles = publishedArticles.subList(
+                    offset,
+                    Math.min((offset + limit), publishedArticles.size()));
+            // toIndex should be calculated as min of requested and actual ends
+
+            return ResponseEntity.ok().body(new PageContent(hasBefore, articles, hasAfter));
         } catch (IllegalArticleStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
