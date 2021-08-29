@@ -1,4 +1,4 @@
-package com.salat.briene.api.containers;
+package com.salat.briene.payload.response;
 
 import com.salat.briene.entities.Article;
 

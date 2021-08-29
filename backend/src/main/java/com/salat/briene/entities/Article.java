@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -21,22 +24,24 @@ import java.util.Objects;
 public class Article {
 
     @Id
+    @NotNull
     private Long id;
 
-    @Column
+    @NotBlank(message = "Title cannot be empty: it is shown in HTML title")
     private String title;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
 
-    @Column
+    @NotBlank(message = "Content cannot be empty")
     private byte[] content;
 
-    @Column
+    @NotNull
     private ArticleState state;
 
-    @Column
+    @PastOrPresent(message = "Article cannot be published in future")
     private Date publicationDate;
 
     public String makeHTML() {

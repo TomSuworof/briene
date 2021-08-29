@@ -1,6 +1,6 @@
 package com.salat.briene.api;
 
-import com.salat.briene.api.containers.AuthorContainer;
+import com.salat.briene.payload.response.AuthorContainer;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.IllegalArticleStateException;

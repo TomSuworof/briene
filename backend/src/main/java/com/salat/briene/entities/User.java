@@ -5,6 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -16,23 +20,26 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Id
+    @NotNull
     private Long id;
 
-    @Column
+    @NotBlank(message = "Username cannot be empty")
     private String username;
 
-    @Column
+    @NotBlank(message="Email cannot be empty")
+    @Email(message = "Invalid email")
     private String email;
 
-    @Column
+    @NotBlank(message = "Secret question cannot be empty: Is is used in password reset procedure")
     private String secretQuestion;
 
-    @Column
+    @NotBlank(message = "Secret answer cannot be empty: Is is used in password reset procedure")
     private String secretAnswer;
 
-    @Column
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 
+    @NotEmpty
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 

@@ -1,8 +1,8 @@
 package com.salat.briene.api;
 
-import com.salat.briene.api.containers.ArticleContainer;
-import com.salat.briene.api.containers.ArticleContainerHTML;
-import com.salat.briene.api.containers.UserContainer;
+import com.salat.briene.payload.response.ArticleContainer;
+import com.salat.briene.payload.response.ArticleContainerHTML;
+import com.salat.briene.payload.response.UserContainer;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;

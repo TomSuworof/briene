@@ -1,7 +1,7 @@
 package com.salat.briene.api;
 
-import com.salat.briene.api.containers.ArticleContainer;
-import com.salat.briene.api.containers.ArticleContainerHTML;
+import com.salat.briene.payload.response.ArticleContainer;
+import com.salat.briene.payload.response.ArticleContainerHTML;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
