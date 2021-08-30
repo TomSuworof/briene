@@ -3,7 +3,7 @@ package com.salat.briene.services;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
-import com.salat.briene.exceptions.ArticleFoundException;
+import com.salat.briene.exceptions.DuplicatedArticleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class ArticleEditorService {
     private final ArticleService articleService;
 
-    public void loadArticle(User author, String title, String content, String action) throws ArticleFoundException {
+    public void loadArticle(User author, String title, String content, String action) throws DuplicatedArticleException {
         Article article = new Article();
         article.setAuthor(author);
         article.setTitle(title);

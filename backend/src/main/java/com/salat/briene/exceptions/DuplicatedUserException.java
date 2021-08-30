@@ -2,18 +2,18 @@ package com.salat.briene.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 
-public class UserFoundException extends AuthenticationException {
+public class DuplicatedUserException extends AuthenticationException {
     private static final String USER_EXISTS = "[Such user exists] ";
 
-    public UserFoundException(String msg, Throwable cause) {
+    public DuplicatedUserException(String msg, Throwable cause) {
         super(USER_EXISTS + msg, cause);
     }
 
-    public UserFoundException(String msg) {
+    public DuplicatedUserException(String msg) {
         super(USER_EXISTS + msg);
     }
 
-    public UserFoundException() {
+    public DuplicatedUserException() {
         super(USER_EXISTS);
     }
 }

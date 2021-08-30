@@ -3,7 +3,7 @@ package com.salat.briene.services;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
-import com.salat.briene.exceptions.ArticleFoundException;
+import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.repositories.ArticleRepository;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public void saveArticle(Article newArticle) throws ArticleFoundException {
+    public void saveArticle(Article newArticle) throws DuplicatedArticleException {
         newArticle.setPublicationDate(new Date());
         newArticle.setId((long) newArticle.hashCode());
 
@@ -31,7 +31,7 @@ public class ArticleService {
                 articleRepository.delete(oldArticle);
                 articleRepository.save(newArticle);
             } else {
-                throw new ArticleFoundException();
+                throw new DuplicatedArticleException();
             }
         } else {
             articleRepository.save(newArticle);

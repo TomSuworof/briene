@@ -1,14 +1,12 @@
 package com.salat.briene.api;
 
+import com.salat.briene.exceptions.*;
 import com.salat.briene.payload.response.ArticleContainer;
 import com.salat.briene.payload.response.ArticleContainerHTML;
 import com.salat.briene.payload.response.ArticleContainerRaw;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
-import com.salat.briene.exceptions.ArticleNotFoundException;
-import com.salat.briene.exceptions.IllegalArticleStateException;
-import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleEditorService;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,20 +30,16 @@ public class ApiArticlesController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getArticles() {
-        try {
-            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
-                    .stream().map(ArticleContainerHTML::new)
-                    .collect(Collectors.toList());
+    public ResponseEntity<?> getArticles() throws IllegalArticleStateException {
+        List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
+                .stream().map(ArticleContainerHTML::new)
+                .collect(Collectors.toList());
 
-            return ResponseEntity.ok().body(publishedArticles);
-        } catch (IllegalArticleStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(publishedArticles);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
+    public ResponseEntity<?> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) throws IllegalArticleStateException {
 
         @Getter
         @AllArgsConstructor
@@ -56,58 +49,49 @@ public class ApiArticlesController {
             private boolean hasAfter;
         }
 
-        try {
-            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
-                    .stream().map(ArticleContainerHTML::new)
-                    .collect(Collectors.toList());
 
-            boolean hasBefore = offset > 0 && publishedArticles.size() > 0;
-            boolean hasAfter = (offset + limit) < publishedArticles.size();
+        List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
+                .stream().map(ArticleContainerHTML::new)
+                .collect(Collectors.toList());
 
-            List<ArticleContainer> articles = publishedArticles.subList(
-                    offset,
-                    Math.min((offset + limit), publishedArticles.size()));
-            // toIndex should be calculated as min of requested and actual ends
+        boolean hasBefore = offset > 0 && publishedArticles.size() > 0;
+        boolean hasAfter = (offset + limit) < publishedArticles.size();
 
-            return ResponseEntity.ok().body(new PageContent(hasBefore, articles, hasAfter));
-        } catch (IllegalArticleStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<ArticleContainer> articles = publishedArticles.subList(
+                offset,
+                Math.min((offset + limit), publishedArticles.size()));
+        // toIndex should be calculated as min of requested and actual ends
+
+        return ResponseEntity.ok().body(new PageContent(hasBefore, articles, hasAfter));
     }
 
     @GetMapping("/my")
-    public ResponseEntity<?> getMyArticles(@RequestParam String state, Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
+    public ResponseEntity<?> getMyArticles(@RequestParam String state, Authentication authentication)
+            throws IllegalArticleStateException, AnonymousUserException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
 
-            List<ArticleContainer> articles = articleService.getArticlesByAuthorAndState(currentUser, state)
-                    .stream().map(ArticleContainerHTML::new)
-                    .collect(Collectors.toList());
+        List<ArticleContainer> articles = articleService.getArticlesByAuthorAndState(currentUser, state)
+                .stream().map(ArticleContainerHTML::new)
+                .collect(Collectors.toList());
 
-            return ResponseEntity.ok().body(articles);
-        } catch (UserNotFoundException | IllegalArticleStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(articles);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getArticle(
             @RequestParam(required = false) Boolean raw,
             @PathVariable Long id,
-            Authentication authentication) {
-        try {
-            ArticleContainer article = null;
+            Authentication authentication) throws ArticleNotFoundException, UserNotFoundException {
 
-            if (raw == null) {
-                article = this.getArticleHTML(id, authentication);
-            } else if (raw) {
-                article = this.getArticleRaw(id, authentication);
-            }
+        ArticleContainer article = null;
 
-            return ResponseEntity.ok().body(article);
-        } catch (ArticleNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
+        if (raw == null) {
+            article = this.getArticleHTML(id, authentication);
+        } else if (raw) {
+            article = this.getArticleRaw(id, authentication);
         }
+
+        return ResponseEntity.ok().body(article);
     }
 
     private ArticleContainer getArticleHTML(Long id, Authentication authentication) throws ArticleNotFoundException {
@@ -141,30 +125,24 @@ public class ApiArticlesController {
             @RequestParam String title,
             @RequestParam String content,
             @RequestParam String action,
-            Authentication authentication) {
-        try {
-            User userFromToken = userService.getUserFromAuthentication(authentication);
-            articleEditorService.loadArticle(userFromToken, title, content, action);
-            return ResponseEntity.ok().body("Article was published or saved");
-        } catch (IOException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body("Error occurred while saving article. Try to remove article with same title");
-        }
+            Authentication authentication)
+            throws DuplicatedArticleException, AnonymousUserException {
+        User userFromToken = userService.getUserFromAuthentication(authentication);
+        articleEditorService.loadArticle(userFromToken, title, content, action);
+        return ResponseEntity.ok().body("Article was published or saved");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteArticle(@PathVariable Long id, Authentication authentication) {
-        try {
-            Article article = articleService.getArticleById(id);
+    public ResponseEntity<?> deleteArticle(@PathVariable Long id, Authentication authentication)
+            throws ArticleNotFoundException, UserNotFoundException {
+        Article article = articleService.getArticleById(id);
 
-            User currentUser = userService.getUserFromAuthentication(authentication);
-            if (articleService.canUserEditArticle(currentUser, article)) {
-                articleService.deleteArticleById(id);
-                return ResponseEntity.ok().body("Article " + id + " was deleted");
-            } else {
-                throw new ArticleNotFoundException();
-            }
-        } catch (ArticleNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body("Article " + id + " can not be deleted");
+        User currentUser = userService.getUserFromAuthentication(authentication);
+        if (articleService.canUserEditArticle(currentUser, article)) {
+            articleService.deleteArticleById(id);
+            return ResponseEntity.ok().body("Article " + id + " was deleted");
+        } else {
+            throw new ArticleNotFoundException();
         }
     }
 }

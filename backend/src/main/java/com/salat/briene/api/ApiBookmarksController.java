@@ -27,54 +27,44 @@ public class ApiBookmarksController {
     private final UserService userService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getBookmarksOfUser(Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
+    public ResponseEntity<?> getBookmarksOfUser(Authentication authentication) throws UserNotFoundException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
 
-            List<ArticleContainer> bookmarks = currentUser.getBookmarkedArticles()
-                    .stream().map(ArticleContainerHTML::new)
-                    .collect(Collectors.toList());
+        List<ArticleContainer> bookmarks = currentUser.getBookmarkedArticles()
+                .stream().map(ArticleContainerHTML::new)
+                .collect(Collectors.toList());
 
-            return ResponseEntity.ok().body(bookmarks);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(bookmarks);
     }
 
     @GetMapping("/isIn")
-    public ResponseEntity<?> isArticleInBookmarksOfUser(@RequestParam Long id, Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
+    public ResponseEntity<?> isArticleInBookmarksOfUser(@RequestParam Long id, Authentication authentication)
+            throws ArticleNotFoundException, UserNotFoundException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
 
-            Article article = articleService.getArticleById(id);
+        Article article = articleService.getArticleById(id);
 
-            return ResponseEntity.ok().body(currentUser.getBookmarkedArticles().contains(article));
-        } catch (ArticleNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(currentUser.getBookmarkedArticles().contains(article));
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editBookmark(@RequestParam Long id, @RequestParam String action, Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
-            Set<Article> bookmarks = currentUser.getBookmarkedArticles();
+    public ResponseEntity<?> editBookmark(@RequestParam Long id, @RequestParam String action, Authentication authentication)
+            throws ArticleNotFoundException, UserNotFoundException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
+        Set<Article> bookmarks = currentUser.getBookmarkedArticles();
 
-            Article article = articleService.getArticleById(id);
+        Article article = articleService.getArticleById(id);
 
-            switch (action.toLowerCase()) {
-                case "add" -> bookmarks.add(article);
-                case "remove" -> bookmarks.remove(article);
-                default -> throw new ArticleNotFoundException();
-            }
-
-            userService.updateUser(currentUser.getId(), new HashMap<>(){{
-                put("bookmarks", bookmarks);
-            }});
-
-            return ResponseEntity.ok().body("Bookmarks updated");
-        } catch (ArticleNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        switch (action.toLowerCase()) {
+            case "add" -> bookmarks.add(article);
+            case "remove" -> bookmarks.remove(article);
+            default -> throw new ArticleNotFoundException();
         }
+
+        userService.updateUser(currentUser.getId(), new HashMap<>() {{
+            put("bookmarks", bookmarks);
+        }});
+
+        return ResponseEntity.ok().body("Bookmarks updated");
     }
 }
