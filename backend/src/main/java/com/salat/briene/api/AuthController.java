@@ -6,7 +6,6 @@ import com.salat.briene.exceptions.DuplicatedUserException;
 import com.salat.briene.payload.request.LoginRequest;
 import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.payload.response.JwtResponse;
-import com.salat.briene.payload.response.MessageResponse;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +46,7 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        return ResponseEntity.ok(new JwtResponse(
+        return ResponseEntity.ok().body(new JwtResponse(
                 jwt,
                 user.getId(),
                 user.getUsername(),
@@ -58,6 +57,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws DuplicatedUserException {
         userService.saveUser(signUpRequest);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok().body("User registered successfully!");
     }
 }
