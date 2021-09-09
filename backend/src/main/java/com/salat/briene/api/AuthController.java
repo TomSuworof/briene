@@ -62,6 +62,7 @@ public class AuthController {
             userService.saveUser(signUpRequest);
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } catch (UserFoundByUsernameException | UserFoundByEmailException e) {
+            e.printStackTrace();
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());

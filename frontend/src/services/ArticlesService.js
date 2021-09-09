@@ -1,24 +1,44 @@
 import http from '../http-common'
+import authHeader from "@/services/AuthHeader";
 
 class ArticlesService {
     getPublishedArticles() {
         return http.get('/articles');
     }
 
-    getArticleById(id, accessToken) {
-        return http.get(`/articles/${id}`, {headers: {"Authorization" : `Bearer ${accessToken}`}});
+    getArticleById(id) {
+        return http.get(`/articles/${id}`, { headers: authHeader() });
     }
 
-    publishArticle(title, content, state) {
-        return http.post('/articles/load', {
-            title: title,
-            content: content,
-            state: state,
-        });
+    getRawArticle(id) {
+        return http.get(`/articles/${id}?raw=true`, { headers: authHeader() });
+    }
+
+    loadArticle(title, content, action) {
+        return http.post('/articles/load',
+            {},
+            {
+                headers: authHeader(),
+                params : {
+                    title: title,
+                    content: content,
+                    action: action
+                }
+            });
+    }
+
+    getMyArticles(state) {
+        return http.get('/articles/my',
+            {
+                headers: authHeader(),
+                params: {
+                    state: state,
+                }
+            });
     }
 
     delete(id) {
-        return http.delete(`/articles/${id}`);
+        return http.delete(`/articles/${id}`, { headers: authHeader() });
     }
 }
 

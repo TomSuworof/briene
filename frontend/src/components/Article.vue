@@ -1,14 +1,12 @@
 <template>
   <div class="article-page-content">
     <div class="bookmarking">
-<!--      <div>-->
-<!--&lt;!&ndash;          th:if="${inBookmarks}">&ndash;&gt;-->
-<!--        <a href="/remove_from_bookmarks">Remove from bookmarks</a>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        th:unless="${inBookmarks}">-->
-      <div>
-        <a href="/add_to_bookmarks">Add to bookmarks</a>
+
+      <div v-if="!inBookmarks">
+        <a @click="editBookmarks('add')" href="#">Add to bookmarks</a>
+      </div>
+      <div v-if="inBookmarks">
+        <a @click="editBookmarks('remove')" href="#">Remove from bookmarks</a>
       </div>
     </div>
     <div class="article-about row">
@@ -22,7 +20,7 @@
     <div class="article-title">
       <h1 id="article-title">{{  article.title }}</h1>
     </div>
-    <div v-html="article.htmlContent" class="article-content" id="article-content"></div>
+    <div v-html="article.content" class="article-content" id="article-content"></div>
     <div class="control" id="control">
       <p id="quote">💬 Quote</p>
     </div>
@@ -32,28 +30,43 @@
 <script>
 import moment from 'moment';
 import ArticlesService from "@/services/ArticlesService";
+import BookmarksService from "@/services/BookmarksService";
 
 export default {
   name: "Article",
   data() {
     return {
-      article: undefined
+      inBookmarks: false,
+      article: ''
     }
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
     finePublicationDate: function() {
       return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm")
     }
   },
   created() {
-    ArticlesService.getArticleById(this.$route.params.articleId)
+    let articleId = this.$route.params.articleId;
+
+    BookmarksService.isArticleInBookmarksOfUser(articleId)
+        .then(response => {
+          this.inBookmarks = response.data;
+        }).catch(err => {
+          console.log(err);
+          this.inBookmarks = false;
+        });
+
+    ArticlesService.getArticleById(articleId)
         .then(response => {
           this.article = response.data;
           document.title = this.article.title;
         })
         .catch(err => {
           console.log(err);
-          this.$router.push({ path: '/error' }); // redirecting to '/error'
+          this.$router.replace('/error'); // redirecting to '/error'
         });
   },
   mounted() {
@@ -88,20 +101,37 @@ export default {
   },
   methods: {
     makeQuote: function(citedText) {
-      let currentArticleUrl = window.location.href;
+      let citedArticleUrl = window.location.href;
       let citedArticleTitle = document.getElementById("article-title").innerText;
+
+      if (citedArticleUrl.endsWith('/')) {
+        citedArticleUrl = citedArticleUrl.slice(0, -1);
+      }
 
       let quote = `
 <figure>
   <blockquote>
     <q>${citedText}</q>
   </blockquote>
-  <p>- <a href="${currentArticleUrl}/#:~:text=${citedText}"><i>${citedArticleTitle}</i></a></p>
+  <p>- <a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>${citedArticleTitle}</i></a></p>
 </figure>`;
 
       console.log(quote);
 
       navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
+    },
+    editBookmarks: function(action) {
+      if (this.currentUser === null) {
+        this.$router.push('/login');
+      }
+
+      BookmarksService.editBookmark(this.$route.params.articleId, action)
+          .then(response => {
+            console.log(response);
+            this.inBookmarks = !this.inBookmarks;
+          }).catch(err => {
+            console.log(err);
+          });
     }
   },
   beforeUnmount() {

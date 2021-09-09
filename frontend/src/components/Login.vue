@@ -3,7 +3,6 @@
     <div>
       <Form @submit="handleLogin" :validation-schema="schema">
         <h2 class="welcome">Log In</h2>
-<!--        Field tag cannot be replaced by input -->
         <div class="form-group">
           <Field id="username" name="username" type="text" placeholder="Username" class="form-control"/>
           <ErrorMessage name="username" class="error-feedback"/>

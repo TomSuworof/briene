@@ -28,13 +28,13 @@ export default {
     }
   },
   created() {
-    AuthorsService.get(this.$route.params.authorName)
+    AuthorsService.getAuthorData(this.$route.params.authorName)
         .then(response => {
           this.author = response.data;
         })
         .catch(err => {
           console.log(err);
-          this.$router.push({ path: '/error' }); // redirecting to '/error'
+          this.$router.replace('/error'); // redirecting to '/error'
         });
   }
 }

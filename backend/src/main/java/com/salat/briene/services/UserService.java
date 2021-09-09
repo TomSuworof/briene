@@ -9,6 +9,8 @@ import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,17 +34,15 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-//    public User getUserFromContext() throws AnonymousUserException {
-//        Authentication currentUserDetails = SecurityContextHolder.getContext().getAuthentication();
-//        if (currentUserDetails instanceof AnonymousAuthenticationToken) {
-//            throw new AnonymousUserException();
-//        } else {
-//            return (User) currentUserDetails.getPrincipal();
-//        }
-//    }
+    public User loadUserById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
 
-    public User getUserFromToken(String accessToken) throws UserNotFoundException {
-        return loadUserByUsername(jwtUtils.getUsernameFromJwtToken(accessToken));
+    public User getUserFromAuthentication(Authentication authentication) throws UserNotFoundException {
+        if (authentication == null) {
+            throw new UserNotFoundException();
+        }
+        return loadUserByUsername(authentication.getName());
     }
 
     public void saveUser(SignupRequest signupRequest)  throws UserFoundException {
@@ -61,6 +61,7 @@ public class UserService implements UserDetailsService {
         user.setSecretAnswer(signupRequest.getSecretAnswer());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRoles(Set.of(new Role(2L, "ROLE_USER")));
+        user.setId((long) user.hashCode());
         userRepository.save(user);
     }
 
@@ -75,15 +76,15 @@ public class UserService implements UserDetailsService {
     public void updateUser(Long userId, Map<String, ?> userData) throws UserNotFoundException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if (userData.containsKey("email")) {
+        if (userData.containsKey("email") && userData.get("email") != null) {
             userFromDB.setEmail((String) userData.get("email"));
         }
 
-        if (userData.containsKey("bookmarks")) {
+        if (userData.containsKey("bookmarks") && userData.get("bookmarks") != null) {
             userFromDB.setBookmarkedArticles((Set<Article>) userData.get("bookmarks"));
         }
 
-        if (userData.containsKey("password")) {
+        if (userData.containsKey("password") && userData.get("password") != null) {
             userFromDB.setPassword(passwordEncoder.encode((String) userData.get("password")));
         }
 
@@ -118,10 +119,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(userFromDB);
     }
 
-    public boolean isCurrentPasswordSameAs(String passwordAnother) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String currentUserPassword = currentUser.getPassword();
-        return passwordEncoder.matches(passwordAnother, currentUserPassword);
+    public boolean isCurrentPasswordSameAs(Long requiredUserId, String passwordAnother) {
+        User requiredUser = this.loadUserById(requiredUserId);
+        String requiredUserPassword = requiredUser.getPassword();
+        return passwordEncoder.matches(passwordAnother, requiredUserPassword);
     }
 
     public List<User> getAllUsers() {

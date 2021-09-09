@@ -83,7 +83,7 @@ public class ArticleService {
         }
 
         ArticleState state;
-        switch (articleState) {
+        switch (articleState.toLowerCase()) {
             case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
             case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
             case "all" -> {
