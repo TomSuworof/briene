@@ -58,7 +58,6 @@ public class ArticleService {
     }
 
 
-    @Deprecated
     public List<Article> getArticlesByState(String articleState) throws IllegalArticleStateException {
         if (articleState == null) {
             throw new IllegalArticleStateException();
@@ -77,9 +76,31 @@ public class ArticleService {
         return articleRepository.findArticlesByState(state);
     }
 
-    @Deprecated
     private List<Article> getAllArticles() {
         return articleRepository.findAll();
+    }
+
+
+    public List<Article> getArticlesByAuthorAndState(User author, String articleState) throws IllegalArticleStateException {
+        if (articleState == null) {
+            throw new IllegalArticleStateException();
+        }
+
+        ArticleState state;
+        switch (articleState.toLowerCase()) {
+            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
+            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
+            case "all" -> {
+                return getArticlesByAuthor(author);
+            }
+            default -> throw new IllegalArticleStateException();
+        }
+
+        return articleRepository.findArticlesByAuthorAndState(author, state);
+    }
+
+    private List<Article> getArticlesByAuthor(User author) {
+        return articleRepository.findArticlesByAuthor(author);
     }
 
 
@@ -128,29 +149,6 @@ public class ArticleService {
 
     private List<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
         return articleRepository.findAll(PageRequest.of(offset / limit, limit)).stream().toList();
-    }
-
-
-    public List<Article> getArticlesByAuthorAndState(User author, String articleState) throws IllegalArticleStateException {
-        if (articleState == null) {
-            throw new IllegalArticleStateException();
-        }
-
-        ArticleState state;
-        switch (articleState.toLowerCase()) {
-            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
-            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
-            case "all" -> {
-                return getArticlesByAuthor(author);
-            }
-            default -> throw new IllegalArticleStateException();
-        }
-
-        return articleRepository.findArticlesByAuthorAndState(author, state);
-    }
-
-    private List<Article> getArticlesByAuthor(User author) {
-        return articleRepository.findArticlesByAuthor(author);
     }
 
 
