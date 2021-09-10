@@ -9,12 +9,12 @@ import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.services.ArticleEditorService;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -32,50 +32,35 @@ public class ApiArticlesController {
     private final ArticleEditorService articleEditorService;
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<?> getArticles() {
-        try {
-            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
-                    .stream().map(ArticleContainerHTML::new)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.ok().body(publishedArticles);
-        } catch (IllegalArticleStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    @GetMapping
+//    public ResponseEntity<?> getArticles() {
+//        try {
+//            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
+//                    .stream().map(ArticleContainerHTML::new)
+//                    .collect(Collectors.toList());
+//
+//            return ResponseEntity.ok().body(publishedArticles);
+//        } catch (IllegalArticleStateException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 
     @GetMapping("/get")
     public ResponseEntity<?> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
-
-        @Getter
-        @AllArgsConstructor
-        class PageContent {
-            private boolean hasBefore;
-            private List<ArticleContainer> articles;
-            private boolean hasAfter;
-        }
-
         try {
-            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
-                    .stream().map(ArticleContainerHTML::new)
-                    .collect(Collectors.toList());
+            PageResponseDTO response = articleService.getPageWithArticlesByState("published", limit, offset);
 
-            boolean hasBefore = offset > 0 && publishedArticles.size() > 0;
-            boolean hasAfter = (offset + limit) < publishedArticles.size();
-
-            List<ArticleContainer> articles = publishedArticles.subList(
-                    offset,
-                    Math.min((offset + limit), publishedArticles.size()));
-            // toIndex should be calculated as min of requested and actual ends
-
-            return ResponseEntity.ok().body(new PageContent(hasBefore, articles, hasAfter));
+            if (!response.isHasBefore() && !response.isHasAfter()) {
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
+            }
         } catch (IllegalArticleStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/my")
+    @GetMapping("/my_articles")
     public ResponseEntity<?> getMyArticles(@RequestParam String state, Authentication authentication) {
         try {
             User currentUser = userService.getUserFromAuthentication(authentication);
