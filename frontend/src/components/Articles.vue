@@ -39,12 +39,13 @@ export default {
   name: "Articles",
   data() {
     return {
+      articles: [],
+
       hasBefore: false,
       hasAfter: true,
 
       limit: 10,
       offset: 0,
-      articles: [],
     }
   },
   methods: {

@@ -6,8 +6,10 @@ import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
+import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -79,29 +81,6 @@ public class ArticleService {
     }
 
 
-//    public List<Article> getArticlesByStatePaginated(String articleState, Integer limit, Integer offset) throws IllegalArticleStateException {
-//        if (articleState == null) {
-//            throw new IllegalArticleStateException();
-//        }
-//
-//        ArticleState state;
-//        switch (articleState) {
-//            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
-//            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
-//            case "all" -> {
-//                return getAllArticlesPaginated(limit, offset);
-//            }
-//            default -> throw new IllegalArticleStateException();
-//        }
-//
-//        return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit));
-//    }
-//
-//    private List<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
-//        return articleRepository.findAll(PageRequest.of(offset / limit, limit)).stream().toList();
-//    }
-
-
     public List<Article> getArticlesByAuthorAndState(User author, String articleState) throws IllegalArticleStateException {
         if (articleState == null) {
             throw new IllegalArticleStateException();
@@ -122,6 +101,54 @@ public class ArticleService {
 
     private List<Article> getArticlesByAuthor(User author) {
         return articleRepository.findArticlesByAuthor(author);
+    }
+
+
+    public PageResponseDTO getPageWithArticlesByState(String articleState, Integer limit, Integer offset) throws IllegalArticleStateException {
+        if (articleState == null) {
+            throw new IllegalArticleStateException();
+        }
+
+        switch (articleState) {
+            case "published" -> {
+                ArticleState state = ArticleState.ARTICLE_PUBLISHED;
+                List<Article> articles = getArticlesByStatePaginated(state, limit, offset);
+                long allArticlesSize = articleRepository.countArticlesByState(state);
+                return new PageResponseDTO(
+                        offset > 0 && allArticlesSize > 0,
+                        (offset + limit) < allArticlesSize,
+                        articles
+                );
+            }
+            case "drafts" -> {
+                ArticleState state = ArticleState.ARTICLE_IN_EDITING;
+                List<Article> articles = getArticlesByStatePaginated(state, limit, offset);
+                long allArticlesSize = articleRepository.countArticlesByState(state);
+                return new PageResponseDTO(
+                        offset > 0 && allArticlesSize > 0,
+                        (offset + limit) < allArticlesSize,
+                        articles
+                );
+            }
+            case "all" -> {
+                List<Article> articles = getAllArticlesPaginated(limit, offset);
+                long allArticlesSize = articleRepository.count();
+                return new PageResponseDTO(
+                        offset > 0 && allArticlesSize > 0,
+                        (offset + limit) < allArticlesSize,
+                        articles
+                );
+            }
+            default -> throw new IllegalArticleStateException();
+        }
+    }
+
+    private List<Article> getArticlesByStatePaginated(ArticleState state, Integer limit, Integer offset) {
+        return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit));
+    }
+
+    private List<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
+        return articleRepository.findAll(PageRequest.of(offset / limit, limit)).stream().toList();
     }
 
 

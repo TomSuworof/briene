@@ -7,13 +7,13 @@ import lombok.Getter;
 import java.util.Set;
 
 @Getter
-public class UserContainer {
+public class UserDTO {
     private final Long id;
     private final String username;
     private final String email;
     private final Set<Role> roles;
 
-    public UserContainer(User user) {
+    public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();

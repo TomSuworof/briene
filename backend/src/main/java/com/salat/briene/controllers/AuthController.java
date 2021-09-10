@@ -1,4 +1,4 @@
-package com.salat.briene.api;
+package com.salat.briene.controllers;
 
 import com.salat.briene.config.JwtUtils;
 import com.salat.briene.entities.User;
