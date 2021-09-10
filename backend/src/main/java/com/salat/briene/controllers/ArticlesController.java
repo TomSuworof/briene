@@ -1,8 +1,8 @@
-package com.salat.briene.api;
+package com.salat.briene.controllers;
 
-import com.salat.briene.payload.response.ArticleContainer;
-import com.salat.briene.payload.response.ArticleContainerHTML;
-import com.salat.briene.payload.response.ArticleContainerRaw;
+import com.salat.briene.payload.response.ArticleDTO;
+import com.salat.briene.payload.response.ArticleDTOHTML;
+import com.salat.briene.payload.response.ArticleDTORaw;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/articles")
 @RequiredArgsConstructor
-public class ApiArticlesController {
+public class ArticlesController {
     private final ArticleService articleService;
     private final ArticleEditorService articleEditorService;
     private final UserService userService;
@@ -65,8 +65,8 @@ public class ApiArticlesController {
         try {
             User currentUser = userService.getUserFromAuthentication(authentication);
 
-            List<ArticleContainer> articles = articleService.getArticlesByAuthorAndState(currentUser, state)
-                    .stream().map(ArticleContainerHTML::new)
+            List<ArticleDTO> articles = articleService.getArticlesByAuthorAndState(currentUser, state)
+                    .stream().map(ArticleDTOHTML::new)
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok().body(articles);
@@ -81,7 +81,7 @@ public class ApiArticlesController {
             @PathVariable Long id,
             Authentication authentication) {
         try {
-            ArticleContainer article = null;
+            ArticleDTO article = null;
 
             if (raw == null) {
                 article = this.getArticleHTML(id, authentication);
@@ -95,7 +95,7 @@ public class ApiArticlesController {
         }
     }
 
-    private ArticleContainer getArticleHTML(Long id, Authentication authentication) throws ArticleNotFoundException {
+    private ArticleDTO getArticleHTML(Long id, Authentication authentication) throws ArticleNotFoundException {
         Article article = articleService.getArticleById(id);
 
         if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
@@ -106,10 +106,10 @@ public class ApiArticlesController {
             }
         }
 
-        return new ArticleContainerHTML(article);
+        return new ArticleDTOHTML(article);
     }
 
-    private ArticleContainer getArticleRaw(Long id, Authentication authentication) throws ArticleNotFoundException {
+    private ArticleDTO getArticleRaw(Long id, Authentication authentication) throws ArticleNotFoundException {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);
@@ -118,7 +118,7 @@ public class ApiArticlesController {
             throw new ArticleNotFoundException();
         }
 
-        return new ArticleContainerRaw(article);
+        return new ArticleDTORaw(article);
     }
 
     @PostMapping("/load")

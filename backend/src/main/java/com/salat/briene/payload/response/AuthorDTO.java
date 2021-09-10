@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class AuthorContainer {
+public class AuthorDTO {
     private final String username;
-    private final List<ArticleContainer> articles;
+    private final List<ArticleDTO> articles;
 
-    public AuthorContainer(User user, List<Article> articles) {
+    public AuthorDTO(User user, List<Article> articles) {
         this.username = user.getUsername();
-        this.articles = articles.stream().map(ArticleContainerHTML::new).collect(Collectors.toList());
+        this.articles = articles.stream().map(ArticleDTOHTML::new).collect(Collectors.toList());
     }
 }

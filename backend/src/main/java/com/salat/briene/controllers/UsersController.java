@@ -1,4 +1,4 @@
-package com.salat.briene.api;
+package com.salat.briene.controllers;
 
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.UserNotFoundException;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class ApiUsersController {
+public class UsersController {
     private final UserService userService;
 
     @PostMapping("/edit")
