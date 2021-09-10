@@ -37,7 +37,7 @@ class ArticlesService {
     }
 
     getMyArticles(state) {
-        return http.get('/articles/my',
+        return http.get('/articles/my_articles',
             {
                 headers: authHeader(),
                 params: {
