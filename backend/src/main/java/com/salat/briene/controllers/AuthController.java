@@ -29,7 +29,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -55,8 +55,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws DuplicatedUserException {
+    public ResponseEntity<String> registerUser(@RequestBody SignupRequest signUpRequest) throws DuplicatedUserException {
         userService.saveUser(signUpRequest);
-        return ResponseEntity.ok().body("User registered successfully!");
+        return ResponseEntity.ok().body("User registered successfully");
     }
 }

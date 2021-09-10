@@ -18,7 +18,7 @@ public class UsersController {
     private final UserService userService;
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editUser(
+    public ResponseEntity<String> editUser(
             @RequestParam Long id,
             @RequestParam String password,
             @RequestParam(required = false) String email,

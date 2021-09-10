@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .logout().permitAll().logoutSuccessUrl("/");

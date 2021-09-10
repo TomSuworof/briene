@@ -1,5 +1,6 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.exceptions.AnonymousUserException;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.entities.Article;
@@ -27,54 +28,42 @@ public class BookmarksController {
     private final UserService userService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getBookmarksOfUser(Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
+    public ResponseEntity<List<ArticleDTO>> getBookmarksOfUser(Authentication authentication) throws AnonymousUserException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
 
-            List<ArticleDTO> bookmarks = currentUser.getBookmarkedArticles()
-                    .stream().map(ArticleDTOHTML::new)
-                    .collect(Collectors.toList());
+        List<ArticleDTO> bookmarks = currentUser.getBookmarkedArticles()
+                .stream().map(ArticleDTOHTML::new)
+                .collect(Collectors.toList());
 
-            return ResponseEntity.ok().body(bookmarks);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(bookmarks);
     }
 
     @GetMapping("/isIn")
-    public ResponseEntity<?> isArticleInBookmarksOfUser(@RequestParam Long id, Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
-
-            Article article = articleService.getArticleById(id);
-
-            return ResponseEntity.ok().body(currentUser.getBookmarkedArticles().contains(article));
-        } catch (ArticleNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam Long id, Authentication authentication)
+            throws ArticleNotFoundException, UserNotFoundException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
+        Article article = articleService.getArticleById(id);
+        return ResponseEntity.ok().body(currentUser.getBookmarkedArticles().contains(article));
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editBookmark(@RequestParam Long id, @RequestParam String action, Authentication authentication) {
-        try {
-            User currentUser = userService.getUserFromAuthentication(authentication);
-            Set<Article> bookmarks = currentUser.getBookmarkedArticles();
+    public ResponseEntity<String> editBookmark(@RequestParam Long id, @RequestParam String action, Authentication authentication)
+            throws ArticleNotFoundException, AnonymousUserException, UserNotFoundException {
+        User currentUser = userService.getUserFromAuthentication(authentication);
+        Set<Article> bookmarks = currentUser.getBookmarkedArticles();
 
-            Article article = articleService.getArticleById(id);
+        Article article = articleService.getArticleById(id);
 
-            switch (action.toLowerCase()) {
-                case "add" -> bookmarks.add(article);
-                case "remove" -> bookmarks.remove(article);
-                default -> throw new ArticleNotFoundException();
-            }
-
-            userService.updateUser(currentUser.getId(), new HashMap<>(){{
-                put("bookmarks", bookmarks);
-            }});
-
-            return ResponseEntity.ok().body("Bookmarks updated");
-        } catch (ArticleNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        switch (action.toLowerCase()) {
+            case "add" -> bookmarks.add(article);
+            case "remove" -> bookmarks.remove(article);
+            default -> throw new ArticleNotFoundException();
         }
+
+        userService.updateUser(currentUser.getId(), new HashMap<>() {{
+            put("bookmarks", bookmarks);
+        }});
+
+        return ResponseEntity.ok().body("Bookmarks updated");
     }
 }

@@ -1,6 +1,5 @@
 package com.salat.briene.services;
 
-import com.salat.briene.config.JwtUtils;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.entities.Role;
@@ -20,9 +19,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

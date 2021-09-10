@@ -22,15 +22,12 @@ public class AuthorController {
     private final UserService userService;
 
     @GetMapping("/{authorName}")
-    public ResponseEntity<?> getAuthorPage(@PathVariable String authorName) {
-        try {
-            User userAuthor = userService.loadUserByUsername(authorName);
-            List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, "published");
+    public ResponseEntity<AuthorDTO> getAuthorPage(@PathVariable String authorName)
+            throws UserNotFoundException, IllegalArticleStateException {
+        User userAuthor = userService.loadUserByUsername(authorName);
+        List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, "published");
 
-            AuthorDTO author = new AuthorDTO(userAuthor, articles);
-            return ResponseEntity.ok().body(author);
-        } catch (UserNotFoundException | IllegalArticleStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        AuthorDTO author = new AuthorDTO(userAuthor, articles);
+        return ResponseEntity.ok().body(author);
     }
 }
