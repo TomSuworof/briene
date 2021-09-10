@@ -13,15 +13,15 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    // Optional<Article> findArticleByTitle(String title);
-
     Optional<Article> findArticleByTitleAndState(String title, ArticleState state);
 
     List<Article> findArticlesByState(ArticleState state);
 
+
     List<Article> findArticlesByState(ArticleState state, Pageable pageable);
 
     Long countArticlesByState(ArticleState state);
+
 
     List<Article> findArticlesByAuthor(User author);
 
