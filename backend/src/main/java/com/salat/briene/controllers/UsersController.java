@@ -22,6 +22,7 @@ public class UsersController {
             @RequestParam Long id,
             @RequestParam String password,
             @RequestParam(required = false) String email,
+            @RequestParam(required = false) String bio,
             @RequestParam(required = false) String passwordNew,
             Authentication authentication) throws UserNotFoundException {
         User authUser = userService.getUserFromAuthentication(authentication);
@@ -29,6 +30,7 @@ public class UsersController {
         if (authUser.is("admin") || (authUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
             userService.updateUser(id, new HashMap<>() {{
                 put("email", email);
+                put("bio", bio);
                 put("password", passwordNew);
             }});
             return ResponseEntity.ok().body("User data of " + id + " was changed");
