@@ -58,9 +58,11 @@ export default {
     },
     handleButton: function (action) {
       if (this.formIsValid()) {
-        this.summary = prompt("Enter summary for article (max 250 characters):", this.summary);
-        if (this.summary.length > 250) {
-          alert("Summary should be less than 250 characters");
+        let maxLength = 255
+
+        this.summary = prompt(`Enter summary for article (max ${maxLength} characters):`, this.summary);
+        if (this.summary.length > maxLength) {
+          alert(`Summary should be less than ${maxLength} characters`);
         } else {
           this.uploadArticle(action);
         }
