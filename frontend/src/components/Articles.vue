@@ -20,6 +20,14 @@
         </h3>
       </div>
     </div>
+    <div class="navigation-buttons">
+      <div class="navigation-button-prev" title="Previous">
+        <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
+      </div>
+      <div class="navigation-button-next" title="Next">
+        <button @click="getNextPage" :disabled="!hasAfter">▶</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,16 +40,37 @@ export default {
   data() {
     return {
       articles: [],
+
+      hasBefore: false,
+      hasAfter: true,
+
+      limit: 10,
+      offset: 0,
     }
   },
+  methods: {
+    getPreviousPage: function () {
+      this.offset -= this.limit;
+      this.getArticlesPaginated(this.limit, this.offset);
+    },
+    getNextPage: function () {
+      this.offset += this.limit;
+      this.getArticlesPaginated(this.limit, this.offset);
+    },
+    getArticlesPaginated: function (limit, offset) {
+      ArticlesService.getPublishedArticlesPaginated(limit, offset)
+          .then(response => {
+            this.articles = response.data.articles;
+            this.hasBefore = response.data.hasBefore;
+            this.hasAfter = response.data.hasAfter;
+          })
+          .catch(e => {
+            console.log(e);
+          });
+    },
+  },
   created() {
-    ArticlesService.getPublishedArticles()
-      .then(response => {
-        this.articles = response.data;
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    this.getArticlesPaginated(this.limit, this.offset);
   }
 }
 </script>
@@ -63,5 +92,17 @@ export default {
 
 .article-container {
   margin: 0 0 10pt;
+}
+
+.navigation-button-prev, .navigation-button-next {
+  display: inline-block;
+  margin: 0 10pt 0;
+}
+
+button {
+  background: white;
+  display: block;
+  border: none;
+  outline: none;
 }
 </style>

@@ -1,8 +1,8 @@
-package com.salat.briene.api;
+package com.salat.briene.controllers;
 
-import com.salat.briene.api.containers.ArticleContainer;
-import com.salat.briene.api.containers.ArticleContainerHTML;
-import com.salat.briene.api.containers.UserContainer;
+import com.salat.briene.payload.response.ArticleDTO;
+import com.salat.briene.payload.response.ArticleDTOHTML;
+import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
-public class ApiAdminController {
+public class AdminController {
     private final ArticleService articleService;
     private final UserService userService;
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
-        List<UserContainer> users = userService.getAllUsers()
-                .stream().map(UserContainer::new)
+        List<UserDTO> users = userService.getAllUsers()
+                .stream().map(UserDTO::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(users);
@@ -52,8 +52,8 @@ public class ApiAdminController {
     @GetMapping("/articles")
     public ResponseEntity<?> getAllArticles(@RequestParam String state) {
         try {
-            List<ArticleContainer> articles = articleService.getArticlesByState(state)
-                    .stream().map(ArticleContainerHTML::new)
+            List<ArticleDTO> articles = articleService.getArticlesByState(state)
+                    .stream().map(ArticleDTOHTML::new)
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok().body(articles);

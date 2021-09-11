@@ -1,119 +1,155 @@
-//package com.salat.briene.controllers;
-//
-//import com.salat.briene.entities.ArticleState;
-//import com.salat.briene.entities.User;
-//import com.salat.briene.exceptions.AnonymousUserException;
-//import com.salat.briene.exceptions.ArticleNotFoundException;
-//import com.salat.briene.exceptions.IllegalArticleStateException;
-//import com.salat.briene.services.UserService;
-//import com.salat.briene.entities.Article;
-//import com.salat.briene.services.ArticleService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//
-//import java.io.IOException;
-//import java.text.SimpleDateFormat;
-//import java.util.HashMap;
-//import java.util.Set;
-//
-//@Controller
-//@RequiredArgsConstructor
-//public class ArticlesController {
-//    private final UserService userService;
-//    private final ArticleService articleService;
-//
-//    @GetMapping("/articles")
-//    public String getArticles(Model model) {
+package com.salat.briene.controllers;
+
+import com.salat.briene.payload.response.ArticleDTO;
+import com.salat.briene.payload.response.ArticleDTOHTML;
+import com.salat.briene.payload.response.ArticleDTORaw;
+import com.salat.briene.entities.Article;
+import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.User;
+import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.IllegalArticleStateException;
+import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.payload.response.PageResponseDTO;
+import com.salat.briene.services.ArticleEditorService;
+import com.salat.briene.services.ArticleService;
+import com.salat.briene.services.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@CrossOrigin(origins = "http://localhost:8081")
+@RestController
+@RequestMapping("/api/articles")
+@RequiredArgsConstructor
+public class ArticlesController {
+    private final ArticleService articleService;
+    private final ArticleEditorService articleEditorService;
+    private final UserService userService;
+
+//    @GetMapping
+//    public ResponseEntity<?> getArticles() {
 //        try {
-//            model.addAttribute("articles", articleService.getArticlesByState("published"));
-//            return "articles";
+//            List<ArticleContainer> publishedArticles = articleService.getArticlesByState("published")
+//                    .stream().map(ArticleContainerHTML::new)
+//                    .collect(Collectors.toList());
+//
+//            return ResponseEntity.ok().body(publishedArticles);
 //        } catch (IllegalArticleStateException e) {
-//            return "redirect:/error";
+//            return ResponseEntity.badRequest().body(e.getMessage());
 //        }
 //    }
-//
-//    @GetMapping("/articles/{id}")
-//    public String getArticle(@PathVariable Long id, Model model) {
-//        try {
-//            Article article = articleService.getArticleById(id);
-//
-//            if (article.getState().equals(ArticleState.ARTICLE_PUBLISHED)) {
-//                model.addAttribute("article", article);
-//                SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-//                model.addAttribute("publicationDate", formatter.format(article.getPublicationDate()));
-//            }
-//
-//            try {
-//                User currentUser = userService.getUserFromContext();
-//                if (articleService.canUserEditArticle(currentUser, article)) {
-//                    model.addAttribute("canEdit", true);
-//                }
-//
-//                model.addAttribute("inBookmarks", currentUser.getBookmarkedArticles().contains(article));
-//            } catch (AnonymousUserException ignored) {
-//            }
-//
-//            return "article";
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            model.addAttribute("error", "Cannot open article");
-//            return "articles";
-//        }
-//    }
-//
-//    @GetMapping("/articles/{id}/{action}")
-//    public String editBookmarks(@PathVariable String id, @PathVariable String action, Model model) {
-//        Long articleId = Long.parseLong(id);
-//        switch (action) {
-//            case "add_to_bookmarks" -> {
-//                return addToBookmarks(articleId, model);
-//            }
-//            case "remove_from_bookmarks" -> {
-//                return removeFromBookmarks(articleId, model);
-//            }
-//            default -> {
-//                model.addAttribute("error", "Cannot execute command");
-//                return "articles";
-//            }
-//        }
-//    }
-//
-//    private String addToBookmarks(Long id, Model model) {
-//        try {
-//            Article article = articleService.getArticleById(id);
-//            User currentUser = userService.getUserFromContext();
-//
-//            Set<Article> bookmarks = currentUser.getBookmarkedArticles();
-//            bookmarks.add(article);
-//
-//            userService.updateUser(currentUser.getId(), new HashMap<>(){{
-//                put("bookmarks", bookmarks);
-//            }});
-//
-//        } catch (ArticleNotFoundException | AnonymousUserException ignored) {
-//        }
-//        model.addAttribute("id", id);
-//        return "redirect:/articles/{id}";
-//    }
-//
-//    private String removeFromBookmarks(Long id, Model model) {
-//        try {
-//            Article article = articleService.getArticleById(id);
-//            User currentUser = userService.getUserFromContext();
-//
-//            Set<Article> bookmarks = currentUser.getBookmarkedArticles();
-//            bookmarks.remove(article);
-//
-//            userService.updateUser(currentUser.getId(), new HashMap<>(){{
-//                put("bookmarks", bookmarks);
-//            }});
-//
-//        } catch (ArticleNotFoundException | AnonymousUserException ignored) {
-//        }
-//        model.addAttribute("id", id);
-//        return "redirect:/articles/{id}";
-//    }
-//}
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
+        try {
+            PageResponseDTO response = articleService.getPageWithArticlesByState("published", limit, offset);
+
+            if (!response.isHasBefore() && !response.isHasAfter()) {
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
+            }
+        } catch (IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/my_articles")
+    public ResponseEntity<?> getMyArticles(@RequestParam String state, Authentication authentication) {
+        try {
+            User currentUser = userService.getUserFromAuthentication(authentication);
+
+            List<ArticleDTO> articles = articleService.getArticlesByAuthorAndState(currentUser, state)
+                    .stream().map(ArticleDTOHTML::new)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok().body(articles);
+        } catch (UserNotFoundException | IllegalArticleStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getArticle(
+            @RequestParam(required = false) Boolean raw,
+            @PathVariable Long id,
+            Authentication authentication) {
+        try {
+            ArticleDTO article = null;
+
+            if (raw == null) {
+                article = this.getArticleHTML(id, authentication);
+            } else if (raw) {
+                article = this.getArticleRaw(id, authentication);
+            }
+
+            return ResponseEntity.ok().body(article);
+        } catch (ArticleNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private ArticleDTO getArticleHTML(Long id, Authentication authentication) throws ArticleNotFoundException {
+        Article article = articleService.getArticleById(id);
+
+        if (article.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
+            User userFromToken = userService.getUserFromAuthentication(authentication);
+
+            if (!articleService.canUserEditArticle(userFromToken, article)) {
+                throw new ArticleNotFoundException();
+            }
+        }
+
+        return new ArticleDTOHTML(article);
+    }
+
+    private ArticleDTO getArticleRaw(Long id, Authentication authentication) throws ArticleNotFoundException {
+        Article article = articleService.getArticleById(id);
+
+        User currentUser = userService.getUserFromAuthentication(authentication);
+
+        if (!articleService.canUserEditArticle(currentUser, article)) {
+            throw new ArticleNotFoundException();
+        }
+
+        return new ArticleDTORaw(article);
+    }
+
+    @PostMapping("/load")
+    public ResponseEntity<?> publishArticle(
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam String action,
+            Authentication authentication) {
+        try {
+            User userFromToken = userService.getUserFromAuthentication(authentication);
+            articleEditorService.loadArticle(userFromToken, title, content, action);
+            return ResponseEntity.ok().body("Article was published or saved");
+        } catch (IOException | UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Error occurred while saving article. Try to remove article with same title");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteArticle(@PathVariable Long id, Authentication authentication) {
+        try {
+            Article article = articleService.getArticleById(id);
+
+            User currentUser = userService.getUserFromAuthentication(authentication);
+            if (articleService.canUserEditArticle(currentUser, article)) {
+                articleService.deleteArticleById(id);
+                return ResponseEntity.ok().body("Article " + id + " was deleted");
+            } else {
+                throw new ArticleNotFoundException();
+            }
+        } catch (ArticleNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Article " + id + " can not be deleted");
+        }
+    }
+}

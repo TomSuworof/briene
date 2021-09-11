@@ -1,6 +1,6 @@
-package com.salat.briene.api;
+package com.salat.briene.controllers;
 
-import com.salat.briene.api.containers.AuthorContainer;
+import com.salat.briene.payload.response.AuthorDTO;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.IllegalArticleStateException;
@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/authors")
 @RequiredArgsConstructor
-public class ApiAuthorController {
+public class AuthorController {
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -27,7 +27,7 @@ public class ApiAuthorController {
             User userAuthor = userService.loadUserByUsername(authorName);
             List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, "published");
 
-            AuthorContainer author = new AuthorContainer(userAuthor, articles);
+            AuthorDTO author = new AuthorDTO(userAuthor, articles);
             return ResponseEntity.ok().body(author);
         } catch (UserNotFoundException | IllegalArticleStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

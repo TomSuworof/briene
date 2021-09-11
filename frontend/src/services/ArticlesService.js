@@ -6,6 +6,15 @@ class ArticlesService {
         return http.get('/articles');
     }
 
+    getPublishedArticlesPaginated(limit, offset) {
+        return http.get('/articles/get', {
+            params: {
+                limit: limit,
+                offset: offset,
+            }
+        });
+    }
+
     getArticleById(id) {
         return http.get(`/articles/${id}`, { headers: authHeader() });
     }
@@ -28,7 +37,7 @@ class ArticlesService {
     }
 
     getMyArticles(state) {
-        return http.get('/articles/my',
+        return http.get('/articles/my_articles',
             {
                 headers: authHeader(),
                 params: {

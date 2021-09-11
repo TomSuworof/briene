@@ -1,7 +1,7 @@
-package com.salat.briene.api;
+package com.salat.briene.controllers;
 
-import com.salat.briene.api.containers.ArticleContainer;
-import com.salat.briene.api.containers.ArticleContainerHTML;
+import com.salat.briene.payload.response.ArticleDTO;
+import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/bookmarks")
 @RequiredArgsConstructor
-public class ApiBookmarksController {
+public class BookmarksController {
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -31,8 +31,8 @@ public class ApiBookmarksController {
         try {
             User currentUser = userService.getUserFromAuthentication(authentication);
 
-            List<ArticleContainer> bookmarks = currentUser.getBookmarkedArticles()
-                    .stream().map(ArticleContainerHTML::new)
+            List<ArticleDTO> bookmarks = currentUser.getBookmarkedArticles()
+                    .stream().map(ArticleDTOHTML::new)
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok().body(bookmarks);

@@ -46,12 +46,12 @@
         </div>
         <div class="form-group">
           <label>Secret Question</label>
-          <Field id="secret_question" name="secretQuestion" type="text" class="form-control"/>
+          <Field id="secret_question" name="secretQuestion" type="text" class="form-control" required/>
           <ErrorMessage name="secret_question" class="error-feedback"/>
         </div>
         <div class="form-group">
           <label>Secret Answer</label>
-          <Field id="secret_answer" name="secretAnswer" type="text" class="form-control"/>
+          <Field id="secret_answer" name="secretAnswer" type="text" class="form-control" required/>
           <ErrorMessage name="secret_answer" class="error-feedback"/>
         </div>
         <div>
@@ -124,7 +124,7 @@ export default {
     }
   },
   methods: {
-    handleRegister(user) {
+    handleRegister: function (user) {
       if (pswChecker.checkFields()) {
         this.message = "";
         this.successful = false;

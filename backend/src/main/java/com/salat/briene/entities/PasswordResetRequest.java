@@ -3,22 +3,25 @@ package com.salat.briene.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
 @Table(name = "t_password_reset_requests")
 @NoArgsConstructor
 @AllArgsConstructor
 public class PasswordResetRequest {
 
     @Id
-    @Column
+    @NotNull
     private String id;
 
-    @Column
+    @NotEmpty(message = "Request cannot correspond to empty user")
     private String username;
 
-    @Column
+    @PastOrPresent(message = "Request cannot be created in future")
     private Date created;
 }
