@@ -6,6 +6,9 @@
           <h1>{{ author.username }}</h1>
         </div>
       </div>
+      <div class="author-bio">
+        <p>{{ author.bio }}</p>
+      </div>
       <div>
         <div class="article-container" v-for="article in author.articles" v-bind:key="article.id">
           <div class="article-about row">
@@ -62,6 +65,11 @@ export default {
   margin: 0 0 10pt;
 }
 
+.author-bio {
+  white-space: pre-line;
+  padding: 0 0 5pt;
+}
+
 .article-container {
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
   border-radius: 10px;
@@ -78,7 +86,7 @@ export default {
   color: #999;
 }
 
-.article-title {
+.article-title, .article-summary, .author-bio {
   overflow-wrap: break-word;
 }
 </style>

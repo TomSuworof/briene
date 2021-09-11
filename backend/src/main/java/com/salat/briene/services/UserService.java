@@ -74,6 +74,10 @@ public class UserService implements UserDetailsService {
             userFromDB.setEmail((String) userData.get("email"));
         }
 
+        if (userData.containsKey("bio") && userData.get("bio") != null) {
+            userFromDB.setBio((String) userData.get("bio"));
+        }
+
         if (userData.containsKey("bookmarks") && userData.get("bookmarks") != null) {
             userFromDB.setBookmarkedArticles((Set<Article>) userData.get("bookmarks"));
         }

@@ -1,8 +1,8 @@
 <template>
-  <div class="personal-area-page-content" v-if="currentUser !== null">
+  <div class="profile-page-content" v-if="currentUser !== null">
     <div class="header row">
       <div>
-        <h1>Personal area</h1>
+        <h1>Profile</h1>
       </div>
       <div class="header-buttons">
         <div v-if="isAdmin" class="header-admin-button">
@@ -24,6 +24,12 @@
         <p>
           <strong>Email: </strong>{{ currentUser.email }}
         </p>
+        <p>
+          <strong>Bio: </strong>
+        </p>
+        <div class="bio">
+          <p>{{ bio }}</p>
+        </div>
       </div>
     </div>
     <div v-if="showEditUserData" class="edit-user-data">
@@ -38,6 +44,12 @@
             <div>
               <label for="email"><strong>Email: </strong></label>
               <input id="email" type="email" v-model="email"/>
+            </div>
+            <div>
+              <label><strong>Bio: </strong></label>
+              <div>
+                <textarea id="bio" v-model="bio"></textarea>
+              </div>
             </div>
             <div>
               <div>
@@ -153,6 +165,7 @@ import BookmarksService from "@/services/BookmarksService";
 import * as pswChecker from '../../static/js/password_check'
 import UserService from "@/services/UserService";
 import moment from "moment";
+import AuthorsService from "@/services/AuthorsService";
 
 export default {
   name: 'Profile',
@@ -163,6 +176,7 @@ export default {
 
       password: undefined,
       email: undefined,
+      bio: undefined,
       passwordNew: undefined,
       passwordNewConfirm: undefined,
 
@@ -197,9 +211,9 @@ export default {
     },
     submitChangesBaseInfo: function () {
       this.showUserData = !this.showUserData;
-      // send data to server and update currentUser
       UserService.editUser(this.currentUser.id, this.password, {
         email: this.email,
+        bio: this.bio,
       })
           .then(response => {
             console.log(response);
@@ -224,7 +238,15 @@ export default {
               console.log(err);
             });
       }
-      // send data to server and update currentUser
+    },
+    getMyBio: function() {
+      AuthorsService.getAuthorData(this.currentUser.username)
+          .then(response => {
+            this.bio = response.data.bio;
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
     getMyBookmarks: function () {
       BookmarksService.getBookmarksOfUser()
@@ -270,6 +292,7 @@ export default {
   },
   created() {
     this.email = this.currentUser.email;
+    this.getMyBio();
     this.getMyBookmarks();
     this.getMyArticles('all');
   },
@@ -287,6 +310,11 @@ export default {
 .header-admin-button, .header-logout-button {
   margin: 0 10pt 0;
   display: inline-block;
+}
+
+#bio {
+  width: 100%;
+  height: 100pt;
 }
 
 .article-type {

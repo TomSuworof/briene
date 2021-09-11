@@ -5,10 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -29,6 +26,9 @@ public class User implements UserDetails {
     @NotBlank(message="Email cannot be empty")
     @Email(message = "Invalid email")
     private String email;
+
+    @Size(max = 255)
+    private String bio;
 
     @NotBlank(message = "Secret question cannot be empty: Is is used in password reset procedure")
     private String secretQuestion;

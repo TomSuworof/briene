@@ -11,6 +11,7 @@ class UserService {
                     id: id,
                     password: password,
                     email: newUserData.email,
+                    bio: newUserData.bio,
                     passwordNew: newUserData.passwordNew,
                 }
             });
