@@ -99,10 +99,11 @@ public class ArticlesController {
     public ResponseEntity<String> publishArticle(
             @RequestParam String title,
             @RequestParam String content,
+            @RequestParam(required = false) String summary,
             @RequestParam String action,
             Authentication authentication) throws DuplicatedArticleException, AnonymousUserException {
         User userFromToken = userService.getUserFromAuthentication(authentication);
-        articleEditorService.loadArticle(userFromToken, title, content, action);
+        articleEditorService.loadArticle(userFromToken, title, content, summary, action);
         return ResponseEntity.ok().body("Article was published or saved");
     }
 

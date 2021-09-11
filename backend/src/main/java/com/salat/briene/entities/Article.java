@@ -39,6 +39,9 @@ public class Article {
     @Size(min = 1, message = "Content cannot be empty")
     private byte[] content;
 
+    @Size(max = 255)
+    private String summary;
+
     @NotNull
     private ArticleState state;
 
