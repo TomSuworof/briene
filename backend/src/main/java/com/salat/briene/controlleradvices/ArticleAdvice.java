@@ -19,7 +19,7 @@ public class ArticleAdvice {
     private static final Logger logger = LoggerFactory.getLogger(ArticleAdvice.class);
 
     @ExceptionHandler(ArticleNotFoundException.class)
-    public ResponseEntity<?> handleArticleNotFound(ArticleNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleArticleNotFound(ArticleNotFoundException e, HttpServletRequest request) {
         logger.error("Article not found error: {}", e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -29,7 +29,7 @@ public class ArticleAdvice {
     }
 
     @ExceptionHandler(DuplicatedArticleException.class)
-    public ResponseEntity<?> handleDuplicatedArticle(DuplicatedArticleException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDuplicatedArticle(DuplicatedArticleException e, HttpServletRequest request) {
         logger.error("Duplicated article error: {}", e.getMessage());
 
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
@@ -42,7 +42,7 @@ public class ArticleAdvice {
     }
 
     @ExceptionHandler(IllegalArticleStateException.class)
-    public ResponseEntity<?> handleIllegalArticleState(IllegalArticleStateException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleIllegalArticleState(IllegalArticleStateException e, HttpServletRequest request) {
         logger.error("Illegal article state error: {}", e.getMessage());
 
         HttpStatus status = HttpStatus.BAD_REQUEST;

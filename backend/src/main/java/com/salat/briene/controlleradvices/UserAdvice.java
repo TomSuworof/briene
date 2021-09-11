@@ -19,7 +19,7 @@ public class UserAdvice {
     private static final Logger logger = LoggerFactory.getLogger(UserAdvice.class);
 
     @ExceptionHandler(AnonymousUserException.class)
-    public ResponseEntity<?> handleAnonymousUser(AnonymousUserException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAnonymousUser(AnonymousUserException e, HttpServletRequest request) {
         logger.error("Anonymous user error: {}", e.getMessage());
 
         HttpStatus status = HttpStatus.UNAUTHORIZED;
@@ -29,7 +29,7 @@ public class UserAdvice {
     }
 
     @ExceptionHandler(DuplicatedUserException.class)
-    public ResponseEntity<?> handleDuplicatedUser(DuplicatedUserException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDuplicatedUser(DuplicatedUserException e, HttpServletRequest request) {
         logger.error("Duplicated user error: {}", e.getMessage());
 
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
@@ -42,7 +42,7 @@ public class UserAdvice {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handleUserNotFound(UserNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e, HttpServletRequest request) {
         logger.error("User not found error: {}", e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
