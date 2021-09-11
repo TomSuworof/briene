@@ -19,10 +19,10 @@
       </div>
       <div class="user-data">
         <p>
-          <strong>Username: </strong>{{currentUser.username}}
+          <strong>Username: </strong>{{ currentUser.username }}
         </p>
         <p>
-          <strong>Email: </strong>{{currentUser.email}}
+          <strong>Email: </strong>{{ currentUser.email }}
         </p>
       </div>
     </div>
@@ -60,7 +60,9 @@
             </div>
             <div class="setting-password">
               <div>
-                <input id="psw" type="password" v-model="passwordNew" placeholder="New password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+                <input id="psw" type="password" v-model="passwordNew" placeholder="New password" required
+                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                       title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
               </div>
               <div class="container-for-message">
                 <div id="message" class="message">
@@ -72,7 +74,8 @@
                 </div>
               </div>
               <div>
-                <input id="pswConfirm" type="password" v-model="passwordNewConfirm" placeholder="Confirm your new password" required>
+                <input id="pswConfirm" type="password" v-model="passwordNewConfirm"
+                       placeholder="Confirm your new password" required>
                 <div id="password-matching" class="password-matching">
                   <p id="match" class="invalid">Passwords match</p>
                 </div>
@@ -116,6 +119,9 @@
       </div>
       <div v-if="articles.length > 0">
         <div class="article-container" v-for="article in articles" v-bind:key="article.id">
+          <div class="article-publication-date">
+            <p>{{ getFinePublicationDate(article) }}</p>
+          </div>
           <div class="article-title-container">
             <h3 class="article-title">
               <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
@@ -128,6 +134,9 @@
             <div class="article-action-remove">
               <a @click="removeArticle(article.id)" href="#">❌ Remove</a>
             </div>
+          </div>
+          <div class="article-summary">
+            <p>{{ article.summary }}</p>
           </div>
         </div>
       </div>
@@ -143,6 +152,7 @@ import ArticlesService from "@/services/ArticlesService";
 import BookmarksService from "@/services/BookmarksService";
 import * as pswChecker from '../../static/js/password_check'
 import UserService from "@/services/UserService";
+import moment from "moment";
 
 export default {
   name: 'Profile',
@@ -174,6 +184,9 @@ export default {
     },
   },
   methods: {
+    getFinePublicationDate: function (article) {
+      return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
+    },
     logout: function () {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
@@ -280,6 +293,21 @@ export default {
   margin: 0 20pt 0 0;
 }
 
+.articles-types {
+  padding: 5pt 0;
+}
+
+.article-container {
+  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
+  border-radius: 10px;
+  margin: 0 0 10pt;
+  padding: 10pt;
+}
+
+.article-publication-date {
+  color: #999;
+}
+
 .article-action-container, .article-title-container, .article-action-edit, .article-action-remove {
   display: inline-block;
   margin: 0 20pt 0 0;
@@ -298,7 +326,7 @@ export default {
   margin: 0 0 10pt;
 }
 
-.article-title {
+.article-title, .article-summary {
   overflow-wrap: break-word;
 }
 </style>

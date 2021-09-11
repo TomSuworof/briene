@@ -145,6 +145,10 @@ export default {
   margin: 0 0 10pt;
 }
 
+.article-title {
+  overflow-wrap: break-word;
+}
+
 .article-about {
   padding: 0 10pt 0;
   justify-content: space-between;

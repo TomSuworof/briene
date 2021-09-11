@@ -32,6 +32,7 @@ export default {
     return {
       title: '',
       content: '',
+      summary: '',
     }
   },
   computed: {
@@ -57,18 +58,26 @@ export default {
     },
     handleButton: function (action) {
       if (this.formIsValid()) {
-        ArticlesService.loadArticle(this.title, this.content, action)
-            .then(() => {
-              this.$router.push('/articles');
-            })
-            .catch(err => {
-              console.log(err);
-              this.showWarningArticleExists();
-            });
+        this.summary = prompt("Enter summary for article (max 250 characters):", this.summary);
+        if (this.summary.length > 250) {
+          alert("Summary should be less than 250 characters");
+        } else {
+          this.uploadArticle(action);
+        }
       } else {
         this.showWarningEmpty();
       }
     },
+    uploadArticle: function (action) {
+      ArticlesService.loadArticle(this.title, this.content, this.summary, action)
+          .then(() => {
+            this.$router.push('/articles');
+          })
+          .catch(err => {
+            console.log(err);
+            this.showWarningArticleExists();
+          });
+    }
   },
   created() {
     if (this.$route.query.articleId !== undefined) {
@@ -79,6 +88,7 @@ export default {
           .then((response) => {
             this.title = response.data.title;
             this.content = response.data.content;
+            this.summary = response.data.summary;
           }).catch(err => {
         console.log(err);
         this.$router.replace('/error'); // redirecting to '/error'

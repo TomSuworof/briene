@@ -2,10 +2,6 @@ import http from '../http-common'
 import authHeader from "@/services/AuthHeader";
 
 class ArticlesService {
-    getPublishedArticles() {
-        return http.get('/articles');
-    }
-
     getPublishedArticlesPaginated(limit, offset) {
         return http.get('/articles/get', {
             params: {
@@ -23,7 +19,7 @@ class ArticlesService {
         return http.get(`/articles/${id}?raw=true`, { headers: authHeader() });
     }
 
-    loadArticle(title, content, action) {
+    loadArticle(title, content, summary, action) {
         return http.post('/articles/load',
             {},
             {
@@ -31,6 +27,7 @@ class ArticlesService {
                 params : {
                     title: title,
                     content: content,
+                    summary: summary,
                     action: action
                 }
             });
