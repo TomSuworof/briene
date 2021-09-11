@@ -3,17 +3,17 @@ package com.salat.briene.exceptions;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class UserNotFoundException extends UsernameNotFoundException {
-    private static final String USER_NOT_EXISTS = "[User not found] ";
+    private static final String USER_NOT_FOUND = "User not found";
 
-    public UserNotFoundException(String msg, Throwable cause) {
-        super(USER_NOT_EXISTS + msg, cause);
+    public UserNotFoundException() {
+        super(USER_NOT_FOUND);
     }
 
     public UserNotFoundException(String msg) {
-        super(USER_NOT_EXISTS + msg);
+        super("[%s] %s".formatted(USER_NOT_FOUND, msg));
     }
 
-    public UserNotFoundException() {
-        super(USER_NOT_EXISTS);
+    public UserNotFoundException(String msg, Throwable cause) {
+        super("[%s] %s".formatted(USER_NOT_FOUND, msg), cause);
     }
 }

@@ -1,6 +1,7 @@
 package com.salat.briene.services;
 
 import com.salat.briene.entities.Article;
+import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.entities.User;
 import com.salat.briene.entities.Role;
 import com.salat.briene.exceptions.*;
@@ -97,6 +98,18 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public void changeRole(Long userId, Role role) {
+        User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        userFromDB.setRoles(new HashSet<>(){{
+            add(role);
+        }});
+
+//        mailService.send(userFromDB.getEmail(), "role_change", role);
+        userRepository.save(userFromDB);
+    }
+
+    @Deprecated
     public void changeRole(Long userId, String role) throws UserNotFoundException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 

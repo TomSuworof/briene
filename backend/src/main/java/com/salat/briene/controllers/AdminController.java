@@ -1,5 +1,6 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.payload.response.UserDTO;
@@ -35,12 +36,7 @@ public class AdminController {
 
     @PostMapping("/edit_user")
     public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam Long id) throws UserNotFoundException {
-        switch (action) {
-            case "delete" -> userService.changeRole(id, "blocked");
-            case "make_admin" -> userService.changeRole(id, "admin");
-            case "make_user" -> userService.changeRole(id, "user");
-            default -> throw new UserNotFoundException();
-        }
+        userService.changeRole(id, RoleEnum.fromAction(action).getAsObject());
         return ResponseEntity.ok().body("Role of " + id + " changed");
     }
 

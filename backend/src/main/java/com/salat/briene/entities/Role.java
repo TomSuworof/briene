@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "t_roles")
 public class Role implements GrantedAuthority {
@@ -19,11 +20,6 @@ public class Role implements GrantedAuthority {
 
     @NotEmpty(message = "Role cannot be called by empty string")
     private String name;
-
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     @Override
     public String getAuthority() {

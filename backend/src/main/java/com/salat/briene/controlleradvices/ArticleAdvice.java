@@ -20,7 +20,7 @@ public class ArticleAdvice {
 
     @ExceptionHandler(ArticleNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleArticleNotFound(ArticleNotFoundException e, HttpServletRequest request) {
-        logger.error("Article not found error: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -30,7 +30,7 @@ public class ArticleAdvice {
 
     @ExceptionHandler(DuplicatedArticleException.class)
     public ResponseEntity<ErrorResponse> handleDuplicatedArticle(DuplicatedArticleException e, HttpServletRequest request) {
-        logger.error("Duplicated article error: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -43,7 +43,7 @@ public class ArticleAdvice {
 
     @ExceptionHandler(IllegalArticleStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArticleState(IllegalArticleStateException e, HttpServletRequest request) {
-        logger.error("Illegal article state error: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());

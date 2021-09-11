@@ -22,7 +22,7 @@ public class ConstraintViolationAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException e, HttpServletRequest request) {
-        logger.error("Illegal entity format: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         Set<String> violations = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
 

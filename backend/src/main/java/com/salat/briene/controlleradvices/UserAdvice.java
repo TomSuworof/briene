@@ -20,7 +20,7 @@ public class UserAdvice {
 
     @ExceptionHandler(AnonymousUserException.class)
     public ResponseEntity<ErrorResponse> handleAnonymousUser(AnonymousUserException e, HttpServletRequest request) {
-        logger.error("Anonymous user error: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -30,7 +30,7 @@ public class UserAdvice {
 
     @ExceptionHandler(DuplicatedUserException.class)
     public ResponseEntity<ErrorResponse> handleDuplicatedUser(DuplicatedUserException e, HttpServletRequest request) {
-        logger.error("Duplicated user error: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -43,7 +43,7 @@ public class UserAdvice {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e, HttpServletRequest request) {
-        logger.error("User not found error: {}", e.getMessage());
+        logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
