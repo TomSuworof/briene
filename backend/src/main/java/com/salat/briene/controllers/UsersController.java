@@ -18,27 +18,22 @@ public class UsersController {
     private final UserService userService;
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editUser(
+    public ResponseEntity<String> editUser(
             @RequestParam Long id,
             @RequestParam String password,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String passwordNew,
-            Authentication authentication) {
-        try {
-            User authUser = userService.getUserFromAuthentication(authentication);
+            Authentication authentication) throws UserNotFoundException {
+        User authUser = userService.getUserFromAuthentication(authentication);
 
-            if (authUser.is("admin") || (authUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
-                userService.updateUser(id, new HashMap<>(){{
-                    put("email", email);
-                    put("password", passwordNew);
-                }});
-                return ResponseEntity.ok().body("User data of " + id + " was changed");
-            } else {
-                throw new UserNotFoundException();
-            }
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Cannot execute command");
+        if (authUser.is("admin") || (authUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
+            userService.updateUser(id, new HashMap<>() {{
+                put("email", email);
+                put("password", passwordNew);
+            }});
+            return ResponseEntity.ok().body("User data of " + id + " was changed");
+        } else {
+            throw new UserNotFoundException();
         }
     }
 }

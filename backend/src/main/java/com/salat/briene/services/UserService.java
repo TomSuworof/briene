@@ -1,6 +1,5 @@
 package com.salat.briene.services;
 
-import com.salat.briene.config.JwtUtils;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.entities.Role;
@@ -9,9 +8,7 @@ import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,9 +19,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,20 +32,20 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public User getUserFromAuthentication(Authentication authentication) throws UserNotFoundException {
+    public User getUserFromAuthentication(Authentication authentication) throws AnonymousUserException {
         if (authentication == null) {
-            throw new UserNotFoundException();
+            throw new AnonymousUserException();
         }
         return loadUserByUsername(authentication.getName());
     }
 
-    public void saveUser(SignupRequest signupRequest)  throws UserFoundException {
+    public void saveUser(SignupRequest signupRequest)  throws DuplicatedUserException {
         if (existsByUsername(signupRequest.getUsername())) {
-            throw new UserFoundByUsernameException();
+            throw new DuplicatedUserByUsernameException();
         }
 
         if (existsByEmail(signupRequest.getEmail())) {
-            throw new UserFoundByEmailException();
+            throw new DuplicatedUserByEmailException();
         }
 
         User user = new User();

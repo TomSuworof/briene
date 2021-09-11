@@ -17,4 +17,3 @@ public class IllegalArticleStateException extends IOException {
         super(ILLEGAL_STATE + message, cause);
     }
 }
-

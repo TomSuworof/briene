@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public class Article {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @NotBlank(message = "Content cannot be empty")
+    @Size(min = 1, message = "Content cannot be empty")
     private byte[] content;
 
     @NotNull

@@ -56,8 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/**").permitAll()
-                //Все остальные страницы требуют аутентификации
                 .anyRequest().authenticated()
                 .and()
                 .logout().permitAll().logoutSuccessUrl("/");

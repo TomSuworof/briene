@@ -2,12 +2,10 @@ package com.salat.briene.controllers;
 
 import com.salat.briene.config.JwtUtils;
 import com.salat.briene.entities.User;
-import com.salat.briene.exceptions.UserFoundByEmailException;
-import com.salat.briene.exceptions.UserFoundByUsernameException;
+import com.salat.briene.exceptions.DuplicatedUserException;
 import com.salat.briene.payload.request.LoginRequest;
 import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.payload.response.JwtResponse;
-import com.salat.briene.payload.response.MessageResponse;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -48,7 +46,7 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        return ResponseEntity.ok(new JwtResponse(
+        return ResponseEntity.ok().body(new JwtResponse(
                 jwt,
                 user.getId(),
                 user.getUsername(),
@@ -57,18 +55,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
-        try {
-            userService.saveUser(signUpRequest);
-            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-        } catch (UserFoundByUsernameException | UserFoundByEmailException e) {
-            e.printStackTrace();
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-//                    .body(new MessageResponse("Error: Email is already in use!"));
-//                    .body(new MessageResponse("Error: Username is already taken!"));
-
-        }
+    public ResponseEntity<String> registerUser(@RequestBody SignupRequest signUpRequest) throws DuplicatedUserException {
+        userService.saveUser(signUpRequest);
+        return ResponseEntity.ok().body("User registered successfully");
     }
 }

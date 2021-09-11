@@ -8,12 +8,14 @@
         <tr>
           <th class="user-column">ID</th>
           <th class="user-column">Username</th>
+          <th class="user-column">Email</th>
           <th class="user-column">Roles</th>
           <th class="user-column-actions">Actions</th>
         </tr>
         <tr class="user-row" v-for="user in users"  v-bind:key="user.id">
           <td class="user-column">{{ user.id }}</td>
           <td class="user-column">{{ user.username }}</td>
+          <td class="user-column">{{ user.email }}</td>
           <td class="user-column">
             <ul v-for="role in user.roles" v-bind:key="role.id">
               <li>{{ role.name }}</li>
