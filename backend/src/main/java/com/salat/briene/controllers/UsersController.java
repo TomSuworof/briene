@@ -11,32 +11,33 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UsersController {
-    private static final String USER_UPDATED = "User data of {%d} was changed";
+    private static final String USER_UPDATED = "User data of {%s} was changed";
 
     private final UserService userService;
 
     @PostMapping("/edit")
     public ResponseEntity<String> editUser(
-            @RequestParam Long id,
+            @RequestParam UUID id,
             @RequestParam String password,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String bio,
             @RequestParam(required = false) String passwordNew,
             Authentication authentication) throws UserNotFoundException {
-        User authUser = userService.getUserFromAuthentication(authentication);
+        User currentUser = userService.getUserFromAuthentication(authentication);
 
-        if (authUser.is(RoleEnum.ADMIN) || (authUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
+        if (currentUser.is(RoleEnum.ADMIN) || (currentUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
 
             UserDataRequest newUserData = new UserDataRequest();
-            newUserData.setEmail(Optional.of(email));
-            newUserData.setBio(Optional.of(bio));
-            newUserData.setPassword(Optional.of(passwordNew));
+            newUserData.setEmail(Optional.ofNullable(email));
+            newUserData.setBio(Optional.ofNullable(bio));
+            newUserData.setPassword(Optional.ofNullable(passwordNew));
 
             userService.updateUser(id, newUserData);
 

@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -26,15 +27,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ArticlesController {
     private static final String ARTICLE_UPLOADED = "Article was published or saved";
-    private static final String ARTICLE_DELETED = "Article {%d} was deleted";
+    private static final String ARTICLE_DELETED = "Article {%s} was deleted";
 
     private final ArticleService articleService;
     private final ArticleEditorService articleEditorService;
     private final UserService userService;
 
     @GetMapping("/get")
-    public ResponseEntity<PageResponseDTO> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset)
-            throws IllegalArticleStateException {
+    public ResponseEntity<PageResponseDTO> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
         PageResponseDTO response = articleService.getPageWithArticlesByState(ArticleState.PUBLISHED, limit, offset);
 
         if (!response.isHasBefore() && !response.isHasAfter()) {
@@ -59,7 +59,7 @@ public class ArticlesController {
     @GetMapping("/{id}")
     public ResponseEntity<ArticleDTO> getArticle(
             @RequestParam(required = false) Boolean raw,
-            @PathVariable Long id,
+            @PathVariable UUID id,
             Authentication authentication) throws ArticleNotFoundException {
         ArticleDTO article = null;
 
@@ -72,7 +72,7 @@ public class ArticlesController {
         return ResponseEntity.ok().body(article);
     }
 
-    private ArticleDTO getArticleHTML(Long id, Authentication authentication) throws ArticleNotFoundException {
+    private ArticleDTO getArticleHTML(UUID id, Authentication authentication) throws ArticleNotFoundException {
         Article article = articleService.getArticleById(id);
 
         if (article.getState().equals(ArticleState.IN_EDITING)) {
@@ -86,7 +86,7 @@ public class ArticlesController {
         return new ArticleDTOHTML(article);
     }
 
-    private ArticleDTO getArticleRaw(Long id, Authentication authentication) throws ArticleNotFoundException {
+    private ArticleDTO getArticleRaw(UUID id, Authentication authentication) throws ArticleNotFoundException {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);
@@ -111,7 +111,7 @@ public class ArticlesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteArticle(@PathVariable Long id, Authentication authentication)
+    public ResponseEntity<String> deleteArticle(@PathVariable UUID id, Authentication authentication)
             throws ArticleNotFoundException {
         Article article = articleService.getArticleById(id);
 

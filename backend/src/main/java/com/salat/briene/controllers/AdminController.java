@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    private static final String ROLE_UPDATED = "Role of {%d} changed";
+    private static final String ROLE_UPDATED = "Role of {%s} changed";
 
     private final ArticleService articleService;
     private final UserService userService;
@@ -38,7 +39,7 @@ public class AdminController {
     }
 
     @PostMapping("/edit_user")
-    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam Long id) throws UserNotFoundException {
+    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) throws UserNotFoundException {
         userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
         return ResponseEntity.ok().body(ROLE_UPDATED.formatted(id));
     }

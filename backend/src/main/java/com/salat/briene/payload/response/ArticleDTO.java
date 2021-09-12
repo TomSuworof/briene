@@ -4,10 +4,11 @@ import com.salat.briene.entities.Article;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 public abstract class ArticleDTO {
-    protected final Long id;
+    protected final UUID id;
     protected final String title;
     protected final String author;
     protected String content;

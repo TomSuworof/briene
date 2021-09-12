@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class ArticleService {
 
     public void saveArticle(Article newArticle) throws DuplicatedArticleException {
         newArticle.setPublicationDate(OffsetDateTime.now());
-        newArticle.setId((long) newArticle.hashCode());
+//        newArticle.setId((long) newArticle.hashCode());
 
         Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
 
@@ -40,7 +41,7 @@ public class ArticleService {
         }
     }
 
-    public void deleteArticleById(Long articleId) throws ArticleNotFoundException {
+    public void deleteArticleById(UUID articleId) throws ArticleNotFoundException {
         if (articleRepository.findById(articleId).isPresent()) {
             articleRepository.deleteById(articleId);
         } else {
@@ -48,7 +49,7 @@ public class ArticleService {
         }
     }
 
-    public Article getArticleById(Long id) throws ArticleNotFoundException {
+    public Article getArticleById(UUID id) throws ArticleNotFoundException {
         Optional<Article> articleOptional = articleRepository.findById(id);
         if (articleOptional.isPresent()) {
             return articleOptional.get();

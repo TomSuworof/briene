@@ -5,10 +5,11 @@ import com.salat.briene.entities.User;
 import lombok.Getter;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 public class UserDTO {
-    private final Long id;
+    private final UUID id;
     private final String username;
     private final String email;
     private final Set<Role> roles;

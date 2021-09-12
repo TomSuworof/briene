@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -45,7 +46,7 @@ public class BookmarksController {
     }
 
     @GetMapping("/isIn")
-    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam Long id, Authentication authentication)
+    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam UUID id, Authentication authentication)
             throws ArticleNotFoundException, UserNotFoundException {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Article article = articleService.getArticleById(id);
@@ -53,7 +54,7 @@ public class BookmarksController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editBookmark(@RequestParam Long id, @RequestParam String action, Authentication authentication)
+    public ResponseEntity<String> editBookmark(@RequestParam UUID id, @RequestParam String action, Authentication authentication)
             throws ArticleNotFoundException, AnonymousUserException, UserNotFoundException {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Set<Article> bookmarks = currentUser.getBookmarkedArticles();
@@ -67,7 +68,7 @@ public class BookmarksController {
         }
 
         UserDataRequest newUserData = new UserDataRequest();
-        newUserData.setBookmarks(Optional.of(bookmarks));
+        newUserData.setBookmarks(Optional.ofNullable(bookmarks));
 
         userService.updateUser(currentUser.getId(), newUserData);
 

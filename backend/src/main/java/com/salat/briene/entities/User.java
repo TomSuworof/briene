@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +19,8 @@ public class User implements UserDetails {
 
     @Id
     @NotNull
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @NotBlank(message = ConstraintViolationMessage.USER_USERNAME_EMPTY)
     private String username;

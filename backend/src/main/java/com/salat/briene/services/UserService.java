@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-    public User loadUserById(Long id) throws UserNotFoundException {
+    public User loadUserById(UUID id) throws UserNotFoundException {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
         user.setSecretAnswer(signupRequest.getSecretAnswer());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRoles(Set.of(RoleEnum.USER.getAsObject()));
-        user.setId((long) user.hashCode());
+//        user.setId((long) user.hashCode());
         userRepository.save(user);
     }
 
@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
-    public void updateUser(Long userId, UserDataRequest userData) throws UserNotFoundException {
+    public void updateUser(UUID userId, UserDataRequest userData) throws UserNotFoundException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         if (userData.getEmail().isPresent()) {
@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(userFromDB);
     }
 
-    private void deleteUser(Long userId) throws UserNotFoundException {
+    private void deleteUser(UUID userId) throws UserNotFoundException {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
         } else {
@@ -96,7 +96,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void changeRole(Long userId, Role role) throws UserNotFoundException {
+    public void changeRole(UUID userId, Role role) throws UserNotFoundException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         userFromDB.setRoles(new HashSet<>(){{
@@ -107,7 +107,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(userFromDB);
     }
 
-    public boolean isCurrentPasswordSameAs(Long requiredUserId, String passwordAnother) {
+    public boolean isCurrentPasswordSameAs(UUID requiredUserId, String passwordAnother) {
         User requiredUser = this.loadUserById(requiredUserId);
         String requiredUserPassword = requiredUser.getPassword();
         return passwordEncoder.matches(passwordAnother, requiredUserPassword);
