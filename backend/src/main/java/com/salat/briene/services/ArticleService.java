@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public void saveArticle(Article newArticle) throws DuplicatedArticleException {
-        newArticle.setPublicationDate(new Date());
+        newArticle.setPublicationDate(OffsetDateTime.now());
         newArticle.setId((long) newArticle.hashCode());
 
         Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());

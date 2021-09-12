@@ -30,13 +30,13 @@ create table if not exists t_users
 
 create table if not exists t_articles
 (
-    id               bigint       not null constraint t_articles_pkey primary key,
-    content          bytea        not null,
-    state            integer      not null,
+    id               bigint                   not null constraint t_articles_pkey primary key,
+    content          bytea                    not null,
+    state            integer                  not null,
     summary          varchar(255),
-    title            varchar(255) not null,
-    author_id        bigint       constraint references_to_not_null_author references t_users not null,
-    publication_date timestamp    not null
+    title            varchar(255)             not null,
+    author_id        bigint                   not null constraint references_to_not_null_author references t_users not null,
+    publication_date timestamp with time zone not null
 );
 
 create table if not exists t_users_roles

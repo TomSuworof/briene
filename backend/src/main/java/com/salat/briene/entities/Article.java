@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -46,7 +46,7 @@ public class Article {
     private ArticleState state;
 
     @PastOrPresent(message = "Article cannot be published in future")
-    private Date publicationDate;
+    private OffsetDateTime publicationDate;
 
     public String makeHTML() {
         MutableDataSet options = new MutableDataSet();

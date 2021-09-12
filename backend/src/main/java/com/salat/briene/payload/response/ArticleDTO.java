@@ -3,7 +3,7 @@ package com.salat.briene.payload.response;
 import com.salat.briene.entities.Article;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Getter
 public abstract class ArticleDTO {
@@ -12,7 +12,7 @@ public abstract class ArticleDTO {
     protected final String author;
     protected String content;
     protected String summary;
-    protected final Date publicationDate;
+    protected final OffsetDateTime publicationDate;
 
     public ArticleDTO(Article article) {
         this.id = article.getId();
