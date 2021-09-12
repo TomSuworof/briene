@@ -77,7 +77,15 @@ export default {
     getArticlesPaginated: function (limit, offset) {
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
-            this.articles = response.data.articles;
+            this.articles = response.data.articles.sort((article1, article2) => {
+              if (article1.publicationDate < article2.publicationDate) {
+                return -1;
+              }
+              if (article1.publicationDate > article2.publicationDate) {
+                return 1;
+              }
+              return 0;
+            }).reverse(); // newer first
             this.hasBefore = response.data.hasBefore;
             this.hasAfter = response.data.hasAfter;
           })
