@@ -2,6 +2,7 @@ package com.salat.briene.controlleradvices;
 
 import com.salat.briene.exceptions.AnonymousUserException;
 import com.salat.briene.exceptions.DuplicatedUserException;
+import com.salat.briene.exceptions.RoleNotFoundException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.payload.response.ErrorResponse;
 import org.slf4j.Logger;
@@ -43,6 +44,16 @@ public class UserAdvice {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e, HttpServletRequest request) {
+        logger.error(e.getMessage());
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRoleNotFound(RoleNotFoundException e, HttpServletRequest request) {
         logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;

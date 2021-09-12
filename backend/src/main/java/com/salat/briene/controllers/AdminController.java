@@ -1,5 +1,6 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
+    private static final String ROLE_UPDATED = "Role of {%d} changed";
+
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -36,13 +39,13 @@ public class AdminController {
 
     @PostMapping("/edit_user")
     public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam Long id) throws UserNotFoundException {
-        userService.changeRole(id, RoleEnum.fromAction(action).getAsObject());
-        return ResponseEntity.ok().body("Role of " + id + " changed");
+        userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
+        return ResponseEntity.ok().body(ROLE_UPDATED.formatted(id));
     }
 
     @GetMapping("/articles")
     public ResponseEntity<List<ArticleDTO>> getAllArticles(@RequestParam String state) throws IllegalArticleStateException {
-        List<ArticleDTO> articles = articleService.getArticlesByState(state)
+        List<ArticleDTO> articles = articleService.getArticlesByState(ArticleState.getFromDescription(state))
                 .stream().map(ArticleDTOHTML::new)
                 .collect(Collectors.toList());
 

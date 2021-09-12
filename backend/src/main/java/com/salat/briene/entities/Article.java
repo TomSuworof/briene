@@ -28,7 +28,7 @@ public class Article {
     @NotNull
     private Long id;
 
-    @NotBlank(message = "Title cannot be empty: it is shown in HTML title")
+    @NotBlank(message = ConstraintViolationMessage.ARTICLE_TITLE_EMPTY)
     private String title;
 
     @NotNull
@@ -36,7 +36,7 @@ public class Article {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @Size(min = 1, message = "Content cannot be empty")
+    @Size(min = 1, message = ConstraintViolationMessage.ARTICLE_CONTENT_EMPTY)
     private byte[] content;
 
     @Size(max = 255)
@@ -45,7 +45,7 @@ public class Article {
     @NotNull
     private ArticleState state;
 
-    @PastOrPresent(message = "Article cannot be published in future")
+    @PastOrPresent(message = ConstraintViolationMessage.ARTICLE_PUBLICATION_DATE_INVALID)
     private OffsetDateTime publicationDate;
 
     public String makeHTML() {

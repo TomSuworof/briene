@@ -1,5 +1,6 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.exceptions.AnonymousUserException;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
@@ -14,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/bookmarks")
 @RequiredArgsConstructor
 public class BookmarksController {
+    private static final String BOOKMARKS_ACTION_ADD = "add";
+    private static final String BOOKMARKS_ACTION_REMOVE = "remove";
+
+    private static final String BOOKMARKS_UPDATED = "Bookmarks updated";
+
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -55,15 +61,16 @@ public class BookmarksController {
         Article article = articleService.getArticleById(id);
 
         switch (action.toLowerCase()) {
-            case "add" -> bookmarks.add(article);
-            case "remove" -> bookmarks.remove(article);
+            case BOOKMARKS_ACTION_ADD -> bookmarks.add(article);
+            case BOOKMARKS_ACTION_REMOVE -> bookmarks.remove(article);
             default -> throw new ArticleNotFoundException();
         }
 
-        userService.updateUser(currentUser.getId(), new HashMap<>() {{
-            put("bookmarks", bookmarks);
-        }});
+        UserDataRequest newUserData = new UserDataRequest();
+        newUserData.setBookmarks(Optional.of(bookmarks));
 
-        return ResponseEntity.ok().body("Bookmarks updated");
+        userService.updateUser(currentUser.getId(), newUserData);
+
+        return ResponseEntity.ok().body(BOOKMARKS_UPDATED);
     }
 }

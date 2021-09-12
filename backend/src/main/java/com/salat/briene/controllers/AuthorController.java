@@ -1,5 +1,6 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.entities.ArticleState;
 import com.salat.briene.payload.response.AuthorDTO;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
@@ -25,7 +26,7 @@ public class AuthorController {
     public ResponseEntity<AuthorDTO> getAuthorPage(@PathVariable String authorName)
             throws UserNotFoundException, IllegalArticleStateException {
         User userAuthor = userService.loadUserByUsername(authorName);
-        List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, "published");
+        List<Article> articles = articleService.getArticlesByAuthorAndState(userAuthor, ArticleState.PUBLISHED);
 
         AuthorDTO author = new AuthorDTO(userAuthor, articles);
         return ResponseEntity.ok().body(author);

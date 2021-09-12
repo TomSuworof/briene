@@ -19,9 +19,9 @@ public class PasswordResetRequest {
     @NotNull
     private String id;
 
-    @NotEmpty(message = "Request cannot correspond to empty user")
+    @NotEmpty(message = ConstraintViolationMessage.PASSWORD_RESET_REQUEST_USERNAME_EMPTY)
     private String username;
 
-    @PastOrPresent(message = "Request cannot be created in future")
+    @PastOrPresent(message = ConstraintViolationMessage.PASSWORD_RESET_REQUEST_CREATED_INVALID)
     private Date created;
 }

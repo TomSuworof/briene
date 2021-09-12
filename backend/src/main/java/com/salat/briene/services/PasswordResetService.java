@@ -2,6 +2,7 @@ package com.salat.briene.services;
 
 import com.salat.briene.entities.PasswordResetRequest;
 import com.salat.briene.entities.User;
+import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.exceptions.PasswordResetRequestNotFoundException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.repositories.PasswordResetRepository;
@@ -68,14 +69,13 @@ public class PasswordResetService {
 
         PasswordResetRequest passwordResetRequest = passwordResetRequestOpt.get();
 
-        Map<String, String> newData = new HashMap<>(){{
-            put("password", passwordNew);
-        }};
+        UserDataRequest newUserData = new UserDataRequest();
+        newUserData.setPassword(Optional.of(passwordNew));
 
         Long userId = userService.loadUserByUsername(passwordResetRequest.getUsername()).getId();
 
         passwordResetRepository.delete(passwordResetRequest);
-        userService.updateUser(userId, newData);
+        userService.updateUser(userId, newUserData);
     }
 
     public String getSecretQuestionOf(String userId) throws PasswordResetRequestNotFoundException, UserNotFoundException {

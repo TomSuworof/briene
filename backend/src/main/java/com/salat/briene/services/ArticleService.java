@@ -2,10 +2,10 @@ package com.salat.briene.services;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
-import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class ArticleService {
 
         if (oldArticleOpt.isPresent()) {
             Article oldArticle = oldArticleOpt.get();
-            if (newArticle.getState().equals(ArticleState.ARTICLE_IN_EDITING)) {
+            if (newArticle.getState().equals(ArticleState.IN_EDITING)) {
                 articleRepository.delete(oldArticle);
                 articleRepository.save(newArticle);
             } else {
@@ -58,22 +58,12 @@ public class ArticleService {
     }
 
 
-    public List<Article> getArticlesByState(String articleState) throws IllegalArticleStateException {
-        if (articleState == null) {
-            throw new IllegalArticleStateException();
+    public List<Article> getArticlesByState(ArticleState state) {
+        if (state.equals(ArticleState.ALL)) {
+            return getAllArticles();
+        } else {
+            return articleRepository.findArticlesByState(state);
         }
-
-        ArticleState state;
-        switch (articleState) {
-            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
-            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
-            case "all" -> {
-                return getAllArticles();
-            }
-            default -> throw new IllegalArticleStateException();
-        }
-
-        return articleRepository.findArticlesByState(state);
     }
 
     private List<Article> getAllArticles() {
@@ -81,22 +71,12 @@ public class ArticleService {
     }
 
 
-    public List<Article> getArticlesByAuthorAndState(User author, String articleState) throws IllegalArticleStateException {
-        if (articleState == null) {
-            throw new IllegalArticleStateException();
+    public List<Article> getArticlesByAuthorAndState(User author, ArticleState state) {
+        if (state.equals(ArticleState.ALL)) {
+            return getArticlesByAuthor(author);
+        } else {
+            return articleRepository.findArticlesByAuthorAndState(author, state);
         }
-
-        ArticleState state;
-        switch (articleState.toLowerCase()) {
-            case "published" -> state = ArticleState.ARTICLE_PUBLISHED;
-            case "drafts" -> state = ArticleState.ARTICLE_IN_EDITING;
-            case "all" -> {
-                return getArticlesByAuthor(author);
-            }
-            default -> throw new IllegalArticleStateException();
-        }
-
-        return articleRepository.findArticlesByAuthorAndState(author, state);
     }
 
     private List<Article> getArticlesByAuthor(User author) {
@@ -104,43 +84,27 @@ public class ArticleService {
     }
 
 
-    public PageResponseDTO getPageWithArticlesByState(String articleState, Integer limit, Integer offset) throws IllegalArticleStateException {
-        if (articleState == null) {
-            throw new IllegalArticleStateException();
+    public PageResponseDTO getPageWithArticlesByState(ArticleState state, Integer limit, Integer offset) {
+        // here we will store response
+        List<Article> articles;
+        long allArticlesSize;
+
+        if (state.equals(ArticleState.ALL)) {
+            // if all articles were requested, then execute SELECT and COUNT for all articles
+            articles = getAllArticlesPaginated(limit, offset);
+            allArticlesSize = articleRepository.count();
+        } else {
+            // if articles were requested with state, then execute SELECT and COUNT for articles with the state
+            articles = getArticlesByStatePaginated(state, limit, offset);
+            allArticlesSize = articleRepository.countArticlesByState(state);
         }
 
-        switch (articleState) {
-            case "published" -> {
-                ArticleState state = ArticleState.ARTICLE_PUBLISHED;
-                List<Article> articles = getArticlesByStatePaginated(state, limit, offset);
-                long allArticlesSize = articleRepository.countArticlesByState(state);
-                return new PageResponseDTO(
-                        offset > 0 && allArticlesSize > 0,
-                        (offset + limit) < allArticlesSize,
-                        articles
-                );
-            }
-            case "drafts" -> {
-                ArticleState state = ArticleState.ARTICLE_IN_EDITING;
-                List<Article> articles = getArticlesByStatePaginated(state, limit, offset);
-                long allArticlesSize = articleRepository.countArticlesByState(state);
-                return new PageResponseDTO(
-                        offset > 0 && allArticlesSize > 0,
-                        (offset + limit) < allArticlesSize,
-                        articles
-                );
-            }
-            case "all" -> {
-                List<Article> articles = getAllArticlesPaginated(limit, offset);
-                long allArticlesSize = articleRepository.count();
-                return new PageResponseDTO(
-                        offset > 0 && allArticlesSize > 0,
-                        (offset + limit) < allArticlesSize,
-                        articles
-                );
-            }
-            default -> throw new IllegalArticleStateException();
-        }
+        // return response after filtering
+        return new PageResponseDTO(
+                offset > 0 && allArticlesSize > 0,
+                (offset + limit) < allArticlesSize,
+                articles
+        );
     }
 
     private List<Article> getArticlesByStatePaginated(ArticleState state, Integer limit, Integer offset) {
@@ -157,6 +121,6 @@ public class ArticleService {
             return false;
         }
 
-        return user.is("admin") || article.getAuthor().equals(user);
+        return user.is(RoleEnum.ADMIN) || article.getAuthor().equals(user);
     }
 }

@@ -1,6 +1,6 @@
 package com.salat.briene.entities;
 
-import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.exceptions.RoleNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,23 +13,23 @@ public enum RoleEnum {
 
     private final String actionForThisRole;
     private final String description;
-    private final Role asObject;
+    private final Role asObject; // should be used for persistence
 
-    public static RoleEnum fromAction(String action) {
+    public static RoleEnum getFromAction(String action) {
         return switch (action) {
             case "delete" -> BLOCKED;
             case "make_admin" -> ADMIN;
             case "make_user" -> USER;
-            default -> throw new UserNotFoundException();
+            default -> throw new RoleNotFoundException();
         };
     }
 
-    public static RoleEnum fromDescription(String description) {
+    public static RoleEnum getFromDescription(String description) {
         return switch (description) {
             case "blocked" -> BLOCKED;
             case "admin" -> ADMIN;
             case "user" -> USER;
-            default -> throw new UserNotFoundException();
+            default -> throw new RoleNotFoundException();
         };
     }
 }

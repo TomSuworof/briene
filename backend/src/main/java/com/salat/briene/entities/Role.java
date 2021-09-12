@@ -18,7 +18,7 @@ public class Role implements GrantedAuthority {
     @NotNull
     private Long id;
 
-    @NotEmpty(message = "Role cannot be called by empty string")
+    @NotEmpty(message = ConstraintViolationMessage.ROLE_NAME_EMPTY)
     private String name;
 
     @Override

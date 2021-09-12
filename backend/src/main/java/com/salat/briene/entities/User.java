@@ -20,23 +20,23 @@ public class User implements UserDetails {
     @NotNull
     private Long id;
 
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank(message = ConstraintViolationMessage.USER_USERNAME_EMPTY)
     private String username;
 
-    @NotBlank(message="Email cannot be empty")
-    @Email(message = "Invalid email")
+    @NotBlank(message = ConstraintViolationMessage.USER_EMAIL_EMPTY)
+    @Email(message = ConstraintViolationMessage.USER_EMAIL_INVALID)
     private String email;
 
-    @Size(max = 255)
+    @Size(max = 255, message = ConstraintViolationMessage.USER_BIO_LIMIT)
     private String bio;
 
-    @NotBlank(message = "Secret question cannot be empty: Is is used in password reset procedure")
+    @NotBlank(message = ConstraintViolationMessage.USER_SECRET_QUESTION_EMPTY)
     private String secretQuestion;
 
-    @NotBlank(message = "Secret answer cannot be empty: Is is used in password reset procedure")
+    @NotBlank(message = ConstraintViolationMessage.USER_SECRET_ANSWER_EMPTY)
     private String secretAnswer;
 
-    @NotBlank(message = "Password cannot be empty")
+    @NotBlank(message = ConstraintViolationMessage.USER_PASSWORD_EMPTY)
     private String password;
 
     @NotEmpty
@@ -61,7 +61,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !roles.contains(new Role(0L, "ROLE_BLOCKED"));
+        return !roles.contains(RoleEnum.BLOCKED.getAsObject());
     }
 
     @Override
@@ -87,15 +87,7 @@ public class User implements UserDetails {
         return Objects.hash(username, email);
     }
 
-    public boolean is(String role) {
-        if (role.equals("blocked") && this.getRoles().contains(new Role((long) 0, "ROLE_BLOCKED"))) {
-            return true;
-        } else if (role.equals("admin") && this.getRoles().contains(new Role((long) 1, "ROLE_ADMIN"))) {
-            return true;
-        } else if (role.equals("user") && this.getRoles().contains(new Role((long) 2, "ROLE_USER"))) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean is(RoleEnum role) {
+        return this.getRoles().contains(role.getAsObject());
     }
 }
