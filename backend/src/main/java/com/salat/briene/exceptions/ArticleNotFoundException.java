@@ -1,8 +1,6 @@
 package com.salat.briene.exceptions;
 
-import java.io.IOException;
-
-public class ArticleNotFoundException extends IOException {
+public class ArticleNotFoundException extends IllegalStateException {
     private static final String ARTICLE_NOT_FOUND = "Such article does not exist";
 
     public ArticleNotFoundException() {

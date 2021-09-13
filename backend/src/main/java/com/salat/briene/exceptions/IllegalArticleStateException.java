@@ -1,8 +1,6 @@
 package com.salat.briene.exceptions;
 
-import java.io.IOException;
-
-public class IllegalArticleStateException extends IOException {
+public class IllegalArticleStateException extends IllegalArgumentException {
     private static final String ILLEGAL_STATE = "Unknown article state";
 
     public IllegalArticleStateException() {

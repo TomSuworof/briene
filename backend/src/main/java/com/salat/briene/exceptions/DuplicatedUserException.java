@@ -1,8 +1,6 @@
 package com.salat.briene.exceptions;
 
-import org.springframework.security.core.AuthenticationException;
-
-public class DuplicatedUserException extends AuthenticationException {
+public class DuplicatedUserException extends IllegalStateException {
     private static final String USER_EXISTS = "Such user exists";
 
     public DuplicatedUserException() {

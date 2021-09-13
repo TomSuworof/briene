@@ -1,8 +1,6 @@
 package com.salat.briene.exceptions;
 
-import java.io.IOException;
-
-public class DuplicatedArticleException extends IOException {
+public class DuplicatedArticleException extends IllegalStateException {
     private static final String ARTICLE_FOUND = "Such article exists";
 
     public DuplicatedArticleException() {
