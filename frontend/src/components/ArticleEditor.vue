@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="editor">
-          <vue-simplemde v-model="content" ref="markdownEditor"/>
+          <vue-simplemde :configs="configs" v-model="content" ref="markdownEditor"/>
         </div>
       </div>
     </form>
@@ -33,6 +33,9 @@ export default {
       title: '',
       content: '',
       summary: '',
+      configs: {
+        spellChecker: false, // disable spell check
+      },
     }
   },
   computed: {

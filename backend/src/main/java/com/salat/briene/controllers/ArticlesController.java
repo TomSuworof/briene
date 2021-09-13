@@ -1,6 +1,7 @@
 package com.salat.briene.controllers;
 
 import com.salat.briene.exceptions.*;
+import com.salat.briene.payload.request.ArticleLoadRequest;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.payload.response.ArticleDTORaw;
@@ -100,13 +101,11 @@ public class ArticlesController {
 
     @PostMapping("/load")
     public ResponseEntity<String> publishArticle(
-            @RequestParam String title,
-            @RequestParam String content,
-            @RequestParam(required = false) String summary,
+            @RequestBody ArticleLoadRequest article,
             @RequestParam String action,
             Authentication authentication) throws DuplicatedArticleException, AnonymousUserException, IllegalArticleStateException {
         User userFromToken = userService.getUserFromAuthentication(authentication);
-        articleEditorService.loadArticle(userFromToken, title, content, summary, action);
+        articleEditorService.loadArticle(userFromToken, article, action);
         return ResponseEntity.ok().body(ARTICLE_UPLOADED);
     }
 

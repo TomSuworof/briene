@@ -21,13 +21,14 @@ class ArticlesService {
 
     loadArticle(title, content, summary, action) {
         return http.post('/articles/load',
-            {},
+            {
+                title: title,
+                content: content,
+                summary: summary,
+            },
             {
                 headers: authHeader(),
                 params : {
-                    title: title,
-                    content: content,
-                    summary: summary,
                     action: action
                 }
             });
