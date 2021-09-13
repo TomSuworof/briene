@@ -15,13 +15,11 @@ public enum ArticleState {
     private final String description;
 
     public static ArticleState getFromAction(String action) throws IllegalArticleStateException {
-        try {
-            for (ArticleState state : values()) {
-                if (state.getActionForThisState().equalsIgnoreCase(action)) {
-                    return state;
-                }
+        for (ArticleState state : values()) {
+            // if null we should not do anything - just skip it
+            if (state.getActionForThisState() != null && state.getActionForThisState().equalsIgnoreCase(action)) {
+                return state;
             }
-        } catch (NullPointerException ignored) {
         }
         throw new IllegalArticleStateException();
     }
