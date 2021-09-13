@@ -16,20 +16,20 @@ public enum RoleEnum {
     private final Role asObject; // should be used for persistence
 
     public static RoleEnum getFromAction(String action) {
-        return switch (action) {
-            case "delete" -> BLOCKED;
-            case "make_admin" -> ADMIN;
-            case "make_user" -> USER;
-            default -> throw new RoleNotFoundException();
-        };
+        for (RoleEnum role : values()) {
+            if (role.getActionForThisRole().equalsIgnoreCase(action)) {
+                return role;
+            }
+        }
+        throw new RoleNotFoundException();
     }
 
     public static RoleEnum getFromDescription(String description) {
-        return switch (description) {
-            case "blocked" -> BLOCKED;
-            case "admin" -> ADMIN;
-            case "user" -> USER;
-            default -> throw new RoleNotFoundException();
-        };
+        for (RoleEnum role : values()) {
+            if (role.getDescription().equalsIgnoreCase(description)) {
+                return role;
+            }
+        }
+        throw new RoleNotFoundException();
     }
 }
