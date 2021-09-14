@@ -23,22 +23,22 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User loadUserByUsername(String username) throws UserNotFoundException {
+    public User loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-    public User loadUserById(UUID id) throws UserNotFoundException {
+    public User loadUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public User getUserFromAuthentication(Authentication authentication) throws AnonymousUserException {
+    public User getUserFromAuthentication(Authentication authentication) {
         if (authentication == null) {
             throw new AnonymousUserException();
         }
         return loadUserByUsername(authentication.getName());
     }
 
-    public void saveUser(SignupRequest signupRequest)  throws DuplicatedUserException {
+    public void saveUser(SignupRequest signupRequest) {
         if (existsByUsername(signupRequest.getUsername())) {
             throw new DuplicatedUserByUsernameException();
         }
@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
-    public void updateUser(UUID userId, UserDataRequest userData) throws UserNotFoundException {
+    public void updateUser(UUID userId, UserDataRequest userData) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         if (userData.getEmail().isPresent()) {
@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(userFromDB);
     }
 
-    private void deleteUser(UUID userId) throws UserNotFoundException {
+    private void deleteUser(UUID userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
         } else {
@@ -96,7 +96,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void changeRole(UUID userId, Role role) throws UserNotFoundException {
+    public void changeRole(UUID userId, Role role) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         userFromDB.setRoles(new HashSet<>(){{

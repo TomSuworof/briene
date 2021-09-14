@@ -46,8 +46,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/my_articles")
-    public ResponseEntity<List<ArticleDTO>> getMyArticles(@RequestParam String state, Authentication authentication)
-            throws IllegalArticleStateException, AnonymousUserException {
+    public ResponseEntity<List<ArticleDTO>> getMyArticles(@RequestParam String state, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
 
         List<ArticleDTO> articles = articleService.getArticlesByAuthorAndState(currentUser, ArticleState.getFromDescription(state))
@@ -61,7 +60,7 @@ public class ArticlesController {
     public ResponseEntity<ArticleDTO> getArticle(
             @RequestParam(required = false) Boolean raw,
             @PathVariable UUID id,
-            Authentication authentication) throws ArticleNotFoundException {
+            Authentication authentication) {
         ArticleDTO article = null;
 
         if (raw == null) {
@@ -73,7 +72,7 @@ public class ArticlesController {
         return ResponseEntity.ok().body(article);
     }
 
-    private ArticleDTO getArticleHTML(UUID id, Authentication authentication) throws ArticleNotFoundException {
+    private ArticleDTO getArticleHTML(UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         if (article.getState().equals(ArticleState.IN_EDITING)) {
@@ -87,7 +86,7 @@ public class ArticlesController {
         return new ArticleDTOHTML(article);
     }
 
-    private ArticleDTO getArticleRaw(UUID id, Authentication authentication) throws ArticleNotFoundException {
+    private ArticleDTO getArticleRaw(UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);
@@ -103,15 +102,14 @@ public class ArticlesController {
     public ResponseEntity<String> publishArticle(
             @RequestBody ArticleLoadRequest article,
             @RequestParam String action,
-            Authentication authentication) throws DuplicatedArticleException, AnonymousUserException, IllegalArticleStateException {
+            Authentication authentication) {
         User userFromToken = userService.getUserFromAuthentication(authentication);
         articleEditorService.loadArticle(userFromToken, article, action);
         return ResponseEntity.ok().body(ARTICLE_UPLOADED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteArticle(@PathVariable UUID id, Authentication authentication)
-            throws ArticleNotFoundException {
+    public ResponseEntity<String> deleteArticle(@PathVariable UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);

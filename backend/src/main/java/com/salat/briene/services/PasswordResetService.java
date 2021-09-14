@@ -4,7 +4,6 @@ import com.salat.briene.entities.PasswordResetRequest;
 import com.salat.briene.entities.User;
 import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.exceptions.PasswordResetRequestNotFoundException;
-import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.repositories.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class PasswordResetService {
 
     private String email;
 
-    public void sendPasswordResetLinkTo(String username) throws UserNotFoundException {
+    public void sendPasswordResetLinkTo(String username) {
             Date created = new Date();
             User requiredUser = userService.loadUserByUsername(username);
             email = requiredUser.getEmail();
@@ -59,7 +58,7 @@ public class PasswordResetService {
         return emailAnswer.toString();
     }
 
-    public void setNewPasswordOf(String passwordNew, UUID requestId) throws PasswordResetRequestNotFoundException, UserNotFoundException {
+    public void setNewPasswordOf(String passwordNew, UUID requestId) {
         Optional<PasswordResetRequest> passwordResetRequestOpt = passwordResetRepository.findById(requestId);
 
         if (passwordResetRequestOpt.isEmpty()) {
@@ -77,7 +76,7 @@ public class PasswordResetService {
         userService.updateUser(userId, newUserData);
     }
 
-    public String getSecretQuestionOf(UUID userId) throws PasswordResetRequestNotFoundException, UserNotFoundException {
+    public String getSecretQuestionOf(UUID userId) {
         Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(userId);
 
         if (passwordResetRequest.isPresent()) {
@@ -88,7 +87,7 @@ public class PasswordResetService {
         }
     }
 
-    public String getSecretAnswerOf(UUID id) throws PasswordResetRequestNotFoundException, UserNotFoundException {
+    public String getSecretAnswerOf(UUID id) {
         Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(id);
 
         if (passwordResetRequest.isPresent()) {

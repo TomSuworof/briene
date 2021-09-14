@@ -22,9 +22,8 @@ import java.util.UUID;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public void saveArticle(Article newArticle) throws DuplicatedArticleException {
+    public void saveArticle(Article newArticle) {
         newArticle.setPublicationDate(OffsetDateTime.now());
-//        newArticle.setId((long) newArticle.hashCode());
 
         Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
 
@@ -41,7 +40,7 @@ public class ArticleService {
         }
     }
 
-    public void deleteArticleById(UUID articleId) throws ArticleNotFoundException {
+    public void deleteArticleById(UUID articleId) {
         if (articleRepository.findById(articleId).isPresent()) {
             articleRepository.deleteById(articleId);
         } else {
@@ -49,7 +48,7 @@ public class ArticleService {
         }
     }
 
-    public Article getArticleById(UUID id) throws ArticleNotFoundException {
+    public Article getArticleById(UUID id) {
         Optional<Article> articleOptional = articleRepository.findById(id);
         if (articleOptional.isPresent()) {
             return articleOptional.get();
@@ -121,7 +120,6 @@ public class ArticleService {
         if (user == null) {
             return false;
         }
-
         return user.is(RoleEnum.ADMIN) || article.getAuthor().equals(user);
     }
 }

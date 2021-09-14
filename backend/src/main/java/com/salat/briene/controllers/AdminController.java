@@ -5,8 +5,6 @@ import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.payload.response.UserDTO;
-import com.salat.briene.exceptions.IllegalArticleStateException;
-import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +37,13 @@ public class AdminController {
     }
 
     @PostMapping("/edit_user")
-    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) throws UserNotFoundException {
+    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) {
         userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
         return ResponseEntity.ok().body(ROLE_UPDATED.formatted(id));
     }
 
     @GetMapping("/articles")
-    public ResponseEntity<List<ArticleDTO>> getAllArticles(@RequestParam String state) throws IllegalArticleStateException {
+    public ResponseEntity<List<ArticleDTO>> getAllArticles(@RequestParam String state) {
         List<ArticleDTO> articles = articleService.getArticlesByState(ArticleState.getFromDescription(state))
                 .stream().map(ArticleDTOHTML::new)
                 .collect(Collectors.toList());

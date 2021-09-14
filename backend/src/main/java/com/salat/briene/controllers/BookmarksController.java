@@ -1,13 +1,11 @@
 package com.salat.briene.controllers;
 
 import com.salat.briene.payload.request.UserDataRequest;
-import com.salat.briene.exceptions.AnonymousUserException;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
-import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,7 @@ public class BookmarksController {
     private final UserService userService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ArticleDTO>> getBookmarksOfUser(Authentication authentication) throws AnonymousUserException {
+    public ResponseEntity<List<ArticleDTO>> getBookmarksOfUser(Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
 
         List<ArticleDTO> bookmarks = currentUser.getBookmarkedArticles()
@@ -46,16 +44,14 @@ public class BookmarksController {
     }
 
     @GetMapping("/isIn")
-    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam UUID id, Authentication authentication)
-            throws ArticleNotFoundException, UserNotFoundException {
+    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam UUID id, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Article article = articleService.getArticleById(id);
         return ResponseEntity.ok().body(currentUser.getBookmarkedArticles().contains(article));
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editBookmark(@RequestParam UUID id, @RequestParam String action, Authentication authentication)
-            throws ArticleNotFoundException, AnonymousUserException, UserNotFoundException {
+    public ResponseEntity<String> editBookmark(@RequestParam UUID id, @RequestParam String action, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Set<Article> bookmarks = currentUser.getBookmarkedArticles();
 

@@ -29,7 +29,7 @@ public class UsersController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String bio,
             @RequestParam(required = false) String passwordNew,
-            Authentication authentication) throws UserNotFoundException {
+            Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
 
         if (currentUser.is(RoleEnum.ADMIN) || (currentUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
