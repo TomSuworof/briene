@@ -1,7 +1,7 @@
 package com.salat.briene.controllers;
 
 import com.salat.briene.exceptions.*;
-import com.salat.briene.payload.request.ArticleLoadRequest;
+import com.salat.briene.payload.request.ArticleUploadRequest;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.payload.response.ArticleDTORaw;
@@ -98,13 +98,13 @@ public class ArticlesController {
         return new ArticleDTORaw(article);
     }
 
-    @PostMapping("/load")
+    @PostMapping("/upload")
     public ResponseEntity<String> publishArticle(
-            @RequestBody ArticleLoadRequest article,
+            @RequestBody ArticleUploadRequest article,
             @RequestParam String action,
             Authentication authentication) {
         User userFromToken = userService.getUserFromAuthentication(authentication);
-        articleEditorService.loadArticle(userFromToken, article, action);
+        articleEditorService.uploadArticle(userFromToken, article, action);
         return ResponseEntity.ok().body(ARTICLE_UPLOADED);
     }
 

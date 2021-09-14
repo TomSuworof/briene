@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ArticleLoadRequest {
+public class ArticleUploadRequest {
     private String title;
     private String content;
     private String summary;

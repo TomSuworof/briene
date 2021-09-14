@@ -74,7 +74,7 @@ export default {
       }
     },
     uploadArticle: function (action) {
-      ArticlesService.loadArticle(this.title, this.content, this.summary, action)
+      ArticlesService.uploadArticle(this.title, this.content, this.summary, action)
           .then(() => {
             this.$router.push('/articles');
           })
