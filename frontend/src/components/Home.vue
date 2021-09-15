@@ -3,8 +3,18 @@
     <div class="header">
       <h1>Briene</h1>
     </div>
+    <div>
+      <h2>Recent articles</h2>
+    </div>
+    <div id="articles">
+      <article-container
+          v-for="article in articles"
+          v-bind:key="article.id"
+          v-bind:article="article"
+      ></article-container>
+    </div>
     <div class="articles-button">
-      <router-link to="/articles">Articles</router-link>
+      <router-link to="/articles">Show more</router-link>
     </div>
     <div class="footer">
       <div>
@@ -18,19 +28,50 @@
 </template>
 
 <script>
+import ArticleContainer from "@/components/ArticleContainer";
+import ArticlesService from "@/services/ArticlesService";
+
 export default {
-  name: "Home"
+  name: "Home",
+  components: {
+    ArticleContainer
+  },
+  data() {
+    return {
+      articles: []
+    }
+  },
+  methods: {
+    getLastArticles: function (limit, offset) {
+      ArticlesService.getPublishedArticlesPaginated(limit, offset)
+          .then(response => {
+            this.articles = response.data.articles.sort((article1, article2) => {
+              if (article1.publicationDate < article2.publicationDate) {
+                return -1;
+              }
+              if (article1.publicationDate > article2.publicationDate) {
+                return 1;
+              }
+              return 0;
+            }).reverse(); // newer first
+            this.hasBefore = response.data.hasBefore;
+            this.hasAfter = response.data.hasAfter;
+          })
+          .catch(e => {
+            console.log(e);
+          });
+    },
+  },
+  created() {
+    this.getLastArticles(10, 0);
+    console.log(this.articles)
+  }
 }
 </script>
 
 <style scoped>
-.home-page-content {
-  margin: auto;
-  text-align: center;
-}
-
 .header {
-  margin: 0 0 50pt;
+  margin: 0 0 25pt;
 }
 
 .articles-button {

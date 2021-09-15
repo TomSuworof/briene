@@ -47,32 +47,12 @@
         <a href="#" class="article-type" @click="getAllArticles('drafts')">Drafts</a>
       </div>
       <div v-if="articles.length > 0">
-        <div class="article-container" v-for="article in articles" v-bind:key="article.id">
-          <div class="article-about row">
-            <div class="article-author">
-              <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
-            </div>
-            <div class="article-publication-date">
-              <p>{{ getFinePublicationDate(article) }}</p>
-            </div>
-          </div>
-          <div class="article-title-container">
-            <h3 class="article-title">
-              <router-link v-bind:to="'/articles/' + article.id">{{ article.title }}</router-link>
-            </h3>
-          </div>
-          <div class="article-action-container">
-            <div class="article-action-edit">
-              <a @click="editArticle(article.id)" href="#">🖊 Edit</a>
-            </div>
-            <div class="article-action-remove">
-              <a @click="removeArticle(article.id)" href="#">❌ Remove</a>
-            </div>
-          </div>
-          <div class="article-summary">
-            <p>{{ article.summary }}</p>
-          </div>
-        </div>
+        <article-container
+            v-for="article in articles"
+            v-bind:key="article.id"
+            v-bind:article="article"
+            v-bind:actions="actions"
+        ></article-container>
       </div>
       <div v-else-if="articles.length === 0">
         <p>No articles</p>
@@ -82,16 +62,23 @@
 </template>
 
 <script>
+import ArticleContainer from "@/components/ArticleContainer";
 import AdminService from "@/services/AdminService";
 import ArticlesService from "@/services/ArticlesService";
-import moment from "moment";
 
 export default {
   name: "Admin",
+  components: {
+    ArticleContainer
+  },
   data() {
     return {
       users: [],
-      articles: []
+      articles: [],
+      actions: [
+        {function: this.editArticle, message: '🖊 Edit'},
+        {function: this.removeArticle, message: '❌ Remove'}
+      ]
     };
   },
   computed: {
@@ -124,9 +111,6 @@ export default {
             console.log(err);
             this.articles = [];
           });
-    },
-    getFinePublicationDate: function(article) {
-      return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
     },
     editUser: function(action, id) {
       AdminService.editUser(action, id)
@@ -198,40 +182,7 @@ export default {
   padding: 5pt 0;
 }
 
-.article-title, .article-summary {
-  overflow-wrap: break-word;
-}
-
-.article-container {
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 10px;
-  margin: 0 0 10pt;
-  padding: 10pt;
-}
-
-.article-about {
-  padding: 0 15pt 0;
-  justify-content: space-between;
-}
-
-.article-author, .article-publication-date {
-  display: inline-block;
-}
-
-.article-publication-date {
-  color: #999;
-}
-
 .article-type {
   margin: 0 20pt 0 0;
-}
-
-.article-action-container, .article-title-container, .article-action-edit, .article-action-remove {
-  display: inline-block;
-  margin: 0 20pt 0 0;
-}
-
-.article-container {
-  margin: 0 0 10pt;
 }
 </style>

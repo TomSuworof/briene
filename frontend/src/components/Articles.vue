@@ -91,29 +91,7 @@ export default {
 </script>
 
 <style scoped>
-.article-title, .article-summary {
-  overflow-wrap: break-word;
-}
-
-.article-container {
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 10px;
-  margin: 0 0 10pt;
-  padding: 10pt;
-}
-
-.article-about {
-  padding: 0 15pt 0;
-  justify-content: space-between;
-}
-
-.article-author, .article-publication-date {
-  display: inline-block;
-}
-
-.article-publication-date {
-  color: #999;
-}
+@import "../../static/css/article_container_style.css";
 
 .navigation-button-prev, .navigation-button-next {
   display: inline-block;
