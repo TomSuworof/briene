@@ -2,13 +2,10 @@ package com.salat.briene.controllers;
 
 import com.salat.briene.exceptions.*;
 import com.salat.briene.payload.request.ArticleUploadRequest;
-import com.salat.briene.payload.response.ArticleDTO;
-import com.salat.briene.payload.response.ArticleDTOHTML;
-import com.salat.briene.payload.response.ArticleDTORaw;
+import com.salat.briene.payload.response.*;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
-import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.services.ArticleEditorService;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
@@ -50,18 +47,18 @@ public class ArticlesController {
         User currentUser = userService.getUserFromAuthentication(authentication);
 
         List<ArticleDTO> articles = articleService.getArticlesByAuthorAndState(currentUser, ArticleState.getFromDescription(state))
-                .stream().map(ArticleDTOHTML::new)
+                .stream().map(ArticleDTO::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(articles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArticleDTO> getArticle(
+    public ResponseEntity<ArticleWithContent> getArticle(
             @RequestParam(required = false) Boolean raw,
             @PathVariable UUID id,
             Authentication authentication) {
-        ArticleDTO article = null;
+        ArticleWithContent article = null;
 
         if (raw == null) {
             article = this.getArticleHTML(id, authentication);
@@ -72,7 +69,7 @@ public class ArticlesController {
         return ResponseEntity.ok().body(article);
     }
 
-    private ArticleDTO getArticleHTML(UUID id, Authentication authentication) {
+    private ArticleWithContent getArticleHTML(UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         if (article.getState().equals(ArticleState.IN_EDITING)) {
@@ -83,10 +80,10 @@ public class ArticlesController {
             }
         }
 
-        return new ArticleDTOHTML(article);
+        return new ArticleWithContentHTML(article);
     }
 
-    private ArticleDTO getArticleRaw(UUID id, Authentication authentication) {
+    private ArticleWithContent getArticleRaw(UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);
@@ -95,7 +92,7 @@ public class ArticlesController {
             throw new ArticleNotFoundException();
         }
 
-        return new ArticleDTORaw(article);
+        return new ArticleWithContentRaw(article);
     }
 
     @PostMapping("/upload")

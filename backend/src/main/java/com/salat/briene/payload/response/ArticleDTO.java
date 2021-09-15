@@ -6,12 +6,14 @@ import lombok.Getter;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+// ArticleDTO provides short form of article without content
+// It is helpful and recommended to use when you need to get a list of articles
+
 @Getter
-public abstract class ArticleDTO {
+public class ArticleDTO {
     protected final UUID id;
     protected final String title;
     protected final String author;
-    protected String content;
     protected String summary;
     protected final OffsetDateTime publicationDate;
 

@@ -3,7 +3,7 @@ package com.salat.briene.controllers;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.payload.response.ArticleDTO;
-import com.salat.briene.payload.response.ArticleDTOHTML;
+import com.salat.briene.payload.response.ArticleWithContentHTML;
 import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
@@ -45,7 +45,7 @@ public class AdminController {
     @GetMapping("/articles")
     public ResponseEntity<List<ArticleDTO>> getAllArticles(@RequestParam String state) {
         List<ArticleDTO> articles = articleService.getArticlesByState(ArticleState.getFromDescription(state))
-                .stream().map(ArticleDTOHTML::new)
+                .stream().map(ArticleWithContentHTML::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(articles);

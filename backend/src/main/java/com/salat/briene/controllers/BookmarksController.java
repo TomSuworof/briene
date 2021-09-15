@@ -2,7 +2,6 @@ package com.salat.briene.controllers;
 
 import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.payload.response.ArticleDTO;
-import com.salat.briene.payload.response.ArticleDTOHTML;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
@@ -37,7 +36,7 @@ public class BookmarksController {
         User currentUser = userService.getUserFromAuthentication(authentication);
 
         List<ArticleDTO> bookmarks = currentUser.getBookmarkedArticles()
-                .stream().map(ArticleDTOHTML::new)
+                .stream().map(ArticleDTO::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(bookmarks);

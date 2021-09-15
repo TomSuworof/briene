@@ -15,6 +15,6 @@ public class PageResponseDTO {
     public PageResponseDTO(boolean hasBefore, boolean hasAfter, List<Article> articles) {
         this.hasBefore = hasBefore;
         this.hasAfter = hasAfter;
-        this.articles = articles.stream().map(ArticleDTOHTML::new).collect(Collectors.toList());
+        this.articles = articles.stream().map(ArticleDTO::new).collect(Collectors.toList());
     }
 }
