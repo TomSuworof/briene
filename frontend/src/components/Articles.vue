@@ -1,17 +1,7 @@
 <template>
   <div class="articles-page-content">
-    <div class="header row">
-      <div>
+    <div class="header">
         <h1>Articles</h1>
-      </div>
-      <div class="header-buttons">
-        <div class="header-button-editor">
-          <router-link to="/article_editor">New article</router-link>
-        </div>
-        <div class="header-button-personal-area">
-          <router-link to="/profile">Profile</router-link>
-        </div>
-      </div>
     </div>
     <div id="articles">
       <div class="article-container" v-for="article in articles" v-bind:key="article.id">
@@ -101,16 +91,6 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  padding: 0 10pt 0;
-  justify-content: space-between;
-}
-
-.header-button-editor, .header-button-personal-area {
-  margin: 0 10pt 0;
-  display: inline-block;
-}
-
 .article-title, .article-summary {
   overflow-wrap: break-word;
 }

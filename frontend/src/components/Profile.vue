@@ -108,7 +108,7 @@
         <div class="article-container" v-for="article in bookmarks" v-bind:key="article.id">
           <div class="article-title-container">
             <h3 class="article-title">
-              <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+              <router-link v-bind:to="'/articles/' + article.id">{{ article.title }}</router-link>
             </h3>
           </div>
           <div class="article-action-container">
@@ -136,7 +136,7 @@
           </div>
           <div class="article-title-container">
             <h3 class="article-title">
-              <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+              <router-link v-bind:to="'/articles/' + article.id">{{ article.title }}</router-link>
             </h3>
           </div>
           <div class="article-action-container">
