@@ -4,24 +4,11 @@
         <h1>Articles</h1>
     </div>
     <div id="articles">
-      <div class="article-container" v-for="article in articles" v-bind:key="article.id">
-        <div class="article-about row">
-          <div class="article-author">
-            <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
-          </div>
-          <div class="article-publication-date">
-            <p>{{ getFinePublicationDate(article) }}</p>
-          </div>
-        </div>
-        <div class="article-title-container">
-          <h3 class="article-title">
-            <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-          </h3>
-        </div>
-        <div class="article-summary">
-          <p>{{ article.summary }}</p>
-        </div>
-      </div>
+      <article-container
+          v-for="article in articles"
+          v-bind:key="article.id"
+          v-bind:article="article"
+      ></article-container>
     </div>
     <div class="navigation-buttons">
       <div class="navigation-button-prev" title="Previous">
@@ -35,12 +22,14 @@
 </template>
 
 <script>
-
+import ArticleContainer from "@/components/ArticleContainer";
 import ArticlesService from "@/services/ArticlesService";
-import moment from "moment";
 
 export default {
   name: "Articles",
+  components: {
+    ArticleContainer
+  },
   data() {
     return {
       articles: [],
@@ -53,9 +42,6 @@ export default {
     }
   },
   methods: {
-    getFinePublicationDate: function(article) {
-      return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
-    },
     getPreviousPage: function () {
       this.offset -= this.limit;
       this.getArticlesPaginated(this.limit, this.offset);
@@ -91,8 +77,6 @@ export default {
 </script>
 
 <style scoped>
-@import "../../static/css/article_container_style.css";
-
 .navigation-button-prev, .navigation-button-next {
   display: inline-block;
   margin: 0 10pt 0;
