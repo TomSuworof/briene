@@ -9,38 +9,32 @@ everything.
 ## Technologies used
 
 * Backend
-  * Spring Boot, JPA, Security
-  * PostgreSQL
+  * Spring (Boot, JPA, Security)
+  * PostgreSQL 
   * Lombok
   * [Flexmark](https://github.com/vsch/flexmark-java)
-  * Gson
+  * Flyway 
+  * JSON Web Token 
+  * Hibernate (Validator)
+
 
 * Frontend
-  * Thymeleaf
+  * Vue
   * Bootstrap
-  * [Lepture's Editor](https://github.com/lepture/editor)
+  * [Vue SimpleMDE](https://github.com/F-loat/vue-simplemde)
+  * Moment
+  * axios
   * jQuery
-  * Vue.JS
 
 ## Quick start guide
 
 1. Clone this repo
-2. Create database using data from [application.yml](src/main/resources/application.yml)
-   1. **Warning**: make sure you created table 't_roles' with roles itself. Here is script:
-    ```postgresql
-    create table t_roles (
-      "id" bigint not null constraint t_roles_pkey primary key,
-      "name" varchar(255)
-    );
-    
-    alter table t_roles owner to postgres;
-    
-    insert into t_roles (id, name) values
-        (0, 'ROLE_BLOCKED'),
-        (1, 'ROLE_ADMIN'),
-        (2, 'ROLE_USER');
-    ```
-    2. Other tables will be created automatically 
+2. Run Maven build: ```mvn clean install```
+3. Change directory to  frontend: ```cd frontend```
+4. Run npm install: ```npm install```
+5. Run npm serve script: ```npm run serve```
+6. Run [BrieneApplication](src/main/java/com/salat/briene/BrieneApplication.java)
 
-3. Run Maven build: ```mvn clean install```
-4. Run [BrieneApplication](src/main/java/com/salat/briene/BrieneApplication.java)
+## Postman collection
+
+// todo update

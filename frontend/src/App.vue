@@ -4,7 +4,7 @@
       <div class="main-link">
         <router-link to="/">Main</router-link>
       </div>
-      <div class="header-buttons-right row">
+      <div class="header-buttons-right">
         <div class="header-button-editor">
           <router-link to="/article_editor">New article</router-link>
         </div>
@@ -32,6 +32,7 @@ export default {
 }
 
 .header-button-editor, .header-button-profile {
+  display: inline-block;
   margin: 0 10pt 0;
 }
 
