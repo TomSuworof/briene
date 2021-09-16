@@ -33,7 +33,7 @@ everything.
 3. Change directory to  frontend: ```cd frontend```
 4. Run npm install: ```npm install```
 5. Run npm serve script: ```npm run serve```
-6. Run [BrieneApplication](src/main/java/com/salat/briene/BrieneApplication.java)
+6. Run [BrieneApplication](backend/src/main/java/com/salat/briene/BrieneApplication.java)
 
 ## Postman API collection
 
