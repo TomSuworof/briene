@@ -105,7 +105,15 @@ export default {
     getAllArticles: function(state) {
       AdminService.getAllArticles(state)
           .then(response => {
-            this.articles = response.data;
+            this.articles = response.data.sort((article1, article2) => {
+              if (article1.publicationDate < article2.publicationDate) {
+                return -1;
+              }
+              if (article1.publicationDate > article2.publicationDate) {
+                return 1;
+              }
+              return 0;
+            }).reverse(); // newer first;
           })
           .catch(err => {
             console.log(err);
