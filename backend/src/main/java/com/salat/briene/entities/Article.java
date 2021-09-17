@@ -71,10 +71,10 @@ public class Article {
                 Arrays.equals(content, article.getContent());
     }
 
-//    @Override
-//    public int hashCode() {
-//        int result = Objects.hash(id, title, author, state, publicationDate);
-//        result = 31 * result + Arrays.hashCode(content);
-//        return result;
-//    }
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, title, author, state, publicationDate);
+        result = 31 * result + Arrays.hashCode(content);
+        return result;
+    }
 }

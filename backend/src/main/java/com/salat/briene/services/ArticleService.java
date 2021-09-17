@@ -42,7 +42,7 @@ public class ArticleService {
 
     public void deleteArticleById(UUID articleId) {
         if (articleRepository.findById(articleId).isPresent()) {
-            articleRepository.deleteById(articleId);
+            articleRepository.deleteArticleById(articleId);
         } else {
             throw new ArticleNotFoundException();
         }
