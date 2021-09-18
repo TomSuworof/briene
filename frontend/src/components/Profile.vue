@@ -315,6 +315,11 @@ export default {
   height: 100pt;
 }
 
+.bio {
+  white-space: pre-line;
+  padding: 0 0 5pt;
+}
+
 .article-type {
   margin: 0 20pt 0 0;
 }
