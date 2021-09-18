@@ -45,7 +45,6 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    // still ca not delete article, when someone has it in bookmarks
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "t_user_bookmarks",
             joinColumns = @JoinColumn(name = "bookmarked_by_user_id", referencedColumnName = "id"),
