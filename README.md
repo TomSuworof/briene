@@ -30,7 +30,7 @@ everything.
 
 1. Clone this repo
 2. Run Maven build: ```mvn clean install```
-3. Change directory to  frontend: ```cd frontend```
+3. Change directory to frontend: ```cd frontend```
 4. Run npm install: ```npm install```
 5. Run npm serve script: ```npm run serve```
 6. Run [BrieneApplication](backend/src/main/java/com/salat/briene/BrieneApplication.java)
