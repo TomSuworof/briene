@@ -105,16 +105,12 @@
         <h2>Bookmarks</h2>
       </div>
       <div v-if="bookmarks.length > 0">
-        <div class="article-container" v-for="article in bookmarks" v-bind:key="article.id">
-          <div class="article-title-container">
-            <h3 class="article-title">
-              <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-            </h3>
-          </div>
-          <div class="article-action-container">
-            <a @click="removeFromBookmarks(article.id)" href="#">❌ Remove from bookmarks</a>
-          </div>
-        </div>
+        <article-container
+            v-for="article in bookmarks"
+            v-bind:key="article.id"
+            v-bind:article="article"
+            v-bind:actions="actionsForBookmarks"
+        ></article-container>
       </div>
       <div v-else-if="bookmarks.length === 0">
         <p>No bookmarks</p>
@@ -122,7 +118,7 @@
     </div>
     <div class="articles-block">
       <div>
-        <h2>Articles</h2>
+        <h2>My articles</h2>
       </div>
       <div class="articles-types">
         <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
@@ -130,27 +126,12 @@
         <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
       </div>
       <div v-if="articles.length > 0">
-        <div class="article-container" v-for="article in articles" v-bind:key="article.id">
-          <div class="article-publication-date">
-            <p>{{ getFinePublicationDate(article) }}</p>
-          </div>
-          <div class="article-title-container">
-            <h3 class="article-title">
-              <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-            </h3>
-          </div>
-          <div class="article-action-container">
-            <div class="article-action-edit">
-              <a @click="editArticle(article.id)" href="#">🖊 Edit</a>
-            </div>
-            <div class="article-action-remove">
-              <a @click="removeArticle(article.id)" href="#">❌ Remove</a>
-            </div>
-          </div>
-          <div class="article-summary">
-            <p>{{ article.summary }}</p>
-          </div>
-        </div>
+        <article-container
+            v-for="article in articles"
+            v-bind:key="article.id"
+            v-bind:article="article"
+            v-bind:actions="actionsForMyArticles"
+        ></article-container>
       </div>
       <div v-else-if="articles.length === 0">
         <p>No articles</p>
@@ -160,15 +141,18 @@
 </template>
 
 <script>
+import ArticleContainer from "@/components/ArticleContainer";
 import ArticlesService from "@/services/ArticlesService";
 import BookmarksService from "@/services/BookmarksService";
 import * as pswChecker from '../../static/js/password_check'
 import UserService from "@/services/UserService";
-import moment from "moment";
 import AuthorsService from "@/services/AuthorsService";
 
 export default {
   name: 'Profile',
+  components: {
+    ArticleContainer
+  },
   data() {
     return {
       bookmarks: [],
@@ -181,6 +165,15 @@ export default {
       passwordNewConfirm: undefined,
 
       showUserData: true,
+
+      actionsForBookmarks: [
+        {function: this.removeFromBookmarks, message: '❌ Remove from bookmarks'}
+      ],
+
+      actionsForMyArticles: [
+        {function: this.editArticle, message: '🖊 Edit'},
+        {function: this.removeArticle, message: '❌ Remove'},
+      ],
     }
   },
   computed: {
@@ -198,9 +191,6 @@ export default {
     },
   },
   methods: {
-    getFinePublicationDate: function (article) {
-      return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
-    },
     logout: function () {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
@@ -261,7 +251,15 @@ export default {
     getMyArticles: function (state) {
       ArticlesService.getMyArticles(state)
           .then(response => {
-            this.articles = response.data;
+            this.articles = response.data.sort((article1, article2) => {
+              if (article1.publicationDate < article2.publicationDate) {
+                return -1;
+              }
+              if (article1.publicationDate > article2.publicationDate) {
+                return 1;
+              }
+              return 0;
+            }).reverse(); // newer first;
           })
           .catch(err => {
             console.log(err);
@@ -317,28 +315,17 @@ export default {
   height: 100pt;
 }
 
+.bio {
+  white-space: pre-line;
+  padding: 0 0 5pt;
+}
+
 .article-type {
   margin: 0 20pt 0 0;
 }
 
 .articles-types {
   padding: 5pt 0;
-}
-
-.article-container {
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 10px;
-  margin: 0 0 10pt;
-  padding: 10pt;
-}
-
-.article-publication-date {
-  color: #999;
-}
-
-.article-action-container, .article-title-container, .article-action-edit, .article-action-remove {
-  display: inline-block;
-  margin: 0 20pt 0 0;
 }
 
 .show-user-basic-data,
@@ -348,13 +335,5 @@ export default {
 .articles-bookmarks,
 .articles-block {
   margin: 50pt 0 0;
-}
-
-.article-container {
-  margin: 0 0 10pt;
-}
-
-.article-title, .article-summary {
-  overflow-wrap: break-word;
 }
 </style>

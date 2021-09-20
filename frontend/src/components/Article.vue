@@ -1,14 +1,5 @@
 <template>
   <div class="article-page-content">
-    <div class="bookmarking">
-
-      <div v-if="!inBookmarks">
-        <a @click="editBookmarks('add')" href="#">Add to bookmarks</a>
-      </div>
-      <div v-if="inBookmarks">
-        <a @click="editBookmarks('remove')" href="#">Remove from bookmarks</a>
-      </div>
-    </div>
     <div class="article-about row">
       <div class="article-author">
         <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
@@ -17,8 +8,18 @@
         <p>{{ finePublicationDate }}</p>
       </div>
     </div>
-    <div class="article-title">
-      <h1 id="article-title">{{  article.title }}</h1>
+    <div class="title-bookmark row">
+      <div class="article-title">
+        <h1 id="article-title">{{  article.title }}</h1>
+      </div>
+      <div class="bookmarking">
+        <div v-if="!inBookmarks" title="Add to bookmarks">
+          <button @click="editBookmarks('add')">❤</button>
+        </div>
+        <div v-if="inBookmarks" title="Remove from bookmarks">
+          <button @click="editBookmarks('remove')">💔</button>
+        </div>
+      </div>
     </div>
     <div v-html="article.content" class="article-content" id="article-content"></div>
     <div class="control" id="control">
@@ -143,6 +144,23 @@ export default {
 <style scoped>
 .article-author {
   margin: 0 0 10pt;
+}
+
+button {
+  background: white;
+  display: block;
+  border: none;
+  outline: none;
+}
+
+.title-bookmark {
+  padding: 0 10pt 0;
+  vertical-align: center;
+  justify-content: space-between;
+}
+
+.bookmarking, .article-title {
+  display: inline-block;
 }
 
 .article-title {

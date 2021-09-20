@@ -16,6 +16,6 @@ public class AuthorDTO {
     public AuthorDTO(User user, List<Article> articles) {
         this.username = user.getUsername();
         this.bio = user.getBio();
-        this.articles = articles.stream().map(ArticleDTOHTML::new).collect(Collectors.toList());
+        this.articles = articles.stream().map(ArticleDTO::new).collect(Collectors.toList());
     }
 }

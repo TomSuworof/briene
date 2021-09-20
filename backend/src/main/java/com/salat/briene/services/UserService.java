@@ -1,10 +1,9 @@
 package com.salat.briene.services;
 
-import com.salat.briene.entities.Article;
-import com.salat.briene.entities.User;
-import com.salat.briene.entities.Role;
+import com.salat.briene.entities.*;
 import com.salat.briene.exceptions.*;
 import com.salat.briene.payload.request.SignupRequest;
+import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +23,22 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User loadUserByUsername(String username) throws UserNotFoundException {
+    public User loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
-    public User loadUserById(Long id) throws UserNotFoundException {
+    public User loadUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public User getUserFromAuthentication(Authentication authentication) throws AnonymousUserException {
+    public User getUserFromAuthentication(Authentication authentication) {
         if (authentication == null) {
             throw new AnonymousUserException();
         }
         return loadUserByUsername(authentication.getName());
     }
 
-    public void saveUser(SignupRequest signupRequest)  throws DuplicatedUserException {
+    public void saveUser(SignupRequest signupRequest) {
         if (existsByUsername(signupRequest.getUsername())) {
             throw new DuplicatedUserByUsernameException();
         }
@@ -54,8 +53,8 @@ public class UserService implements UserDetailsService {
         user.setSecretQuestion(signupRequest.getSecretQuestion());
         user.setSecretAnswer(signupRequest.getSecretAnswer());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        user.setRoles(Set.of(new Role(2L, "ROLE_USER")));
-        user.setId((long) user.hashCode());
+        user.setRoles(Set.of(RoleEnum.USER.getAsObject()));
+//        user.setId((long) user.hashCode());
         userRepository.save(user);
     }
 
@@ -67,29 +66,29 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
-    public void updateUser(Long userId, Map<String, ?> userData) throws UserNotFoundException {
+    public void updateUser(UUID userId, UserDataRequest userData) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if (userData.containsKey("email") && userData.get("email") != null) {
-            userFromDB.setEmail((String) userData.get("email"));
+        if (userData.getEmail().isPresent()) {
+            userFromDB.setEmail(userData.getEmail().get());
         }
 
-        if (userData.containsKey("bio") && userData.get("bio") != null) {
-            userFromDB.setBio((String) userData.get("bio"));
+        if (userData.getBio().isPresent()) {
+            userFromDB.setBio(userData.getBio().get());
         }
 
-        if (userData.containsKey("bookmarks") && userData.get("bookmarks") != null) {
-            userFromDB.setBookmarkedArticles((Set<Article>) userData.get("bookmarks"));
+        if (userData.getBookmarks().isPresent()) {
+            userFromDB.setBookmarkedArticles(userData.getBookmarks().get());
         }
 
-        if (userData.containsKey("password") && userData.get("password") != null) {
-            userFromDB.setPassword(passwordEncoder.encode((String) userData.get("password")));
+        if (userData.getPassword().isPresent()) {
+            userFromDB.setPassword(userData.getPassword().get());
         }
 
         userRepository.save(userFromDB);
     }
 
-    private void deleteUser(Long userId) throws UserNotFoundException {
+    private void deleteUser(UUID userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
         } else {
@@ -97,27 +96,18 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void changeRole(Long userId, String role) throws UserNotFoundException {
+    public void changeRole(UUID userId, Role role) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        switch (role) {
-            case "blocked" -> userFromDB.setRoles(new HashSet<>(){{
-                add(new Role(0L, "ROLE_BLOCKED"));
-            }});
+        userFromDB.setRoles(new HashSet<>(){{
+            add(role);
+        }});
 
-            case "admin" -> userFromDB.setRoles(new HashSet<>(){{
-                add(new Role(1L, "ROLE_ADMIN"));
-            }});
-
-            case "user" -> userFromDB.setRoles(new HashSet<>(){{
-                add(new Role(2L, "ROLE_USER"));
-            }});
-        }
 //        mailService.send(userFromDB.getEmail(), "role_change", role);
         userRepository.save(userFromDB);
     }
 
-    public boolean isCurrentPasswordSameAs(Long requiredUserId, String passwordAnother) {
+    public boolean isCurrentPasswordSameAs(UUID requiredUserId, String passwordAnother) {
         User requiredUser = this.loadUserById(requiredUserId);
         String requiredUserPassword = requiredUser.getPassword();
         return passwordEncoder.matches(passwordAnother, requiredUserPassword);

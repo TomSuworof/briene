@@ -2,7 +2,6 @@ package com.salat.briene.controllers;
 
 import com.salat.briene.config.JwtUtils;
 import com.salat.briene.entities.User;
-import com.salat.briene.exceptions.DuplicatedUserException;
 import com.salat.briene.payload.request.LoginRequest;
 import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.payload.response.JwtResponse;
@@ -24,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    private static final String USER_REGISTERED = "User registered successfully";
+
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtils jwtUtils;
@@ -55,8 +56,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody SignupRequest signUpRequest) throws DuplicatedUserException {
+    public ResponseEntity<String> registerUser(@RequestBody SignupRequest signUpRequest) {
         userService.saveUser(signUpRequest);
-        return ResponseEntity.ok().body("User registered successfully");
+        return ResponseEntity.ok().body(USER_REGISTERED);
     }
 }

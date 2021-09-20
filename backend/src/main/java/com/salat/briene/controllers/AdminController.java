@@ -1,10 +1,10 @@
 package com.salat.briene.controllers;
 
+import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.payload.response.ArticleDTO;
-import com.salat.briene.payload.response.ArticleDTOHTML;
+import com.salat.briene.payload.response.ArticleWithContentHTML;
 import com.salat.briene.payload.response.UserDTO;
-import com.salat.briene.exceptions.IllegalArticleStateException;
-import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
+    private static final String ROLE_UPDATED = "Role of {%s} changed";
+
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -34,20 +37,15 @@ public class AdminController {
     }
 
     @PostMapping("/edit_user")
-    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam Long id) throws UserNotFoundException {
-        switch (action) {
-            case "delete" -> userService.changeRole(id, "blocked");
-            case "make_admin" -> userService.changeRole(id, "admin");
-            case "make_user" -> userService.changeRole(id, "user");
-            default -> throw new UserNotFoundException();
-        }
-        return ResponseEntity.ok().body("Role of " + id + " changed");
+    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) {
+        userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
+        return ResponseEntity.ok().body(ROLE_UPDATED.formatted(id));
     }
 
     @GetMapping("/articles")
-    public ResponseEntity<List<ArticleDTO>> getAllArticles(@RequestParam String state) throws IllegalArticleStateException {
-        List<ArticleDTO> articles = articleService.getArticlesByState(state)
-                .stream().map(ArticleDTOHTML::new)
+    public ResponseEntity<List<ArticleDTO>> getAllArticles(@RequestParam String state) {
+        List<ArticleDTO> articles = articleService.getArticlesByState(ArticleState.getFromDescription(state))
+                .stream().map(ArticleWithContentHTML::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(articles);

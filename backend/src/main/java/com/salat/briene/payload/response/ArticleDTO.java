@@ -3,16 +3,19 @@ package com.salat.briene.payload.response;
 import com.salat.briene.entities.Article;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+// ArticleDTO provides short form of article without content
+// It is helpful and recommended to use when you need to get a list of articles
 
 @Getter
-public abstract class ArticleDTO {
-    protected final Long id;
+public class ArticleDTO {
+    protected final UUID id;
     protected final String title;
     protected final String author;
-    protected String content;
     protected String summary;
-    protected final Date publicationDate;
+    protected final OffsetDateTime publicationDate;
 
     public ArticleDTO(Article article) {
         this.id = article.getId();

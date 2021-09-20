@@ -8,7 +8,9 @@ const setupInterceptors = (store, router) => {
         async (err) => {
             const originalConfig = err.config;
 
-            if (originalConfig.url !== "/auth/login" && err.response) {
+            // we should exclude urls 'auth/login' and 'bookmarks/isIn'
+            // because NotAuthorized error on this endpoints does not make sense
+            if (originalConfig.url !== "/auth/login" && originalConfig.url !== "/bookmarks/isIn" && err.response) {
                 // Access Token was expired
                 if (err.response.status === 401 || err.response.status === 400) {
                     originalConfig._retry = true;

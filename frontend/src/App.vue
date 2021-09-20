@@ -1,7 +1,17 @@
 <template>
   <div>
-    <div class="header-main-link">
-      <router-link to="/">Main</router-link>
+    <div class="header-buttons row">
+      <div class="main-link">
+        <router-link to="/">Main</router-link>
+      </div>
+      <div class="header-buttons-right">
+        <div class="header-button-editor">
+          <router-link to="/article_editor">New article</router-link>
+        </div>
+        <div class="header-button-profile">
+          <router-link to="/profile">Profile</router-link>
+        </div>
+      </div>
     </div>
     <div class="content">
       <router-view/>
@@ -16,8 +26,14 @@ export default {
 </script>
 
 <style>
-.header-main-link {
-  margin: 10px;
+.header-buttons {
+  margin: 10pt;
+  justify-content: space-between;
+}
+
+.header-button-editor, .header-button-profile {
+  display: inline-block;
+  margin: 0 10pt 0;
 }
 
 .content {

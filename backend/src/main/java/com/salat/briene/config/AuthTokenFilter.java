@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
+    private static final String CANNOT_AUTH_USER = "Cannot set user authentication: {}";
+    private static final String AUTHENTICATION_HEADER = "Authorization";
+    private static final String AUTHENTICATION_HEADER_PREFIX = "Bearer ";
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -41,16 +44,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            logger.error(CANNOT_AUTH_USER, e);
         }
 
         filterChain.doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
+        String headerAuth = request.getHeader(AUTHENTICATION_HEADER);
 
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(AUTHENTICATION_HEADER_PREFIX)) {
             return headerAuth.substring(7);
         }
 
