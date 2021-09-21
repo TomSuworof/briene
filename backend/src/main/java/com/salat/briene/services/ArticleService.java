@@ -10,6 +10,7 @@ import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -108,7 +109,7 @@ public class ArticleService {
     }
 
     private List<Article> getArticlesByStatePaginated(ArticleState state, Integer limit, Integer offset) {
-        return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit));
+        return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "publicationDate")));
     }
 
     private List<Article> getAllArticlesPaginated(Integer limit, Integer offset) {

@@ -10,20 +10,15 @@
         <p>{{ author.bio }}</p>
       </div>
       <div class="articles">
-        <div class="article-container" v-for="article in author.articles" v-bind:key="article.id">
-          <div class="article-about row">
-            <div class="article-title-container">
-              <h3 class="article-title">
-                <router-link v-bind:to="'/articles/' + article.id">{{ article.title }}</router-link>
-              </h3>
-            </div>
-            <div class="article-publication-date">
-              <p>{{ getFinePublicationDate(article) }}</p>
-            </div>
-          </div>
-          <div class="article-summary">
-            <p>{{ article.summary }}</p>
-          </div>
+        <div v-if="articles.length > 0">
+          <article-container
+              v-for="article in articles"
+              v-bind:key="article.id"
+              v-bind:article="article"
+          ></article-container>
+        </div>
+        <div v-else-if="articles.length === 0">
+          <p>No articles</p>
         </div>
       </div>
     </div>
@@ -32,24 +27,32 @@
 
 <script>
 import AuthorsService from "@/services/AuthorsService";
-import moment from "moment";
+import ArticleContainer from "@/components/ArticleContainer";
 
 export default {
   name: "Author",
+  components: {
+    ArticleContainer,
+  },
   data() {
     return {
       author: undefined,
+      articles: [],
     }
-  },
-  methods: {
-    getFinePublicationDate: function(article) {
-      return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
-    },
   },
   created() {
     AuthorsService.getAuthorData(this.$route.params.authorName)
         .then(response => {
           this.author = response.data;
+          this.articles = this.author.articles.sort((article1, article2) => {
+            if (article1.publicationDate < article2.publicationDate) {
+              return -1;
+            }
+            if (article1.publicationDate > article2.publicationDate) {
+              return 1;
+            }
+            return 0;
+          }).reverse(); // newer first;
         })
         .catch(err => {
           console.log(err);
@@ -68,25 +71,5 @@ export default {
 .author-bio {
   white-space: pre-line;
   padding: 0 0 5pt;
-}
-
-.article-container {
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 10px;
-  margin: 0 0 10pt;
-  padding: 10pt;
-}
-
-.article-about {
-  padding: 0 15pt 0;
-  justify-content: space-between;
-}
-
-.article-publication-date {
-  color: #999;
-}
-
-.article-title, .article-summary, .author-bio {
-  overflow-wrap: break-word;
 }
 </style>
