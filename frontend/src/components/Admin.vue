@@ -4,7 +4,7 @@
       <div class="admin-dashboard-title">
         <h1>Users</h1>
       </div>
-      <table class="admin-dashboard-table">
+      <table class="admin-dashboard-table table">
         <tr>
           <th class="user-column">ID</th>
           <th class="user-column">Username</th>
@@ -24,13 +24,14 @@
           <td class="user-column-actions">
             <div class="user-actions">
               <div class="user-action">
-                <button @click="editUser('delete', user.id)" type="submit" class="simple-red-button">Delete (block)</button>
+                <button @click="editUser('make_admin', user.id)" class="btn btn-primary btn-block">Make admin</button>
               </div>
-              <div class="user-action">
-                <button @click="editUser('make_admin', user.id)" type="submit" class="simple-red-button">Make admin</button>
+              <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_USER') ||
+                  user.roles.map(role => role.name).includes('ROLE_ADMIN')">
+                <button @click="editUser('delete', user.id)" class="btn btn-danger btn-block">Delete (block)</button>
               </div>
-              <div class="user-action">
-                <button @click="editUser('make_user', user.id)" type="submit" class="simple-red-button">Make user</button>
+              <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_BLOCKED')">
+                <button @click="editUser('make_user', user.id)" class="btn btn-success btn-block">Make user</button>
               </div>
             </div>
           </td>
@@ -156,26 +157,6 @@ export default {
 </script>
 
 <style scoped>
-.admin-dashboard-table {
-  align-self: center;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.user-row {
-  border-top: thin solid;
-  padding: 2% 0 0;
-}
-
-.user-column {
-  text-align: center;
-  border-right: thin solid;
-}
-
-.user-column-actions {
-  text-align: center;
-}
-
 .user-action {
   float: left;
   margin: 1%;
