@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/components/Home';
-import TermsOfUse from "@/components/TermsOfUse";
-import Error from '@/components/Error';
+import Home from '@/views/Home';
+import TermsOfUse from "@/views/TermsOfUse";
+import Error from '@/views/Error';
 
-import Login from '@/components/Login';
-import Register from '@/components/Register';
-import Profile from '@/components/Profile';
+import Login from '@/views/Login';
+import Register from '@/views/Register';
+import Profile from '@/views/Profile';
 
-import Articles from '@/components/Articles';
-import Article from '@/components/Article';
-import ArticleEditor from "@/components/ArticleEditor";
+import Articles from '@/views/Articles';
+import Article from '@/views/Article';
+import ArticleEditor from "@/views/ArticleEditor";
 
-import Admin from "@/components/Admin";
+import Admin from "@/views/Admin";
 
-import Author from '@/components/Author';
+import Author from '@/views/Author';
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(process.env.BASE_URL),
     routes: [
         { path: '/', component: Home },
         { path: '/terms_of_use', component: TermsOfUse },
@@ -32,7 +32,10 @@ const router = createRouter({
 
         { path: '/admin', component: Admin, meta: { requiresAuth: true } },
 
-        { path: '/authors/:authorName', component: Author }
+        { path: '/authors/:authorName', component: Author },
+
+        // otherwise redirect to home
+        { path: '/:pathMatch(.*)*', redirect: '/' }
     ]
 });
 

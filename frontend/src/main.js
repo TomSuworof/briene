@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
-import setupInterceptors from "@/services/setupInterceptors";
+import setupInterceptors from "@/api/setupInterceptors";
 
 setupInterceptors(store, router);
 

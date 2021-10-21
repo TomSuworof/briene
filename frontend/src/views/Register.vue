@@ -68,7 +68,7 @@
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
-import * as pswChecker from '../../static/js/password_check'
+import * as pswChecker from '@/assets/js/password_check'
 
 export default {
   name: "Register",
@@ -148,6 +148,6 @@ export default {
 </script>
 
 <style scoped>
-@import "../../static/css/password_checking_style.css";
+@import "../assets/css/password_checking_style.css";
 
 </style>

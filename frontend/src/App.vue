@@ -19,12 +19,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-}
-</script>
-
 <style>
 .whole-page {
   background: #FAFAFA;

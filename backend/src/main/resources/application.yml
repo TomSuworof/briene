@@ -1,11 +1,16 @@
-spring:
+server:
+  port: 8080
 
+spring:
   # specify own properties
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/briene'
-    password: 'postgres'
-    username: 'postgres'
     driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+#    url: 'jdbc:postgresql://localhost:5432/briene'
+#    username: 'postgres'
+#    password: 'postgres'
 
   jpa:
     hibernate:

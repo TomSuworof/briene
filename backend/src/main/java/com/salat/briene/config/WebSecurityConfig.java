@@ -6,18 +6,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     @Autowired
@@ -37,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     }
 
     @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
 
@@ -50,16 +49,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
                 .and()
-                .authorizeRequests()
-                //.antMatchers("/api/admin/**").hasRole("ADMIN") // if in use, somehow always disable access
-                .antMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()
+                .httpBasic()
                 .and()
-                .logout().permitAll().logoutSuccessUrl("/");
+                .authorizeRequests()
+                .antMatchers("/api/articles/**",
+                        "/api/auth/**",
+                        "/api/authors/**",
+                        "/api/bookmarks/**").permitAll()
+                .antMatchers("/api/users/**").authenticated()
+                .antMatchers("/api/admin/**").hasRole("ADMIN") // if in use, somehow always disable access
+                .and()
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+
+//        httpSecurity
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
+//                .and()
+//                .httpBasic()
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/api/admin/**").hasRole("ADMIN") // if in use, somehow always disable access
+//                .antMatchers("/api/articles/**",
+//                        "/api/auth/**",
+//                        "/api/authors/**",
+//                        "/api/bookmarks/**").permitAll()
+//                .antMatchers("/api/users/**").authenticated()
+//                //.anyRequest().authenticated() // protect all other requests
+//                .and()
+//                .csrf().disable();
+//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+
+        httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

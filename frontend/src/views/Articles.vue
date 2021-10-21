@@ -1,10 +1,7 @@
 <template>
-  <div class="home-page-content">
+  <div class="articles-page-content">
     <div class="header">
-      <h1>Briene</h1>
-    </div>
-    <div>
-      <h2>Recent articles</h2>
+        <h1>Articles</h1>
     </div>
     <div id="articles">
       <article-container
@@ -13,15 +10,12 @@
           v-bind:article="article"
       ></article-container>
     </div>
-    <div class="articles-button">
-      <router-link to="/articles">Show more</router-link>
-    </div>
-    <div class="footer">
-      <div>
-        <router-link to="/terms_of_use">Terms of use</router-link>
+    <div class="navigation-buttons">
+      <div class="navigation-button-prev" title="Previous">
+        <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
       </div>
-      <div>
-        <a href="https://github.com/TomSuworof/briene" target="_blank">Source code</a>
+      <div class="navigation-button-next" title="Next">
+        <button @click="getNextPage" :disabled="!hasAfter">▶</button>
       </div>
     </div>
   </div>
@@ -29,20 +23,34 @@
 
 <script>
 import ArticleContainer from "@/components/ArticleContainer";
-import ArticlesService from "@/services/ArticlesService";
+import ArticlesService from "@/api/ArticlesService";
 
 export default {
-  name: "Home",
+  name: "Articles",
   components: {
     ArticleContainer
   },
   data() {
     return {
-      articles: []
+      articles: [],
+
+      hasBefore: false,
+      hasAfter: true,
+
+      limit: 10,
+      offset: 0,
     }
   },
   methods: {
-    getLastArticles: function (limit, offset) {
+    getPreviousPage: function () {
+      this.offset -= this.limit;
+      this.getArticlesPaginated(this.limit, this.offset);
+    },
+    getNextPage: function () {
+      this.offset += this.limit;
+      this.getArticlesPaginated(this.limit, this.offset);
+    },
+    getArticlesPaginated: function (limit, offset) {
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
             this.articles = response.data.articles.sort((article1, article2) => {
@@ -63,19 +71,21 @@ export default {
     },
   },
   created() {
-    this.getLastArticles(10, 0);
-    console.log(this.articles)
+    this.getArticlesPaginated(this.limit, this.offset);
   }
 }
 </script>
 
 <style scoped>
-.header {
-  margin: 0 0 25pt;
+.navigation-button-prev, .navigation-button-next {
+  display: inline-block;
+  margin: 0 10pt 0;
 }
 
-.articles-button {
-  alignment: bottom;
-  margin: 0 0 50pt;
+button {
+  background: white;
+  display: block;
+  border: none;
+  outline: none;
 }
 </style>

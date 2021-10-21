@@ -25,7 +25,7 @@
 
 <script>
 import VueSimplemde from 'vue-simplemde'
-import ArticlesService from "@/services/ArticlesService";
+import ArticlesService from "@/api/ArticlesService";
 
 export default {
   name: "ArticleEditor",

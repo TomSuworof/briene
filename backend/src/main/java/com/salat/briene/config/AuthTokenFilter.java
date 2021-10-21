@@ -18,8 +18,8 @@ import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final String CANNOT_AUTH_USER = "Cannot set user authentication: {}";
-    private static final String AUTHENTICATION_HEADER = "Authorization";
-    private static final String AUTHENTICATION_HEADER_PREFIX = "Bearer ";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -51,9 +51,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader(AUTHENTICATION_HEADER);
+        String headerAuth = request.getHeader(AUTHORIZATION_HEADER);
 
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(AUTHENTICATION_HEADER_PREFIX)) {
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(AUTHORIZATION_HEADER_PREFIX)) {
             return headerAuth.substring(7);
         }
 

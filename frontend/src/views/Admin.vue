@@ -64,8 +64,8 @@
 
 <script>
 import ArticleContainer from "@/components/ArticleContainer";
-import AdminService from "@/services/AdminService";
-import ArticlesService from "@/services/ArticlesService";
+import AdminService from "@/api/AdminService";
+import ArticlesService from "@/api/ArticlesService";
 
 export default {
   name: "Admin",
