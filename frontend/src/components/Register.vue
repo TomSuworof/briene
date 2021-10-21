@@ -15,11 +15,6 @@
           <Field id="email" name="email" type="email" class="form-control"/>
           <ErrorMessage name="email" class="error-feedback"/>
         </div>
-        <!--        <div class="form-group">-->
-        <!--          <label>Password</label>-->
-        <!--          <Field id="password" name="password" type="password" class="form-control"/>-->
-        <!--          <ErrorMessage name="password" class="error-feedback"/>-->
-        <!--        </div>-->
         <div class="setting-password">
           <div class="form-group">
             <label>Password</label>
@@ -55,11 +50,9 @@
           <ErrorMessage name="secret_answer" class="error-feedback"/>
         </div>
         <div>
-          <input type="checkbox" id="agreement" name="agreement" value="false">
-          <label for="agreement">
-            I agree with
-            <router-link to="/terms_of_use">terms of use</router-link>
-          </label>
+          <Field type="checkbox" id="agreement" name="agreement" value="true"/>
+          <p>I agree with <router-link to="/terms_of_use">terms of use</router-link></p>
+          <ErrorMessage name="agreement" class="error-feedback"/>
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block" :disabled="loading">
@@ -73,7 +66,7 @@
 </template>
 
 <script>
-import {Form, Field, ErrorMessage} from "vee-validate";
+import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import * as pswChecker from '../../static/js/password_check'
 
@@ -101,6 +94,10 @@ export default {
           .required("Password is required!")
           .min(8, "Must be at least 8 characters!")
           .max(40, "Must be maximum 40 characters!"),
+      agreement: yup
+          .bool()
+          .oneOf([true])
+          .required("You must agree to terms of use")
     });
 
     return {
@@ -114,14 +111,6 @@ export default {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
     },
-  },
-  created() {
-    this.$nextTick(pswChecker.passwordChecking);
-  },
-  mounted() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
-    }
   },
   methods: {
     handleRegister: function (user) {
@@ -146,6 +135,14 @@ export default {
             });
       }
     },
+  },
+  created() {
+    this.$nextTick(pswChecker.passwordChecking);
+  },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push("/profile");
+    }
   },
 };
 </script>

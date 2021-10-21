@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
         }
 
         if (userData.getPassword().isPresent()) {
-            userFromDB.setPassword(userData.getPassword().get());
+            userFromDB.setPassword(passwordEncoder.encode(userData.getPassword().get()));
         }
 
         userRepository.save(userFromDB);

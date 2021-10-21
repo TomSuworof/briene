@@ -1,11 +1,11 @@
 <template>
-  <div class="profile-page-content" v-if="currentUser !== null">
+  <div class="profile-page-content" v-show="currentUser !== null">
     <div class="header row">
       <div>
         <h1>Profile</h1>
       </div>
       <div class="header-buttons">
-        <div v-if="isAdmin" class="header-admin-button">
+        <div v-show="isAdmin" class="header-admin-button">
           <router-link to="/admin">Admin</router-link>
         </div>
         <div class="header-logout-button">
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div v-if="showUserData" class="show-user-basic-data">
+    <div v-show="showUserData" class="show-user-basic-data">
       <div class="user-data-action-edit">
         <a @click="editUserData" href="#">🖊 Edit my info</a>
       </div>
@@ -32,49 +32,55 @@
         </div>
       </div>
     </div>
-    <div v-if="showEditUserData" class="edit-user-data">
+    <div v-show="showEditUserData" class="edit-user-data">
       <div class="edit-user-basic-data">
         <h2>Basic information</h2>
         <div class="user-data">
-          <form method="post">
-            <div>
-              <label for="username"><strong>Username: </strong></label>
-              <input id="username" type="text" disabled v-model="currentUser.username"/>
+          <Form @submit="submitChangesBaseInfo" method="post">
+            <div class="form-group">
+              <label><strong>Username:</strong></label>
+              <Field id="username" name="username" type="text" class="form-control" :disabled="true" v-model="currentUser.username"/>
+              <ErrorMessage name="username" class="error-feedback"/>
+            </div>
+            <div class="form-group">
+              <label><strong>Email:</strong></label>
+              <Field id="email" name="email" type="email" class="form-control" v-model="email"/>
+              <ErrorMessage name="email" class="error-feedback"/>
             </div>
             <div>
-              <label for="email"><strong>Email: </strong></label>
-              <input id="email" type="email" v-model="email"/>
-            </div>
-            <div>
-              <label><strong>Bio: </strong></label>
+              <label><strong>Bio:</strong></label>
               <div>
                 <textarea id="bio" v-model="bio"></textarea>
               </div>
             </div>
-            <div>
-              <div>
-                <label for="password">Enter current password to submit changes: </label>
-              </div>
-              <input id="password" type="password" v-model="password" required placeholder="Current password">
+            <div class="form-group">
+              <label>Enter current password to submit changes: </label>
+              <Field id="pswOld" type="password" name="password" class="form-control" placeholder="Password" v-model="password"/>
             </div>
-            <div>
-              <input @click="submitChangesBaseInfo" type="button" value="Submit">
+            <div class="form-group">
+              <button class="btn btn-primary btn-block" :disabled="loading">
+                <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+                Save
+              </button>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
       <div class="edit-user-password">
         <h2>Updating password</h2>
         <div class="user-data">
-          <form method="post">
-            <div>
-              <input type="password" name="passwordOld" v-model="password" required placeholder="Current password"/>
+          <Form @submit="submitChangesPassword" method="post">
+            <div class="form-group">
+              <label>Password</label>
+              <Field id="pswOld" type="password" name="passwordOld" class="form-control" placeholder="Password" v-model="password"/>
             </div>
             <div class="setting-password">
-              <div>
-                <input id="psw" type="password" v-model="passwordNew" placeholder="New password" required
+              <div class="form-group">
+                <label>New password</label>
+                <Field id="psw" type="password" name="password" class="form-control" placeholder="New password" required
                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                       title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+                       title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                       v-model="passwordNew"/>
               </div>
               <div class="container-for-message">
                 <div id="message" class="message">
@@ -85,18 +91,18 @@
                   <p id="length" class="invalid">Minimum <b>8 characters</b></p>
                 </div>
               </div>
-              <div>
-                <input id="pswConfirm" type="password" v-model="passwordNewConfirm"
-                       placeholder="Confirm your new password" required>
+              <div class="form-group">
+                <Field id="pswConfirm" type="password" name="passwordConfirm" class="form-control"
+                       placeholder="Confirm your password" required v-model="passwordNewConfirm"/>
                 <div id="password-matching" class="password-matching">
                   <p id="match" class="invalid">Passwords match</p>
                 </div>
               </div>
             </div>
-            <div>
-              <button @click="submitChangesPassword">Submit</button>
+            <div class="form-group">
+              <button class="btn btn-primary btn-block">Save</button>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
     </div>
@@ -104,7 +110,7 @@
       <div>
         <h2>Bookmarks</h2>
       </div>
-      <div v-if="bookmarks.length > 0">
+      <div v-show="bookmarks.length > 0">
         <article-container
             v-for="article in bookmarks"
             v-bind:key="article.id"
@@ -112,7 +118,7 @@
             v-bind:actions="actionsForBookmarks"
         ></article-container>
       </div>
-      <div v-else-if="bookmarks.length === 0">
+      <div v-show="bookmarks.length === 0">
         <p>No bookmarks</p>
       </div>
     </div>
@@ -125,7 +131,7 @@
         <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
         <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
       </div>
-      <div v-if="articles.length > 0">
+      <div v-show="articles.length > 0">
         <article-container
             v-for="article in articles"
             v-bind:key="article.id"
@@ -133,7 +139,7 @@
             v-bind:actions="actionsForMyArticles"
         ></article-container>
       </div>
-      <div v-else-if="articles.length === 0">
+      <div v-show="articles.length === 0">
         <p>No articles</p>
       </div>
     </div>
@@ -147,13 +153,40 @@ import BookmarksService from "@/services/BookmarksService";
 import * as pswChecker from '../../static/js/password_check'
 import UserService from "@/services/UserService";
 import AuthorsService from "@/services/AuthorsService";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 
 export default {
   name: 'Profile',
   components: {
-    ArticleContainer
+    ArticleContainer,
+    Form,
+    Field,
+    ErrorMessage
   },
   data() {
+    const schema = yup.object().shape({
+      username: yup
+          .string()
+          .required("Username is required!")
+          .min(3, "Must be at least 3 characters!")
+          .max(20, "Must be maximum 20 characters!"),
+      email: yup
+          .string()
+          .required("Email is required!")
+          .email("Email is invalid!")
+          .max(50, "Must be maximum 50 characters!"),
+      password: yup
+          .string()
+          .required("Password is required!")
+          .min(8, "Must be at least 8 characters!")
+          .max(40, "Must be maximum 40 characters!"),
+      agreement: yup
+          .bool()
+          .oneOf([true])
+          .required("You must agree to terms of use")
+    });
+
     return {
       bookmarks: [],
       articles: [],
@@ -163,6 +196,7 @@ export default {
       bio: undefined,
       passwordNew: undefined,
       passwordNewConfirm: undefined,
+      loading: false,
 
       showUserData: true,
 
@@ -174,6 +208,8 @@ export default {
         {function: this.editArticle, message: '🖊 Edit'},
         {function: this.removeArticle, message: '❌ Remove'},
       ],
+
+      schema,
     }
   },
   computed: {
@@ -201,6 +237,7 @@ export default {
     },
     submitChangesBaseInfo: function () {
       this.showUserData = !this.showUserData;
+      this.loading = true;
       UserService.editUser(this.currentUser.id, this.password, {
         email: this.email,
         bio: this.bio,
@@ -289,6 +326,9 @@ export default {
     },
   },
   created() {
+    this.$nextTick(pswChecker.passwordChecking);
+  },
+  mounted() {
     this.email = this.currentUser.email;
     this.getMyBio();
     this.getMyBookmarks();

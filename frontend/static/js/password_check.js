@@ -70,9 +70,9 @@ function passwordChecking() {
             myInput.value.length >= 8
         );
 
-        if (passwordIsStrong) {
-            document.getElementById("message").style.display = "none";
-        }
+        // if (passwordIsStrong) {
+        //     document.getElementById("message").style.display = "none";
+        // }
     }
 
 
