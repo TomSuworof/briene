@@ -24,13 +24,13 @@ const router = createRouter({
 
         { path: '/login', component: Login},
         { path: '/register', component: Register},
-        { path: '/profile', component: Profile, meta: {requiresAuth: true} },
+        { path: '/profile', component: Profile, meta: { requiresAuth: true } },
 
         { path: '/articles', component: Articles },
         { path: '/articles/:articleId', component: Article },
-        { path: '/article_editor', component: ArticleEditor, meta: {requiresAuth: true} },
+        { path: '/article_editor', component: ArticleEditor, meta: { requiresAuth: true } },
 
-        { path: '/admin', component: Admin, meta: {requiresAuth: true} },
+        { path: '/admin', component: Admin, meta: { requiresAuth: true } },
 
         { path: '/authors/:authorName', component: Author }
     ]

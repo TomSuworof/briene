@@ -45,6 +45,7 @@ export default {
 }
 
 .article-container {
+  background: white;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
   border-radius: 10px;
   margin: 0 0 10pt;

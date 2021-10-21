@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="whole-page">
     <div class="header-buttons row">
       <div class="main-link">
         <router-link to="/">Main</router-link>
@@ -26,12 +26,20 @@ export default {
 </script>
 
 <style>
+.whole-page {
+  background: #FAFAFA;
+}
+
+.row {
+  width: 100%;
+}
+
 .header-buttons {
-  margin: 10pt;
+  padding: 10pt;
   justify-content: space-between;
 }
 
-.header-button-editor, .header-button-profile {
+.main-link, .header-button-editor, .header-button-profile {
   display: inline-block;
   margin: 0 10pt 0;
 }

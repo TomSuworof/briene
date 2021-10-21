@@ -2,13 +2,17 @@
   <div class="editor-page-content">
     <form method="post">
       <div class="editor-wrapper">
-        <div class="row">
+        <div>
           <div class="title-wrapper">
             <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title"/>
           </div>
           <div class="action-buttons">
-            <input id="publish" @click="handleButton('publish')" type="button" name="action" value="Publish"/>
-            <input id="save" @click="handleButton('save')" type="button" name="action" value="Save"/>
+            <div class="btn-container">
+              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action" value="Publish">Publish</button>
+            </div>
+            <div class="btn-container">
+              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action" value="Save">Save</button>
+            </div>
           </div>
         </div>
         <div class="editor">
@@ -34,7 +38,7 @@ export default {
       content: '',
       summary: '',
       configs: {
-        spellChecker: false, // disable spell check
+        spellChecker: false, // disable spell checker
       },
     }
   },
@@ -107,15 +111,25 @@ export default {
 
 @import '~simplemde/dist/simplemde.min.css';
 
-.row {
-  padding: 0 10pt 0;
-  justify-content: space-between;
+.title-wrapper, .action-buttons {
+  display: inline-block;
 }
 
-input[type=text] {
+.title-wrapper {
+  width: 85%;
+}
+
+.btn-container {
+  display: inline-block;
+  margin: 0 5pt 5pt 0;
+}
+
+.title {
+  width: 100%;
   font-size: 20pt;
-  outline: none;
-  border: none;
+  outline: transparent;
+  border: transparent;
+  background: transparent;
 }
 
 .editor-page-content {
