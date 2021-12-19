@@ -7,7 +7,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "clean": "rm -rf node_modules target"
   },
   "dependencies": {
     "vue-simplemde": "^2.0.0",
@@ -18,16 +19,21 @@
     "vue": "^3.2.3",
     "vue-router": "4.0.11",
     "vee-validate": "^4.4.9",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "express": "^4.17.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.13",
-    "@vue/cli-plugin-eslint": "~4.5.13",
-    "@vue/cli-service": "~4.5.13",
+    "@vue/cli-plugin-router": "^4.5.15",
+    "@vue/cli-plugin-vuex": "^4.5.15",
+    "@vue/cli-plugin-babel": "~4.5.15",
+    "@vue/cli-plugin-eslint": "~4.5.15",
+    "@vue/cli-service": "~4.5.15",
     "@vue/compiler-sfc": "^3.2.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.16.0",
+    "node-sass": "6.0.1",
+    "sass-loader": "10.2.0",
     "yup": "^0.32.9"
   },
   "eslintConfig": {
@@ -36,14 +42,20 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "no-console": "warn",
+      "no-debugger": "warn"
+    }
   },
+  "eslintIgnore": [
+    "src/*"
+  ],
   "browserslist": [
     "> 1%",
     "last 2 versions",

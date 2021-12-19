@@ -9,16 +9,16 @@ import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:8081")
-@RestController
-@PreAuthorize("hasRole('ADMIN')")
+//@CrossOrigin(origins = "*")
+@Controller
+//@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {

@@ -148,11 +148,11 @@
 
 <script>
 import ArticleContainer from "@/components/ArticleContainer";
-import ArticlesService from "@/services/ArticlesService";
-import BookmarksService from "@/services/BookmarksService";
-import * as pswChecker from '../../static/js/password_check'
-import UserService from "@/services/UserService";
-import AuthorsService from "@/services/AuthorsService";
+import ArticlesService from "@/api/ArticlesService";
+import BookmarksService from "@/api/BookmarksService";
+import * as pswChecker from '@/assets/js/password_check'
+import UserService from "@/api/UserService";
+import AuthorsService from "@/api/AuthorsService";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 
@@ -338,7 +338,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../../static/css/password_checking_style.css";
+@import "../assets/css/password_checking_style.css";
 
 .header {
   justify-content: space-between;

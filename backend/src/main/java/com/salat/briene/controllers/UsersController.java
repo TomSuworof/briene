@@ -8,13 +8,14 @@ import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:8081")
-@RestController
+//@CrossOrigin(origins = "*")
+@Controller
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UsersController {

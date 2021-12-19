@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import AuthorsService from "@/services/AuthorsService";
+import AuthorsService from "@/api/AuthorsService";
 import ArticleContainer from "@/components/ArticleContainer";
 
 export default {

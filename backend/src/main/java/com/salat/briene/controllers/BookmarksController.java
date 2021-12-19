@@ -10,6 +10,7 @@ import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +19,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:8081")
-@RestController
+//@CrossOrigin(origins = "*")
+@Controller
 @RequestMapping("/api/bookmarks")
 @RequiredArgsConstructor
 public class BookmarksController {
@@ -63,7 +64,7 @@ public class BookmarksController {
         }
 
         UserDataRequest newUserData = new UserDataRequest();
-        newUserData.setBookmarks(Optional.ofNullable(bookmarks));
+        newUserData.setBookmarks(Optional.of(bookmarks));
 
         userService.updateUser(currentUser.getId(), newUserData);
 

@@ -1,4 +1,4 @@
-import axiosInstance from "../http-common";
+import axiosInstance from "./http-common";
 
 const setupInterceptors = (store, router) => {
     axiosInstance.interceptors.response.use(

@@ -8,7 +8,7 @@
         <p>{{ finePublicationDate }}</p>
       </div>
     </div>
-    <div class="title-bookmark row">
+    <div class="title">
       <div class="article-title">
         <h1 id="article-title">{{  article.title }}</h1>
       </div>
@@ -21,6 +21,7 @@
         </div>
       </div>
     </div>
+    <hr/>
     <div v-html="article.content" class="article-content" id="article-content"></div>
     <div class="control" id="control">
       <p id="quote">💬 Quote</p>
@@ -30,8 +31,8 @@
 
 <script>
 import moment from 'moment';
-import ArticlesService from "@/services/ArticlesService";
-import BookmarksService from "@/services/BookmarksService";
+import ArticlesService from "@/api/ArticlesService";
+import BookmarksService from "@/api/BookmarksService";
 
 export default {
   name: "Article",
@@ -153,14 +154,14 @@ button {
   outline: none;
 }
 
-.title-bookmark {
-  padding: 0 10pt 0;
-  vertical-align: center;
-  justify-content: space-between;
-}
-
 .bookmarking, .article-title {
   display: inline-block;
+}
+
+.bookmarking {
+  position: relative;
+  float: right;
+  padding: 12pt 7pt 0 0;
 }
 
 .article-title {
@@ -168,7 +169,7 @@ button {
 }
 
 .article-about {
-  padding: 0 10pt 0;
+  padding: 0 0 0 12pt;
   justify-content: space-between;
 }
 

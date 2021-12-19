@@ -1,5 +1,5 @@
-import http from '../http-common'
-import authHeader from "@/services/AuthHeader";
+import http from './http-common'
+import authHeader from "@/api/AuthHeader";
 
 class ArticlesService {
     getPublishedArticlesPaginated(limit, offset) {

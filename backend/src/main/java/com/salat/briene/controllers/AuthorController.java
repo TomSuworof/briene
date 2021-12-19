@@ -8,12 +8,14 @@ import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8081")
-@RestController
+//@CrossOrigin(origins = "http://localhost:8081")
+//@CrossOrigin(origins = "*")
+@Controller
 @RequestMapping("/api/authors")
 @RequiredArgsConstructor
 public class AuthorController {
