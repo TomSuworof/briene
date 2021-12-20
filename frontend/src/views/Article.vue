@@ -143,6 +143,32 @@ export default {
 </script>
 
 <style scoped>
+
+@media screen and (max-width: 720px) {
+  /* comes into effect for screens less than 720 pixels (inclusive) */
+  .article-page-content {
+  }
+}
+
+@media screen and (min-width: 721px) {
+  /* comes into effect for screens larger than or equal to 481 pixels */
+  .bookmarking {
+    padding: 12pt 7pt 0 0;
+  }
+
+  .article-about {
+    padding: 0 0 0 12pt;
+  }
+
+  .article-page-content {
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
+    border-radius: 10px;
+    margin: 0 0 10pt;
+    padding: 20pt 20pt 10pt 40pt;
+  }
+}
+
 .article-author {
   margin: 0 0 10pt;
 }
@@ -161,7 +187,6 @@ button {
 .bookmarking {
   position: relative;
   float: right;
-  padding: 12pt 7pt 0 0;
 }
 
 .article-title {
@@ -169,7 +194,6 @@ button {
 }
 
 .article-about {
-  padding: 0 0 0 12pt;
   justify-content: space-between;
 }
 
@@ -187,11 +211,4 @@ button {
   cursor: pointer;
 }
 
-.article-page-content {
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 10px;
-  margin: 0 0 10pt;
-  padding: 20pt 20pt 10pt 40pt;
-}
 </style>

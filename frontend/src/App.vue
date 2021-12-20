@@ -20,8 +20,19 @@
 </template>
 
 <style>
-.whole-page {
-  background: #FAFAFA;
+
+@media screen and (max-width: 720px) {
+  /* comes into effect for screens less than 720 pixels (inclusive) */
+  .content {
+    padding: 3% 5% 80pt 5%;
+  }
+}
+
+@media screen and (min-width: 721px) {
+  /* comes into effect for screens larger than or equal to 481 pixels */
+  .content {
+    padding: 3% 10% 80pt 10%;
+  }
 }
 
 .row {
@@ -38,7 +49,4 @@
   margin: 0 10pt 0;
 }
 
-.content {
-  padding: 3% 10% 0;
-}
 </style>
