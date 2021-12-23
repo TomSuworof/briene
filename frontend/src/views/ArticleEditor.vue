@@ -16,7 +16,12 @@
           </div>
         </div>
         <div class="editor">
-          <vue-simplemde :configs="configs" v-model="content" ref="markdownEditor"/>
+          <vue-simplemde
+              :configs="configs"
+              v-model="content"
+              ref="markdownEditor"
+              :highlight="true"
+          />
         </div>
       </div>
     </form>
@@ -110,6 +115,7 @@ export default {
 <style scoped>
 
 @import '~simplemde/dist/simplemde.min.css';
+@import '~github-markdown-css';
 
 .title-wrapper, .action-buttons {
   display: inline-block;

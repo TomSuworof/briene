@@ -1,5 +1,7 @@
 package com.salat.briene.entities;
 
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
@@ -15,6 +17,7 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -52,6 +55,13 @@ public class Article {
 
     public String makeHTML() {
         MutableDataSet options = new MutableDataSet();
+
+        options.set(Parser.EXTENSIONS, List.of(
+                TablesExtension.create(),
+                StrikethroughExtension.create()
+        ));
+
+        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();

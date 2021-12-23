@@ -1,10 +1,11 @@
 <template>
   <div class="admin-dashboard">
     <div class="admin-dashboard-users">
-      <div class="admin-dashboard-title">
+      <div class="admin-dashboard-title accordion">
         <h1>Users</h1>
+        <hr/>
       </div>
-      <table class="admin-dashboard-table table">
+      <table class="admin-dashboard-table table panel">
         <tr>
           <th class="user-column">ID</th>
           <th class="user-column">Username</th>
@@ -39,24 +40,28 @@
       </table>
     </div>
     <div class="admin-dashboard-articles">
-      <div>
-        <h2>Articles</h2>
+      <div class="accordion">
+        <h1>Articles</h1>
+        <hr/>
       </div>
-      <div class="articles-types">
-        <a href="#" class="article-type" @click="getAllArticles('all')">All</a>
-        <a href="#" class="article-type" @click="getAllArticles('published')">Published</a>
-        <a href="#" class="article-type" @click="getAllArticles('drafts')">Drafts</a>
-      </div>
-      <div v-if="articles.length > 0">
-        <article-container
-            v-for="article in articles"
-            v-bind:key="article.id"
-            v-bind:article="article"
-            v-bind:actions="actions"
-        ></article-container>
-      </div>
-      <div v-else-if="articles.length === 0">
-        <p>No articles</p>
+      <div class="panel">
+        <div class="articles-types">
+          <a href="#" class="article-type" @click="getAllArticles('all')">All</a>
+          <a href="#" class="article-type" @click="getAllArticles('published')">Published</a>
+          <a href="#" class="article-type" @click="getAllArticles('drafts')">Drafts</a>
+        </div>
+        <div v-if="articles.length > 0">
+          <article-container
+              v-for="article in articles"
+              :key="article.id"
+              :article="article"
+              :actions="actions"
+              :state="article.state"
+          ></article-container>
+        </div>
+        <div v-else-if="articles.length === 0">
+          <p>No articles</p>
+        </div>
       </div>
     </div>
   </div>
@@ -66,6 +71,7 @@
 import ArticleContainer from "@/components/ArticleContainer";
 import AdminService from "@/api/AdminService";
 import ArticlesService from "@/api/ArticlesService";
+import * as accordion from "@/assets/js/accordion";
 
 export default {
   name: "Admin",
@@ -152,11 +158,24 @@ export default {
     } else {
       this.$router.push('/error');
     }
+    this.$nextTick(accordion.setupAccordion);
   }
 }
 </script>
 
 <style scoped>
+@import "../assets/css/accordion_style.css";
+
+@media (max-width: 720px) {
+  table {
+    display: block;
+    max-width: fit-content;
+    margin: 0 auto;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
 .user-action {
   float: left;
   margin: 1%;

@@ -169,6 +169,11 @@ export default {
   }
 }
 
+table, tbody, tfoot, thead, tr, th, td {
+  border-collapse: collapse;
+  border: 10px solid black;
+}
+
 .article-author {
   margin: 0 0 10pt;
 }

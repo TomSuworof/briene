@@ -107,40 +107,47 @@
       </div>
     </div>
     <div class="articles-bookmarks">
-      <div>
+      <div class="accordion">
         <h2>Bookmarks</h2>
+        <hr/>
       </div>
-      <div v-show="bookmarks.length > 0">
-        <article-container
-            v-for="article in bookmarks"
-            v-bind:key="article.id"
-            v-bind:article="article"
-            v-bind:actions="actionsForBookmarks"
-        ></article-container>
-      </div>
-      <div v-show="bookmarks.length === 0">
-        <p>No bookmarks</p>
+      <div class="panel">
+        <div v-show="bookmarks.length > 0">
+          <article-container
+              v-for="article in bookmarks"
+              :key="article.id"
+              :article="article"
+              :actions="actionsForBookmarks"
+          ></article-container>
+        </div>
+        <div v-show="bookmarks.length === 0">
+          <p>No bookmarks</p>
+        </div>
       </div>
     </div>
     <div class="articles-block">
-      <div>
+      <div class="accordion">
         <h2>My articles</h2>
+        <hr/>
       </div>
-      <div class="articles-types">
-        <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
-        <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
-        <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
-      </div>
-      <div v-show="articles.length > 0">
-        <article-container
-            v-for="article in articles"
-            v-bind:key="article.id"
-            v-bind:article="article"
-            v-bind:actions="actionsForMyArticles"
-        ></article-container>
-      </div>
-      <div v-show="articles.length === 0">
-        <p>No articles</p>
+      <div class="panel">
+        <div class="articles-types">
+          <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
+          <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
+          <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
+        </div>
+        <div v-show="articles.length > 0">
+          <article-container
+              v-for="article in articles"
+              :key="article.id"
+              :article="article"
+              :actions="actionsForMyArticles"
+              :state="article.state"
+          ></article-container>
+        </div>
+        <div v-show="articles.length === 0">
+          <p>No articles</p>
+        </div>
       </div>
     </div>
   </div>
@@ -155,6 +162,7 @@ import UserService from "@/api/UserService";
 import AuthorsService from "@/api/AuthorsService";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import * as accordion from "@/assets/js/accordion";
 
 export default {
   name: 'Profile',
@@ -327,6 +335,7 @@ export default {
   },
   created() {
     this.$nextTick(pswChecker.passwordChecking);
+    this.$nextTick(accordion.setupAccordion);
   },
   mounted() {
     this.email = this.currentUser.email;
@@ -338,6 +347,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../assets/css/accordion_style.css";
 @import "../assets/css/password_checking_style.css";
 
 .header {

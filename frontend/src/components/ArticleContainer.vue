@@ -1,8 +1,13 @@
 <template>
   <div class="article-container">
     <div class="article-about row">
-      <div class="article-author">
-        <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
+      <div>
+        <div class="article-author">
+          <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
+        </div>
+        <div class="article-state" v-show="state !== undefined">
+          <p>#{{ state }}</p>
+        </div>
       </div>
       <div class="article-publication-date">
         <p>{{ getFinePublicationDate(article) }}</p>
@@ -29,7 +34,7 @@ import moment from "moment";
 
 export default {
   name: "ArticleContainer",
-  props: ["article", "actions"],
+  props: ["article", "actions", "state"],
   methods: {
     getFinePublicationDate: function (article) {
       return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
@@ -57,7 +62,8 @@ export default {
   justify-content: space-between;
 }
 
-.article-author, .article-publication-date {
+.article-author, .article-state, .article-publication-date {
+  padding: 2pt;
   display: inline-block;
 }
 

@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 // ArticleDTO provides short form of article without content
-// It is helpful and recommended to use when you need to get a list of articles
+// It is helpful and recommended using when you need to get a list of articles
 
 @Getter
 public class ArticleDTO {
@@ -16,6 +16,7 @@ public class ArticleDTO {
     protected final String author;
     protected String summary;
     protected final OffsetDateTime publicationDate;
+    protected final String state;
 
     public ArticleDTO(Article article) {
         this.id = article.getId();
@@ -23,5 +24,6 @@ public class ArticleDTO {
         this.author = article.getAuthor().getUsername();
         this.summary = article.getSummary();
         this.publicationDate = article.getPublicationDate();
+        this.state = article.getState().getDescription();
     }
 }
