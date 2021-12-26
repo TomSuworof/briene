@@ -1,50 +1,52 @@
 <template>
   <div class="admin-dashboard">
-    <div class="admin-dashboard-users">
-      <div class="admin-dashboard-title accordion">
+    <div class="admin-dashboard-users accordion">
+      <div class="admin-dashboard-title accordion__intro">
         <h1>Users</h1>
         <hr/>
       </div>
-      <table class="admin-dashboard-table table panel">
-        <tr>
-          <th class="user-column">ID</th>
-          <th class="user-column">Username</th>
-          <th class="user-column">Email</th>
-          <th class="user-column">Roles</th>
-          <th class="user-column-actions">Actions</th>
-        </tr>
-        <tr class="user-row" v-for="user in users"  v-bind:key="user.id">
-          <td class="user-column">{{ user.id }}</td>
-          <td class="user-column">{{ user.username }}</td>
-          <td class="user-column">{{ user.email }}</td>
-          <td class="user-column">
-            <ul v-for="role in user.roles" v-bind:key="role.id">
-              <li>{{ role.name }}</li>
-            </ul>
-          </td>
-          <td class="user-column-actions">
-            <div class="user-actions">
-              <div class="user-action">
-                <button @click="editUser('make_admin', user.id)" class="btn btn-primary btn-block">Make admin</button>
+      <div class="accordion__content">
+        <table class="admin-dashboard-table table">
+          <tr>
+            <th class="user-column">ID</th>
+            <th class="user-column">Username</th>
+            <th class="user-column">Email</th>
+            <th class="user-column">Roles</th>
+            <th class="user-column-actions">Actions</th>
+          </tr>
+          <tr class="user-row" v-for="user in users"  v-bind:key="user.id">
+            <td class="user-column">{{ user.id }}</td>
+            <td class="user-column">{{ user.username }}</td>
+            <td class="user-column">{{ user.email }}</td>
+            <td class="user-column">
+              <ul v-for="role in user.roles" v-bind:key="role.id">
+                <li>{{ role.name }}</li>
+              </ul>
+            </td>
+            <td class="user-column-actions">
+              <div class="user-actions">
+                <div class="user-action">
+                  <button @click="editUser('make_admin', user.id)" class="btn btn-primary btn-block">Make admin</button>
+                </div>
+                <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_USER') ||
+                    user.roles.map(role => role.name).includes('ROLE_ADMIN')">
+                  <button @click="editUser('delete', user.id)" class="btn btn-danger btn-block">Delete (block)</button>
+                </div>
+                <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_BLOCKED')">
+                  <button @click="editUser('make_user', user.id)" class="btn btn-success btn-block">Make user</button>
+                </div>
               </div>
-              <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_USER') ||
-                  user.roles.map(role => role.name).includes('ROLE_ADMIN')">
-                <button @click="editUser('delete', user.id)" class="btn btn-danger btn-block">Delete (block)</button>
-              </div>
-              <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_BLOCKED')">
-                <button @click="editUser('make_user', user.id)" class="btn btn-success btn-block">Make user</button>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </table>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <div class="admin-dashboard-articles">
-      <div class="accordion">
+    <div class="admin-dashboard-articles accordion">
+      <div class="accordion__intro">
         <h1>Articles</h1>
         <hr/>
       </div>
-      <div class="panel">
+      <div class="accordion__content">
         <div class="articles-types">
           <a href="#" class="article-type" @click="getAllArticles('all')">All</a>
           <a href="#" class="article-type" @click="getAllArticles('published')">Published</a>

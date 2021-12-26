@@ -64,7 +64,6 @@ export default {
   },
   created() {
     this.getLastArticles(10, 0);
-    console.log(this.articles);
   }
 }
 </script>

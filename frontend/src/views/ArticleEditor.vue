@@ -8,10 +8,14 @@
           </div>
           <div class="action-buttons">
             <div class="btn-container">
-              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action" value="Publish">Publish</button>
+              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action"
+                      value="Publish">Publish
+              </button>
             </div>
             <div class="btn-container">
-              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action" value="Save">Save</button>
+              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action"
+                      value="Save">Save
+              </button>
             </div>
           </div>
         </div>
@@ -91,9 +95,30 @@ export default {
             console.log(err);
             this.showWarningArticleExists();
           });
-    }
+    },
+    saveArticleToLocalStorage: function () {
+      localStorage.setItem('recentArticle', JSON.stringify({
+        'title': this.title,
+        'summary': this.summary,
+        'content': this.content
+      }));
+    },
+    loadArticleFromLocalStorage: function () {
+      let recentArticle = localStorage.getItem('recentArticle');
+
+      if (recentArticle !== null) {
+        let article = JSON.parse(recentArticle);
+        this.title = article.title;
+        this.summary = article.summary;
+        this.content = article.content;
+      }
+    },
   },
   created() {
+    if (this.currentUser === undefined) {
+      this.$router.push('/login');
+    }
+
     if (this.$route.query.articleId !== undefined) {
       // if there is a parameter with id - it is a request for editing existing article
       let requestedArticleId = this.$route.query.articleId;
@@ -107,15 +132,18 @@ export default {
         console.log(err);
         this.$router.replace('/error'); // redirecting to '/error'
       });
+    } else {
+      this.loadArticleFromLocalStorage();
     }
+  },
+  beforeUnmount() {
+    this.saveArticleToLocalStorage();
   }
 };
 </script>
 
 <style scoped>
-
 @import '~simplemde/dist/simplemde.min.css';
-@import '~github-markdown-css';
 
 .title-wrapper, .action-buttons {
   display: inline-block;

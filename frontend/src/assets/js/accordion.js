@@ -1,5 +1,5 @@
 function setupAccordion() {
-    let acc = document.getElementsByClassName("accordion");
+    let acc = document.getElementsByClassName("accordion__intro");
     let i;
 
     for (i = 0; i < acc.length; i++) {

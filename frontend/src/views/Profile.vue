@@ -55,7 +55,7 @@
             </div>
             <div class="form-group">
               <label>Enter current password to submit changes: </label>
-              <Field id="pswOld" type="password" name="password" class="form-control" placeholder="Password" v-model="password"/>
+              <Field id="pswCurrent" type="password" name="password" class="form-control" placeholder="Password" v-model="password"/>
             </div>
             <div class="form-group">
               <button class="btn btn-primary btn-block" :disabled="loading">
@@ -106,12 +106,12 @@
         </div>
       </div>
     </div>
-    <div class="articles-bookmarks">
-      <div class="accordion">
+    <div class="articles-bookmarks accordion">
+      <div class="accordion__intro">
         <h2>Bookmarks</h2>
         <hr/>
       </div>
-      <div class="panel">
+      <div class="accordion__content">
         <div v-show="bookmarks.length > 0">
           <article-container
               v-for="article in bookmarks"
@@ -125,12 +125,12 @@
         </div>
       </div>
     </div>
-    <div class="articles-block">
-      <div class="accordion">
+    <div class="articles-block accordion">
+      <div class="accordion__intro">
         <h2>My articles</h2>
         <hr/>
       </div>
-      <div class="panel">
+      <div class="accordion__content">
         <div class="articles-types">
           <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
           <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
@@ -204,17 +204,18 @@ export default {
       bio: undefined,
       passwordNew: undefined,
       passwordNewConfirm: undefined,
+
       loading: false,
 
       showUserData: true,
 
       actionsForBookmarks: [
-        {function: this.removeFromBookmarks, message: '❌ Remove from bookmarks'}
+        { function: this.removeFromBookmarks, message: '❌ Remove from bookmarks' }
       ],
 
       actionsForMyArticles: [
-        {function: this.editArticle, message: '🖊 Edit'},
-        {function: this.removeArticle, message: '❌ Remove'},
+        { function: this.editArticle, message: '🖊 Edit' },
+        { function: this.removeArticle, message: '❌ Remove' },
       ],
 
       schema,
@@ -297,7 +298,7 @@ export default {
       ArticlesService.getMyArticles(state)
           .then(response => {
             this.articles = response.data.sort((article1, article2) => {
-              if (article1.publicationDate < article2.publicationDate) {
+              if (article2.publicationDate > article1.publicationDate) {
                 return -1;
               }
               if (article1.publicationDate > article2.publicationDate) {
