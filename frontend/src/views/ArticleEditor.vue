@@ -119,6 +119,10 @@ export default {
       this.$router.push('/login');
     }
 
+    window.onblur = () => {
+      this.saveArticleToLocalStorage();
+    };
+
     if (this.$route.query.articleId !== undefined) {
       // if there is a parameter with id - it is a request for editing existing article
       let requestedArticleId = this.$route.query.articleId;
