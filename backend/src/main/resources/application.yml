@@ -23,8 +23,9 @@ spring:
 
   flyway:
     locations: 'classpath:db/migration'
+    baselineOnMigrate: true
+    validateOnMigrate: false
 
-  # mail still does not work - no need to specify
   mail:
     host: ${MAIL_HOST}
     port: 465

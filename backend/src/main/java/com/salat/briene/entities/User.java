@@ -32,12 +32,6 @@ public class User implements UserDetails {
     @Size(max = 255, message = ConstraintViolationMessage.USER_BIO_LIMIT)
     private String bio;
 
-    @NotBlank(message = ConstraintViolationMessage.USER_SECRET_QUESTION_EMPTY)
-    private String secretQuestion;
-
-    @NotBlank(message = ConstraintViolationMessage.USER_SECRET_ANSWER_EMPTY)
-    private String secretAnswer;
-
     @NotBlank(message = ConstraintViolationMessage.USER_PASSWORD_EMPTY)
     private String password;
 

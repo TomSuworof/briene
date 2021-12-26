@@ -39,16 +39,6 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <label>Secret Question</label>
-          <Field id="secret_question" name="secretQuestion" type="text" class="form-control" required/>
-          <ErrorMessage name="secret_question" class="error-feedback"/>
-        </div>
-        <div class="form-group">
-          <label>Secret Answer</label>
-          <Field id="secret_answer" name="secretAnswer" type="text" class="form-control" required/>
-          <ErrorMessage name="secret_answer" class="error-feedback"/>
-        </div>
         <div>
           <Field type="checkbox" id="agreement" name="agreement" value="true"/>
           <p>I agree with <router-link to="/terms_of_use">terms of use</router-link></p>

@@ -22,8 +22,6 @@ create table if not exists t_users
     id              uuid         not null constraint t_users_pkey primary key,
     email           varchar(255) not null,
     password        varchar(255) not null,
-    secret_answer   varchar(255) not null,
-    secret_question varchar(255) not null,
     username        varchar(255) not null,
     bio             varchar(255)
 );

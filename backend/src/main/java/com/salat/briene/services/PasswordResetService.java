@@ -6,6 +6,7 @@ import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.exceptions.PasswordResetRequestNotFoundException;
 import com.salat.briene.repositories.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.EmailException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,20 +20,20 @@ public class PasswordResetService {
 
     private String email;
 
-    public void sendPasswordResetLinkTo(String username) {
-            Date created = new Date();
-            User requiredUser = userService.loadUserByUsername(username);
-            email = requiredUser.getEmail();
-            passwordResetRepository.save(new PasswordResetRequest(username, created));
+    public void sendPasswordResetLinkTo(String username) throws EmailException {
+        Date created = new Date();
+        User requiredUser = userService.loadUserByUsername(username);
+        email = requiredUser.getEmail();
+        passwordResetRepository.save(new PasswordResetRequest(username, created));
 
-            String link = "";// "https://acl0ud.herokuapp.com/password_reset/change_password/" + id;
+        String link = "";// "https://briene.herokuapp.com/password_reset/change_password/" + id;
 
-            mailService.send(email, "password_change", link);
+        mailService.send(email, "password_change", link);
     }
 
     public boolean isRequestValid(UUID id) {
         Optional<PasswordResetRequest> request = passwordResetRepository.findById(id);
-        if(request.isPresent()) {
+        if (request.isPresent()) {
             Calendar now = new GregorianCalendar();
             Date dateCreated = request.get().getCreated();
             Calendar dateExpired = new GregorianCalendar();
@@ -76,25 +77,25 @@ public class PasswordResetService {
         userService.updateUser(userId, newUserData);
     }
 
-    public String getSecretQuestionOf(UUID userId) {
-        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(userId);
-
-        if (passwordResetRequest.isPresent()) {
-            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
-            return userForNewPassword.getSecretQuestion();
-        } else {
-            throw new PasswordResetRequestNotFoundException();
-        }
-    }
-
-    public String getSecretAnswerOf(UUID id) {
-        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(id);
-
-        if (passwordResetRequest.isPresent()) {
-            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
-            return userForNewPassword.getSecretAnswer();
-        } else {
-            throw new PasswordResetRequestNotFoundException();
-        }
-    }
+//    public String getSecretQuestionOf(UUID userId) {
+//        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(userId);
+//
+//        if (passwordResetRequest.isPresent()) {
+//            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
+//            return userForNewPassword.getSecretQuestion();
+//        } else {
+//            throw new PasswordResetRequestNotFoundException();
+//        }
+//    }
+//
+//    public String getSecretAnswerOf(UUID id) {
+//        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(id);
+//
+//        if (passwordResetRequest.isPresent()) {
+//            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
+//            return userForNewPassword.getSecretAnswer();
+//        } else {
+//            throw new PasswordResetRequestNotFoundException();
+//        }
+//    }
 }

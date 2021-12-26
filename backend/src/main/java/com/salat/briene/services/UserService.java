@@ -6,6 +6,7 @@ import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -21,6 +22,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -53,8 +55,6 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
-        user.setSecretQuestion(signupRequest.getSecretQuestion());
-        user.setSecretAnswer(signupRequest.getSecretAnswer());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRoles(Set.of(RoleEnum.USER.getAsObject()));
 //        user.setId((long) user.hashCode());
@@ -91,6 +91,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(userFromDB);
     }
 
+    @Deprecated
+    // should be cascaded
     private void deleteUser(UUID userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
@@ -99,14 +101,14 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void changeRole(UUID userId, Role role) {
+    public void changeRole(UUID userId, Role role) throws EmailException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         userFromDB.setRoles(new HashSet<>(){{
             add(role);
         }});
 
-//        mailService.send(userFromDB.getEmail(), "role_change", role);
+        mailService.send(userFromDB.getEmail(), "role_change", role.getName());
         userRepository.save(userFromDB);
     }
 

@@ -8,6 +8,7 @@ import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.EmailException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class AdminController {
     }
 
     @PostMapping("/edit_user")
-    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) {
+    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) throws EmailException {
         userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
         return ResponseEntity.ok().body(ROLE_UPDATED.formatted(id));
     }
