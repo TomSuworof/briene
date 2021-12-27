@@ -33,7 +33,7 @@
 import moment from "moment";
 
 export default {
-  name: "ArticleContainer",
+  name: "ArticleComponent",
   props: ["article", "actions", "state"],
   methods: {
     getFinePublicationDate: function (article) {

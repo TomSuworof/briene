@@ -6,8 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -27,8 +26,17 @@ public class PasswordResetRequest {
     @PastOrPresent(message = ConstraintViolationMessage.PASSWORD_RESET_REQUEST_CREATED_INVALID)
     private Date created;
 
-    public PasswordResetRequest(String username, Date created) {
+    public PasswordResetRequest(String username) {
         this.username = username;
-        this.created = created;
+        this.created = new Date();
+    }
+
+    public Boolean isValid() {
+        Calendar now = new GregorianCalendar();
+        Date dateCreated = this.created;
+        Calendar dateExpired = new GregorianCalendar();
+        dateExpired.setTime(dateCreated);
+        dateExpired.add(Calendar.HOUR, 24);
+        return now.before(dateExpired);
     }
 }

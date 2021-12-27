@@ -11,11 +11,11 @@
       </div>
       <div class="articles">
         <div v-if="articles.length > 0">
-          <article-container
+          <article-component
               v-for="article in articles"
               v-bind:key="article.id"
               v-bind:article="article"
-          ></article-container>
+          ></article-component>
         </div>
         <div v-else-if="articles.length === 0">
           <p>No articles</p>
@@ -27,12 +27,12 @@
 
 <script>
 import AuthorsService from "@/api/AuthorsService";
-import ArticleContainer from "@/components/ArticleContainer";
+import ArticleComponent from "@/components/ArticleComponent";
 
 export default {
   name: "Author",
   components: {
-    ArticleContainer,
+    ArticleComponent,
   },
   data() {
     return {

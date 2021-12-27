@@ -4,11 +4,11 @@
         <h1>Articles</h1>
     </div>
     <div id="articles">
-      <article-container
+      <article-component
           v-for="article in articles"
           v-bind:key="article.id"
           v-bind:article="article"
-      ></article-container>
+      ></article-component>
     </div>
     <div class="navigation-buttons">
       <div class="navigation-button-prev" title="Previous">
@@ -22,13 +22,13 @@
 </template>
 
 <script>
-import ArticleContainer from "@/components/ArticleContainer";
+import ArticleComponent from "@/components/ArticleComponent";
 import ArticlesService from "@/api/ArticlesService";
 
 export default {
   name: "Articles",
   components: {
-    ArticleContainer
+    ArticleComponent
   },
   data() {
     return {

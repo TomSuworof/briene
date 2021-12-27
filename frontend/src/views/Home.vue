@@ -7,11 +7,11 @@
       <h2>Recent articles</h2>
     </div>
     <div id="articles">
-      <article-container
+      <article-component
           v-for="article in articles"
           v-bind:key="article.id"
           v-bind:article="article"
-      ></article-container>
+      ></article-component>
     </div>
     <div class="articles-button">
       <router-link to="/articles">Show more</router-link>
@@ -28,13 +28,14 @@
 </template>
 
 <script>
-import ArticleContainer from "@/components/ArticleContainer";
+import ArticleComponent from "@/components/ArticleComponent";
 import ArticlesService from "@/api/ArticlesService";
 
 export default {
   name: "Home",
   components: {
-    ArticleContainer
+    ArticleComponent,
+    ArticleContainer: ArticleComponent
   },
   data() {
     return {

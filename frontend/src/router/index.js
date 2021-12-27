@@ -14,6 +14,7 @@ import ArticleEditor from "@/views/ArticleEditor";
 import Admin from "@/views/Admin";
 
 import Author from '@/views/Author';
+import PasswordReset from "@/views/PasswordReset";
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
@@ -24,6 +25,7 @@ const router = createRouter({
 
         { path: '/login', component: Login},
         { path: '/register', component: Register},
+        { path: '/password_reset', component: PasswordReset },
         { path: '/profile', component: Profile, meta: { requiresAuth: true } },
 
         { path: '/articles', component: Articles },
@@ -34,7 +36,7 @@ const router = createRouter({
 
         { path: '/authors/:authorName', component: Author },
 
-        // otherwise redirect to home
+        // otherwise, redirect to home
         { path: '/:pathMatch(.*)*', redirect: '/' }
     ]
 });

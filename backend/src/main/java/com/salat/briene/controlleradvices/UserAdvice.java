@@ -5,7 +5,6 @@ import com.salat.briene.exceptions.DuplicatedUserException;
 import com.salat.briene.exceptions.RoleNotFoundException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.payload.response.ErrorResponse;
-import org.apache.commons.mail.EmailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -58,16 +57,6 @@ public class UserAdvice {
         logger.error(e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
-
-        return ResponseEntity.status(status).body(response);
-    }
-
-    @ExceptionHandler(EmailException.class)
-    public ResponseEntity<ErrorResponse> handleEmailException(EmailException e, HttpServletRequest request) {
-        logger.error(e.getMessage());
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(status).body(response);

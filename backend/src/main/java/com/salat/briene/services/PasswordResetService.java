@@ -2,6 +2,7 @@ package com.salat.briene.services;
 
 import com.salat.briene.entities.PasswordResetRequest;
 import com.salat.briene.entities.User;
+import com.salat.briene.exceptions.PasswordResetRequestInvalidException;
 import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.exceptions.PasswordResetRequestNotFoundException;
 import com.salat.briene.repositories.PasswordResetRepository;
@@ -18,34 +19,21 @@ public class PasswordResetService {
     private final PasswordResetRepository passwordResetRepository;
     private final MailService mailService;
 
-    private String email;
+    public void createPasswordResetRequestFor(String username) {
+        passwordResetRepository.save(new PasswordResetRequest(username));
+    }
 
-    public void sendPasswordResetLinkTo(String username) throws EmailException {
-        Date created = new Date();
+    public String sendEmailWithCodeTo(String username) throws EmailException {
         User requiredUser = userService.loadUserByUsername(username);
-        email = requiredUser.getEmail();
-        passwordResetRepository.save(new PasswordResetRequest(username, created));
 
-        String link = "";// "https://briene.herokuapp.com/password_reset/change_password/" + id;
+        String code = passwordResetRepository
+                .findByUsername(username)
+                .orElseThrow(PasswordResetRequestNotFoundException::new)
+                .getId().toString();
 
-        mailService.send(email, "password_change", link);
-    }
+        String email = requiredUser.getEmail();
+        mailService.send(email, "password_change", code);
 
-    public boolean isRequestValid(UUID id) {
-        Optional<PasswordResetRequest> request = passwordResetRepository.findById(id);
-        if (request.isPresent()) {
-            Calendar now = new GregorianCalendar();
-            Date dateCreated = request.get().getCreated();
-            Calendar dateExpired = new GregorianCalendar();
-            dateExpired.setTime(dateCreated);
-            dateExpired.add(Calendar.HOUR, 24);
-            return now.before(dateExpired);
-        } else {
-            return false;
-        }
-    }
-
-    public String getEmail() {
         return hideEmail(email);
     }
 
@@ -59,7 +47,7 @@ public class PasswordResetService {
         return emailAnswer.toString();
     }
 
-    public void setNewPasswordOf(String passwordNew, UUID requestId) {
+    public void setNewPassword(UUID requestId, String newPassword) {
         Optional<PasswordResetRequest> passwordResetRequestOpt = passwordResetRepository.findById(requestId);
 
         if (passwordResetRequestOpt.isEmpty()) {
@@ -68,34 +56,16 @@ public class PasswordResetService {
 
         PasswordResetRequest passwordResetRequest = passwordResetRequestOpt.get();
 
+        if (!passwordResetRequest.isValid()) {
+            throw new PasswordResetRequestInvalidException();
+        }
+
         UserDataRequest newUserData = new UserDataRequest();
-        newUserData.setPassword(Optional.ofNullable(passwordNew));
+        newUserData.setPassword(Optional.ofNullable(newPassword));
 
         UUID userId = userService.loadUserByUsername(passwordResetRequest.getUsername()).getId();
 
         passwordResetRepository.delete(passwordResetRequest);
         userService.updateUser(userId, newUserData);
     }
-
-//    public String getSecretQuestionOf(UUID userId) {
-//        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(userId);
-//
-//        if (passwordResetRequest.isPresent()) {
-//            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
-//            return userForNewPassword.getSecretQuestion();
-//        } else {
-//            throw new PasswordResetRequestNotFoundException();
-//        }
-//    }
-//
-//    public String getSecretAnswerOf(UUID id) {
-//        Optional<PasswordResetRequest> passwordResetRequest = passwordResetRepository.findById(id);
-//
-//        if (passwordResetRequest.isPresent()) {
-//            User userForNewPassword = userService.loadUserByUsername(passwordResetRequest.get().getUsername());
-//            return userForNewPassword.getSecretAnswer();
-//        } else {
-//            throw new PasswordResetRequestNotFoundException();
-//        }
-//    }
 }

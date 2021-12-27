@@ -10,6 +10,7 @@ import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.EmailException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "*")
 @Controller
-//@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {

@@ -1,7 +1,7 @@
 package com.salat.briene.exceptions;
 
 public class PasswordResetRequestNotFoundException extends IllegalStateException {
-    private static final String PASSWORD_RESET_REQUEST_NOT_EXISTS = "Password reset not exists";
+    private static final String PASSWORD_RESET_REQUEST_NOT_EXISTS = "Password reset request does not exist";
 
     public PasswordResetRequestNotFoundException() {
         super(PASSWORD_RESET_REQUEST_NOT_EXISTS);

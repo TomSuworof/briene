@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface PasswordResetRepository extends JpaRepository<PasswordResetRequest, UUID> {
 
     Optional<PasswordResetRequest> findById(UUID id);
+
+    Optional<PasswordResetRequest> findByUsername(String username);
 }

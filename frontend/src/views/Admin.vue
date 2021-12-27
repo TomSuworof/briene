@@ -53,13 +53,13 @@
           <a href="#" class="article-type" @click="getAllArticles('drafts')">Drafts</a>
         </div>
         <div v-if="articles.length > 0">
-          <article-container
+          <article-component
               v-for="article in articles"
               :key="article.id"
               :article="article"
               :actions="actions"
               :state="article.state"
-          ></article-container>
+          ></article-component>
         </div>
         <div v-else-if="articles.length === 0">
           <p>No articles</p>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import ArticleContainer from "@/components/ArticleContainer";
+import ArticleComponent from "@/components/ArticleComponent";
 import AdminService from "@/api/AdminService";
 import ArticlesService from "@/api/ArticlesService";
 import * as accordion from "@/assets/js/accordion";
@@ -78,7 +78,7 @@ import * as accordion from "@/assets/js/accordion";
 export default {
   name: "Admin",
   components: {
-    ArticleContainer
+    ArticleComponent
   },
   data() {
     return {

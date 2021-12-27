@@ -113,12 +113,12 @@
       </div>
       <div class="accordion__content">
         <div v-show="bookmarks.length > 0">
-          <article-container
+          <article-component
               v-for="article in bookmarks"
               :key="article.id"
               :article="article"
               :actions="actionsForBookmarks"
-          ></article-container>
+          ></article-component>
         </div>
         <div v-show="bookmarks.length === 0">
           <p>No bookmarks</p>
@@ -137,13 +137,13 @@
           <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
         </div>
         <div v-show="articles.length > 0">
-          <article-container
+          <article-component
               v-for="article in articles"
               :key="article.id"
               :article="article"
               :actions="actionsForMyArticles"
               :state="article.state"
-          ></article-container>
+          ></article-component>
         </div>
         <div v-show="articles.length === 0">
           <p>No articles</p>
@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import ArticleContainer from "@/components/ArticleContainer";
+import ArticleComponent from "@/components/ArticleComponent";
 import ArticlesService from "@/api/ArticlesService";
 import BookmarksService from "@/api/BookmarksService";
 import * as pswChecker from '@/assets/js/password_check'
@@ -167,7 +167,8 @@ import * as accordion from "@/assets/js/accordion";
 export default {
   name: 'Profile',
   components: {
-    ArticleContainer,
+    ArticleComponent,
+    ArticleContainer: ArticleComponent,
     Form,
     Field,
     ErrorMessage

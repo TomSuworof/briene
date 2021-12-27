@@ -31,14 +31,14 @@ public class MailService {
         }
     }
 
-    private void sendPasswordReset(HtmlEmail email, String link) throws EmailException {
+    private void sendPasswordReset(HtmlEmail email, String code) throws EmailException {
         email.setSubject("Password reset");
         email.setHtmlMsg("<html>\n" +
                 "<body>\n" +
                 "\n" +
                 "<h1>You sent request for password reset.</h1\n" +
                 "<p>" +
-                "<a href=\"" + link + "\">Reset password</a>\n" +
+                "Here is your code: " + code +
                 "\n" +
                 "</p>\n" +
                 "<p>If you did not send the request, ignore this message or contact us via reply on the message.</p>\n" +
@@ -49,7 +49,7 @@ public class MailService {
     }
 
     private void sendRoleChanged(HtmlEmail email, String role) throws EmailException {
-        role = role.equals("blocked") ? role : "an " + role;
+//        role = role.equals("blocked") ? role : "an " + role;
         email.setSubject("Your role was changed");
         email.setHtmlMsg("<html>\n" +
                 "<body>\n" +

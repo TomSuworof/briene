@@ -42,7 +42,7 @@ import * as yup from 'yup';
 
 export default {
   name: "Login",
-  components: {Form, Field},
+  components: { Form, Field },
   data() {
     const schema = yup.object().shape({
       username: yup.string().required("Username if required!"),
@@ -66,7 +66,7 @@ export default {
     }
   },
   methods: {
-    handleLogin(user) {
+    handleLogin: function (user) {
       this.loading = true;
       this.$store.dispatch("auth/login", user)
           .then(() => {
