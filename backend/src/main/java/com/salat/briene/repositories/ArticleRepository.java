@@ -34,10 +34,11 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     @Transactional // it is better to use transaction, because we delete from several tables
     @Modifying // without this there wil be error: The statement did not return a result set
-    @Query(value = "delete from briene.public.t_user_bookmarks as bookmarks where bookmarks.bookmarked_article_id = ?1 ; " +
-            "delete from briene.public.t_articles as articles where articles.id = ?1 ; ",
+    @Query(value = "delete from t_user_bookmarks as bookmarks where bookmarks.bookmarked_article_id = ?1 ; " +
+            "delete from t_articles as articles where articles.id = ?1 ; ",
             nativeQuery = true)
     // delete article from all bookmarks
     // delete article itself
+    // todo make it safer
     void deleteArticleById(@Param("articleId") UUID id);
 }
