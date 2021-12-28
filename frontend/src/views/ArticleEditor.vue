@@ -25,6 +25,7 @@
               v-model="content"
               ref="markdownEditor"
               :highlight="true"
+              @paste="paste"
           />
         </div>
       </div>
@@ -113,6 +114,28 @@ export default {
         this.content = article.content;
       }
     },
+    paste: function (event) {
+      let data = event.clipboardData.items[0];
+
+      if (data.type.includes('image')) {
+        this.toBase64(data.getAsFile())
+            .then(result => {
+              let template = `<br><img id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
+              this.content += template;
+            })
+            .catch(e => {
+              console.log(e);
+            });
+      }
+    },
+    toBase64 : function (file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
   },
   created() {
     if (this.currentUser === undefined) {
