@@ -46,7 +46,7 @@
 
 .main-link, .header-button-editor, .header-button-profile {
   display: inline-block;
-  margin: 0 10pt 0;
+  margin: 0 10pt 0 12pt;
 }
 
 </style>

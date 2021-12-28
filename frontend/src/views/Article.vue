@@ -146,6 +146,10 @@ export default {
 
 @media screen and (max-width: 720px) {
   /* comes into effect for screens less than 720 pixels (inclusive) */
+  .article-about {
+    padding: 0 0 0 12pt;
+  }
+
   .article-page-content {
   }
 }
