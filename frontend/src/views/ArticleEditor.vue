@@ -1,5 +1,8 @@
 <template>
   <div class="editor-page-content">
+<!--    <div class="summary-wrapper" v-show="show_summary_wrapper">-->
+<!--      <textarea></textarea>-->
+<!--    </div>-->
     <form method="post">
       <div class="editor-wrapper">
         <div>
@@ -8,13 +11,13 @@
           </div>
           <div class="action-buttons">
             <div class="btn-container">
-              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action"
-                      value="Publish">Publish
+              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action" value="Publish">
+                <span>Publish</span>
               </button>
             </div>
             <div class="btn-container">
-              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action"
-                      value="Save">Save
+              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action" value="Save">
+                <span>Save</span>
               </button>
             </div>
           </div>
@@ -50,6 +53,7 @@ export default {
       configs: {
         spellChecker: false, // disable spell checker
       },
+      // show_summary_wrapper: true
     }
   },
   computed: {
@@ -128,7 +132,7 @@ export default {
             });
       }
     },
-    toBase64 : function (file) {
+    toBase64: function (file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -197,4 +201,15 @@ export default {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+/*.summary-wrapper {*/
+/*  position: absolute;*/
+/*  top: 50%;*/
+/*  left: 50%;*/
+/*  width: 300pt;*/
+/*  background: white;*/
+/*  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;*/
+/*  border-radius: 10px;*/
+/*  margin: 0 0 10pt;*/
+/*  padding: 10pt;*/
+/*}*/
 </style>
