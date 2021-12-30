@@ -90,9 +90,13 @@ export default {
 </script>
 
 <style scoped>
-.login-form-box {
-  width: 300pt;
-  margin: auto;
+
+@media screen and (min-width: 720px) {
+  /* comes into effect for screens less than 720 pixels (inclusive) */
+  .login-form-box {
+    margin: auto;
+    width: 300pt;
+  }
 }
 
 .log-in-button, .sign-up-button {

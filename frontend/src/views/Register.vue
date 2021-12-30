@@ -150,9 +150,12 @@ export default {
 <style scoped>
 @import "../assets/css/password_checking_style.css";
 
-.registration-form-box {
-  margin: auto;
-  width: 300pt;
+@media screen and (min-width: 720px) {
+  /* comes into effect for screens less than 720 pixels (inclusive) */
+  .registration-form-box {
+    margin: auto;
+    width: 300pt;
+  }
 }
 
 .agreement-checkbox, .agreement-checkbox-text {
