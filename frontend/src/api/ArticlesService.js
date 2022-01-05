@@ -11,11 +11,11 @@ class ArticlesService {
         });
     }
 
-    getArticleById(id) {
+    getArticleForRender(id) {
         return http.get(`/articles/${id}`, { headers: authHeader() });
     }
 
-    getRawArticle(id) {
+    getArticleRaw(id) {
         return http.get(`/articles/${id}?raw=true`, { headers: authHeader() });
     }
 

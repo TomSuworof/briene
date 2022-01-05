@@ -58,7 +58,7 @@ export default {
 }
 
 .article-about {
-  padding: 0 15pt 0;
+  padding: 0 10pt 0;
   justify-content: space-between;
 }
 

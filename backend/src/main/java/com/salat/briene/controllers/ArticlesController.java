@@ -62,7 +62,7 @@ public class ArticlesController {
         ArticleWithContent article = null;
 
         if (raw == null) {
-            article = this.getArticleHTML(id, authentication);
+            article = this.getArticleForRender(id, authentication);
         } else if (raw) {
             article = this.getArticleRaw(id, authentication);
         }
@@ -70,7 +70,7 @@ public class ArticlesController {
         return ResponseEntity.ok().body(article);
     }
 
-    private ArticleWithContent getArticleHTML(UUID id, Authentication authentication) {
+    private ArticleWithContent getArticleForRender(UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         if (article.getState().equals(ArticleState.IN_EDITING)) {
@@ -81,7 +81,7 @@ public class ArticlesController {
             }
         }
 
-        return new ArticleWithContentHTML(article);
+        return new ArticleWithContent(article);
     }
 
     private ArticleWithContent getArticleRaw(UUID id, Authentication authentication) {
@@ -93,7 +93,7 @@ public class ArticlesController {
             throw new ArticleNotFoundException();
         }
 
-        return new ArticleWithContentRaw(article);
+        return new ArticleWithContent(article);
     }
 
     @PostMapping("/upload")

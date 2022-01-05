@@ -1,8 +1,8 @@
 <template>
   <div class="editor-page-content">
-<!--    <div class="summary-wrapper" v-show="show_summary_wrapper">-->
-<!--      <textarea></textarea>-->
-<!--    </div>-->
+    <!--    <div class="summary-wrapper" v-show="show_summary_wrapper">-->
+    <!--      <textarea></textarea>-->
+    <!--    </div>-->
     <form method="post">
       <div class="editor-wrapper">
         <div>
@@ -11,24 +11,25 @@
           </div>
           <div class="action-buttons">
             <div class="btn-container">
-              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action" value="Publish">
+              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action"
+                      value="Publish">
                 <span>Publish</span>
               </button>
             </div>
             <div class="btn-container">
-              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action" value="Save">
+              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action"
+                      value="Save">
                 <span>Save</span>
               </button>
             </div>
           </div>
         </div>
         <div class="editor">
-          <vue-simplemde
-              :configs="configs"
+          <v-md-editor
               v-model="content"
-              ref="markdownEditor"
-              :highlight="true"
-              @paste="paste"
+              :disabled-menus="[]"
+              @upload-image="handleUploadImage"
+              height="400pt"
           />
         </div>
       </div>
@@ -37,22 +38,19 @@
 </template>
 
 <script>
-import VueSimplemde from 'vue-simplemde'
+import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
 
 export default {
   name: "ArticleEditor",
   components: {
-    VueSimplemde
+    VMdEditor
   },
   data() {
     return {
       title: '',
       content: '',
       summary: '',
-      configs: {
-        spellChecker: false, // disable spell checker
-      },
       // show_summary_wrapper: true
     }
   },
@@ -60,6 +58,9 @@ export default {
     currentUser() {
       return this.$store.state.auth.user;
     },
+    currentAvailableHeight() {
+      return window.screen.height * 0.6;
+    }
   },
   methods: {
     contentNotEmpty: function () {
@@ -118,20 +119,6 @@ export default {
         this.content = article.content;
       }
     },
-    paste: function (event) {
-      let data = event.clipboardData.items[0];
-
-      if (data.type.includes('image')) {
-        this.toBase64(data.getAsFile())
-            .then(result => {
-              let template = `<br><img id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
-              this.content += template;
-            })
-            .catch(e => {
-              console.log(e);
-            });
-      }
-    },
     toBase64: function (file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -139,7 +126,14 @@ export default {
         reader.onload = () => resolve(reader.result);
         reader.onerror = error => reject(error);
       });
-    }
+    },
+    handleUploadImage: async function (event, insertImage, files) {
+
+      let result = await this.toBase64(files[0]);
+
+      let template = `<br><img id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
+      this.content += template;
+    },
   },
   created() {
     if (this.currentUser === undefined) {
@@ -154,7 +148,7 @@ export default {
       // if there is a parameter with id - it is a request for editing existing article
       let requestedArticleId = this.$route.query.articleId;
 
-      ArticlesService.getRawArticle(requestedArticleId)
+      ArticlesService.getArticleRaw(requestedArticleId)
           .then((response) => {
             this.title = response.data.title;
             this.content = response.data.content;
@@ -174,7 +168,6 @@ export default {
 </script>
 
 <style scoped>
-@import '~simplemde/dist/simplemde.min.css';
 
 .title-wrapper, .action-buttons {
   display: inline-block;
@@ -195,10 +188,6 @@ export default {
   outline: transparent;
   border: transparent;
   background: transparent;
-}
-
-.editor-page-content {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 /*.summary-wrapper {*/

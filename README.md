@@ -12,7 +12,6 @@ everything.
   * Spring (Boot, JPA, Security)
   * PostgreSQL 
   * Lombok
-  * [Flexmark](https://github.com/vsch/flexmark-java)
   * Flyway 
   * JSON Web Token 
   * Hibernate (Validator)
@@ -21,7 +20,7 @@ everything.
 * Frontend
   * Vue
   * Bootstrap
-  * [Vue SimpleMDE](https://github.com/F-loat/vue-simplemde)
+  * [Vue Markdown Editor](https://github.com/code-farmer-i/vue-markdown-editor)
   * Moment
   * axios
   * jQuery

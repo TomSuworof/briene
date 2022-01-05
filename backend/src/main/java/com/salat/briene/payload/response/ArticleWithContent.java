@@ -4,10 +4,11 @@ import com.salat.briene.entities.Article;
 import lombok.Getter;
 
 @Getter
-public abstract class ArticleWithContent extends ArticleDTO {
-    protected String content;
+public class ArticleWithContent extends ArticleDTO {
+    private final String content;
 
     public ArticleWithContent(Article article) {
         super(article);
+        this.content = new String(article.getContent());
     }
 }

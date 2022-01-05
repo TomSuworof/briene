@@ -11,16 +11,17 @@
     "clean": "rm -rf node_modules target"
   },
   "dependencies": {
-    "vue-simplemde": "^2.0.0",
-    "moment": "^2.29.1",
-    "jquery": "^3.6.0",
+    "@kangc/v-md-editor": "^2.3.13",
     "axios": "^0.21.1",
     "core-js": "^3.16.2",
+    "express": "^4.17.1",
+    "highlight.js": "^11.3.1",
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
+    "vee-validate": "^4.4.9",
     "vue": "^3.2.3",
     "vue-router": "4.0.11",
-    "vee-validate": "^4.4.9",
-    "vuex": "^4.0.2",
-    "express": "^4.17.1"
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-router": "^4.5.15",

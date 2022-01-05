@@ -10,7 +10,7 @@
     </div>
     <div class="title">
       <div class="article-title">
-        <h1 id="article-title">{{  article.title }}</h1>
+        <h1 id="article-title">{{ article.title }}</h1>
       </div>
       <div class="bookmarking">
         <div v-if="!inBookmarks" title="Add to bookmarks">
@@ -22,7 +22,9 @@
       </div>
     </div>
     <hr/>
-    <div v-html="article.content" class="article-content" id="article-content"></div>
+    <div id="article-content">
+      <v-md-editor :model-value="article.content" mode="preview"></v-md-editor>
+    </div>
     <div class="control" id="control">
       <p id="quote">💬 Quote</p>
     </div>
@@ -33,9 +35,13 @@
 import moment from 'moment';
 import ArticlesService from "@/api/ArticlesService";
 import BookmarksService from "@/api/BookmarksService";
+import VMdEditor from '@kangc/v-md-editor';
 
 export default {
   name: "Article",
+  components: {
+    VMdEditor
+  },
   data() {
     return {
       inBookmarks: false,
@@ -46,7 +52,7 @@ export default {
     currentUser() {
       return this.$store.state.auth.user;
     },
-    finePublicationDate: function() {
+    finePublicationDate: function () {
       return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm")
     }
   },
@@ -57,13 +63,14 @@ export default {
         .then(response => {
           this.inBookmarks = response.data;
         }).catch(err => {
-          console.log(err);
-          this.inBookmarks = false;
-        });
+      console.log(err);
+      this.inBookmarks = false;
+    });
 
-    ArticlesService.getArticleById(articleId)
+    ArticlesService.getArticleForRender(articleId)
         .then(response => {
           this.article = response.data;
+          // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
           document.title = this.article.title;
         })
         .catch(err => {
@@ -102,7 +109,7 @@ export default {
     });
   },
   methods: {
-    makeQuote: function(citedText) {
+    makeQuote: function (citedText) {
       let citedArticleUrl = window.location.href;
       let citedArticleTitle = document.getElementById("article-title").innerText;
 
@@ -113,16 +120,14 @@ export default {
       let quote = `
 <figure>
   <blockquote>
-    <q>${citedText}</q>
+    ${citedText}
   </blockquote>
   <p>- <a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>${citedArticleTitle}</i></a></p>
 </figure>`;
 
-      console.log(quote);
-
       navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
     },
-    editBookmarks: function(action) {
+    editBookmarks: function (action) {
       if (this.currentUser === null) {
         this.$router.push('/login');
       }
@@ -132,8 +137,8 @@ export default {
             console.log(response);
             this.inBookmarks = !this.inBookmarks;
           }).catch(err => {
-            console.log(err);
-          });
+        console.log(err);
+      });
     }
   },
   beforeUnmount() {
@@ -171,11 +176,6 @@ export default {
     margin: 0 0 10pt;
     padding: 20pt 20pt 10pt 40pt;
   }
-}
-
-table, tbody, tfoot, thead, tr, th, td {
-  border-collapse: collapse;
-  border: 10px solid black;
 }
 
 .article-author {
