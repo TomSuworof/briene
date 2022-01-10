@@ -50,6 +50,10 @@ export default {
   },
   methods: {
     search: function () {
+      console.log(this.query)
+      console.log(this.limit)
+      console.log(this.offset)
+
       SearchService.search(this.query, this.limit, this.offset)
           .then(response => {
             this.articles = response.data.articles.sort((article1, article2) => {
@@ -81,9 +85,9 @@ export default {
     let uri = window.location.search.substring(1);
     let params = new URLSearchParams(uri);
 
-    this.query = params.get("query");
-    this.limit = params.get("limit");
-    this.offset = params.get("offset");
+    this.query = this.query || params.get("query");
+    this.limit = this.limit || params.get("limit");
+    this.offset = this.offset || params.get("offset");
 
     this.search();
   }

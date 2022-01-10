@@ -8,6 +8,7 @@ import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
+import com.salat.briene.repositories.ArticleSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final ArticleSearchRepository articleSearchRepository;
 
     public void saveArticle(Article newArticle) {
         newArticle.setPublicationDate(OffsetDateTime.now());
@@ -32,18 +34,23 @@ public class ArticleService {
             Article oldArticle = oldArticleOpt.get();
             if (newArticle.getState().equals(ArticleState.IN_EDITING)) {
                 articleRepository.delete(oldArticle);
+                articleSearchRepository.delete(oldArticle);
+
                 articleRepository.save(newArticle);
+                articleSearchRepository.save(newArticle);
             } else {
                 throw new DuplicatedArticleException();
             }
         } else {
             articleRepository.save(newArticle);
+            articleSearchRepository.save(newArticle);
         }
     }
 
     public void deleteArticleById(UUID articleId) {
         if (articleRepository.findById(articleId).isPresent()) {
             articleRepository.deleteArticleById(articleId);
+            articleSearchRepository.deleteById(articleId);
         } else {
             throw new ArticleNotFoundException();
         }

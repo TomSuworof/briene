@@ -3,7 +3,6 @@ package com.salat.briene.repositories;
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -42,12 +41,4 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     // delete article itself
     // todo make it safer
     void deleteArticleById(@Param("articleId") UUID id);
-
-    Page<Article> findArticleByTitleOrSummaryOrContentOrAuthorUsernameAndState(
-            String title,
-            String summary,
-            byte[] content,
-            String authorUsername,
-            ArticleState articleState,
-            Pageable pageable);
 }
