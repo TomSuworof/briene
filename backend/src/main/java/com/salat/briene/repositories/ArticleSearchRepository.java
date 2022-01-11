@@ -12,11 +12,13 @@ import java.util.UUID;
 @Repository
 public interface ArticleSearchRepository extends ElasticsearchRepository<Article, UUID> {
 
-    Page<Article> findArticleByTitleOrSummaryOrContentOrAuthorUsernameAndState(
-            String title,
-            String summary,
-            byte[] content,
-            String authorUsername,
-            ArticleState articleState,
-            Pageable pageable);
+//    Page<Article> findArticleByTitleOrSummaryOrContentOrAuthorUsernameAndState(
+//            String title,
+//            String summary,
+//            byte[] content,
+//            String authorUsername,
+//            ArticleState articleState,
+//            Pageable pageable);
+
+    Page<Article> findArticleByTitle(String title, Pageable pageable);
 }

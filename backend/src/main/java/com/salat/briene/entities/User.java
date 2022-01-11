@@ -1,6 +1,8 @@
 package com.salat.briene.entities;
 
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -23,6 +25,7 @@ public class User implements UserDetails {
     private UUID id;
 
     @NotBlank(message = ConstraintViolationMessage.USER_USERNAME_EMPTY)
+    @Field(type = FieldType.Text)
     private String username;
 
     @NotBlank(message = ConstraintViolationMessage.USER_EMAIL_EMPTY)

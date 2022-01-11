@@ -85,9 +85,9 @@ export default {
     let uri = window.location.search.substring(1);
     let params = new URLSearchParams(uri);
 
-    this.query = this.query || params.get("query");
-    this.limit = this.limit || params.get("limit");
-    this.offset = this.offset || params.get("offset");
+    this.query = params.get("query");
+    this.limit = params.get("limit");
+    this.offset = params.get("offset");
 
     this.search();
   }

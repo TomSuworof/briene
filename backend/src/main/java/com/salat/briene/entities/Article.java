@@ -22,7 +22,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "t_articles")
 @NoArgsConstructor
-@Document(indexName = "article")
+@Document(indexName = "articles")
 public class Article {
 
     @Id
@@ -41,7 +41,7 @@ public class Article {
     private User author;
 
     @Size(min = 1, message = ConstraintViolationMessage.ARTICLE_CONTENT_EMPTY)
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Binary)
     private byte[] content;
 
     @Size(max = 255)

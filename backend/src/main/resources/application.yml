@@ -2,6 +2,9 @@ server:
   port: 8080
 
 spring:
+  elasticsearch:
+    rest:
+      uris: 'localhost:9200'
   # specify own properties
   datasource:
     driver-class-name: org.postgresql.Driver
