@@ -16,7 +16,7 @@ public class ArticleEditorService {
         Article article = new Article();
         article.setAuthor(author);
         article.setTitle(articleUploadRequest.getTitle());
-        article.setContent(articleUploadRequest.getContent().getBytes());
+        article.setContent(articleUploadRequest.getContent());
         article.setSummary(articleUploadRequest.getSummary());
         article.setState(ArticleState.getFromAction(action.toLowerCase()));
         articleService.saveArticle(article);

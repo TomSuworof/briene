@@ -1,6 +1,6 @@
 package com.salat.briene.controllers;
 
-import com.salat.briene.payload.response.PageResponseDTO;
+import com.salat.briene.payload.response.SearchResponseDTO;
 import com.salat.briene.services.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,10 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping
-    public ResponseEntity<PageResponseDTO> search(@RequestParam String query, @RequestParam Integer limit, @RequestParam Integer offset) {
-        PageResponseDTO response = searchService.search(query, limit, offset);
+    public ResponseEntity<SearchResponseDTO> search(@RequestParam String query, @RequestParam Integer limit, @RequestParam Integer offset) {
+        SearchResponseDTO response = searchService.search(query, limit, offset);
 
-        if (!response.isHasBefore() && !response.isHasAfter()) {
+        if (!response.getPage().isHasBefore() && !response.getPage().isHasAfter()) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
             return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);

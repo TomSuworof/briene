@@ -4,8 +4,10 @@
       <h1>Search</h1>
     </div>
     <div>
-      <form @submit="search">
+      <form @submit="search" class="row">
         <input type="text" name="query" v-model="query"/>
+        <input type="number" name="limit" v-model="limit" hidden/>
+        <input type="number" name="offset" v-model="offset" hidden/>
         <button type="submit">🔍</button>
       </form>
     </div>
@@ -27,7 +29,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import ArticleComponent from "@/components/ArticleComponent";
 import SearchService from "@/api/SearchService";
 
@@ -56,17 +58,11 @@ export default {
 
       SearchService.search(this.query, this.limit, this.offset)
           .then(response => {
-            this.articles = response.data.articles.sort((article1, article2) => {
-              if (article1.publicationDate < article2.publicationDate) {
-                return -1;
-              }
-              if (article1.publicationDate > article2.publicationDate) {
-                return 1;
-              }
-              return 0;
-            }).reverse(); // newer first
-            this.hasBefore = response.data.hasBefore;
-            this.hasAfter = response.data.hasAfter;
+            this.articles = response.data.page.articles;
+            this.hasBefore = response.data.page.hasBefore;
+            this.hasAfter = response.data.page.hasAfter;
+
+            console.log(response.data.suggest);
           })
           .catch(e => {
             console.log(e);
