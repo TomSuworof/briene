@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -35,7 +34,8 @@ public class Article {
     private User author;
 
     @Size(min = 1, message = ConstraintViolationMessage.ARTICLE_CONTENT_EMPTY)
-    private byte[] content;
+    @Column(columnDefinition = "text")
+    private String content;
 
     @Size(max = 255)
     private String summary;
@@ -54,13 +54,11 @@ public class Article {
         return Objects.equals(id, article.getId()) &&
                 Objects.equals(title, article.getTitle()) &&
                 Objects.equals(author, article.getAuthor()) &&
-                Arrays.equals(content, article.getContent());
+                Objects.equals(content, article.getContent());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, title, author, state, publicationDate);
-        result = 31 * result + Arrays.hashCode(content);
-        return result;
+        return Objects.hash(id, title, author, content, state, publicationDate);
     }
 }
