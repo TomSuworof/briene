@@ -1,16 +1,17 @@
 <template>
   <div class="search-page-content">
     <div class="header">
-      <h1>Search</h1>
+      <p>Search results for:</p>
+      <h1>{{ query }}</h1>
     </div>
-    <div>
-      <form @submit="search" class="row">
-        <input type="text" name="query" v-model="query"/>
-        <input type="number" name="limit" v-model="limit" hidden/>
-        <input type="number" name="offset" v-model="offset" hidden/>
-        <button type="submit">🔍</button>
-      </form>
-    </div>
+<!--    <div>-->
+<!--      <form @submit="search" class="row">-->
+<!--        <input class="query" type="text" name="query" v-model="query"/>-->
+<!--        <input type="number" name="limit" v-model="limit" hidden/>-->
+<!--        <input type="number" name="offset" v-model="offset" hidden/>-->
+<!--        <button class="search-button" type="submit">🔍</button>-->
+<!--      </form>-->
+<!--    </div>-->
     <div id="articles">
       <article-component
           v-for="article in articles"
@@ -43,7 +44,7 @@ export default {
       articles: [],
 
       hasBefore: false,
-      hasAfter: true,
+      hasAfter: false,
 
       query: '',
       limit: 10,
@@ -52,10 +53,6 @@ export default {
   },
   methods: {
     search: function () {
-      console.log(this.query)
-      console.log(this.limit)
-      console.log(this.offset)
-
       SearchService.search(this.query, this.limit, this.offset)
           .then(response => {
             this.articles = response.data.page.articles;
@@ -78,12 +75,11 @@ export default {
     },
   },
   created() {
-    let uri = window.location.search.substring(1);
-    let params = new URLSearchParams(uri);
+    let params = this.$route.query;
 
-    this.query = params.get("query");
-    this.limit = params.get("limit");
-    this.offset = params.get("offset");
+    this.query = params.query;
+    this.limit = params.limit;
+    this.offset = params.offset;
 
     this.search();
   }

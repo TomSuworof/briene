@@ -4,6 +4,16 @@
       <div class="main-link">
         <router-link to="/">Main</router-link>
       </div>
+      <div class="search-bar">
+        <div>
+          <form @submit="search">
+            <input class="query" type="text" name="query" v-model="query"/>
+            <button class="search-button" type="submit">🔍</button>
+            <input type="number" name="limit" v-model="limit" hidden/>
+            <input type="number" name="offset" v-model="offset" hidden/>
+          </form>
+        </div>
+      </div>
       <div class="header-buttons-right">
         <div class="header-button-editor">
           <router-link to="/article_editor">New article</router-link>
@@ -18,6 +28,28 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      query: '',
+      limit: 10,
+      offset: 0
+    }
+  },
+  methods: {
+    search: function () {
+      this.$router.push({
+        path: '/search',
+        query: { query: this.query, limit: this.limit, offset: this.offset }
+      });
+    }
+  }
+}
+
+</script>
 
 <style>
 
@@ -47,6 +79,13 @@
 .main-link, .header-button-editor, .header-button-profile {
   display: inline-block;
   margin: 0 10pt 0 12pt;
+}
+
+.search-button {
+  background: white;
+  /*display: block;*/
+  /*border: none;*/
+  /*outline: none;*/
 }
 
 </style>
