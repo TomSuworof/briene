@@ -7,10 +7,12 @@
       <div class="search-bar">
         <div>
           <form @submit="search">
-            <input class="query" type="text" name="query" v-model="query"/>
-            <button class="search-button" type="submit">🔍</button>
+            <div class="input-box">
+              <input type="text" name="query" class="query form-control" v-model="query"><i class="fa fa-search"></i>
+            </div>
             <input type="number" name="limit" v-model="limit" hidden/>
             <input type="number" name="offset" v-model="offset" hidden/>
+            <button type="submit" hidden/>
           </form>
         </div>
       </div>
@@ -65,6 +67,10 @@ export default {
   .content {
     padding: 3% 10% 80pt 10%;
   }
+
+  .input-box {
+    width: 400pt;
+  }
 }
 
 .row {
@@ -81,11 +87,29 @@ export default {
   margin: 0 10pt 0 12pt;
 }
 
-.search-button {
+.input-box {
+  height: 100%;
+  position: relative
+}
+
+.input-box i {
+  position: absolute;
+  right: 13px;
+  top: 10px;
+  color: #ced4da
+}
+
+.form-control {
   background: white;
-  /*display: block;*/
-  /*border: none;*/
-  /*outline: none;*/
+  border-radius: 10px;
+  margin: 0 0 10pt;
+  padding: 10pt;
+}
+
+.form-control:focus {
+  background-color: #FEFEFE;
+  box-shadow: none;
+  border-color: #EEEEEE;
 }
 
 </style>
