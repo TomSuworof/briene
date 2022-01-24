@@ -8,6 +8,7 @@ import Register from '@/views/Register';
 import Profile from '@/views/Profile';
 
 import Articles from '@/views/Articles';
+import Search from "@/views/Search";
 import Article from '@/views/Article';
 import ArticleEditor from "@/views/ArticleEditor";
 
@@ -29,6 +30,7 @@ const router = createRouter({
         { path: '/profile', component: Profile, meta: { requiresAuth: true } },
 
         { path: '/articles', component: Articles },
+        { path: '/search', component: Search },
         { path: '/articles/:articleId', component: Article },
         { path: '/article_editor', component: ArticleEditor, meta: { requiresAuth: true } },
 

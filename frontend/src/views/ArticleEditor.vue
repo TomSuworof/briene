@@ -11,15 +11,15 @@
           </div>
           <div class="action-buttons">
             <div class="btn-container">
-              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action"
-                      value="Publish">
-                <span>Publish</span>
+              <button class="btn btn-outline-primary" id="save" @click="handleButton('save')" type="button" name="action"
+                      value="Save">
+                <span>Save</span>
               </button>
             </div>
             <div class="btn-container">
-              <button class="btn btn-primary" id="save" @click="handleButton('save')" type="button" name="action"
-                      value="Save">
-                <span>Save</span>
+              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action"
+                      value="Publish">
+                <span>Publish</span>
               </button>
             </div>
           </div>

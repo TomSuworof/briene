@@ -57,7 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .antMatchers("/api/articles/**",
                         "/api/auth/**",
                         "/api/authors/**",
-                        "/api/bookmarks/**").permitAll()
+                        "/api/bookmarks/**",
+                        "/api/search/**").permitAll()
                 .antMatchers("/api/users/**").authenticated()
                 .antMatchers("/api/admin/**").hasRole("ADMIN") // if in use, somehow always disable access
                 .and()
