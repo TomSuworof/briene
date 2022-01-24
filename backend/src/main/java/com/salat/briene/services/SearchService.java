@@ -43,7 +43,7 @@ public class SearchService {
 
     public SearchResponseDTO search(String query, Integer limit, Integer offset) {
         QueryBuilder queryBuilder = QueryBuilders
-                .multiMatchQuery(query, "title", "summary", "content", "author.username")
+                .multiMatchQuery(query, "title", "summary", "content", "author.username", "author.bio")
                 .autoGenerateSynonymsPhraseQuery(true)
                 .fuzziness(Fuzziness.AUTO);
 

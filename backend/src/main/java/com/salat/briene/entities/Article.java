@@ -36,7 +36,7 @@ public class Article {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @Field(type = FieldType.Nested, includeInParent = true)
+    @Field(type = FieldType.Nested, ignoreFields = {"bookmarkedArticles"})
     private User author;
 
     @Size(min = 1, message = ConstraintViolationMessage.ARTICLE_CONTENT_EMPTY)
