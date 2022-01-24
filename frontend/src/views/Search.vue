@@ -4,28 +4,26 @@
       <p>Search results for:</p>
       <h1>{{ query }}</h1>
     </div>
-<!--    <div>-->
-<!--      <form @submit="search" class="row">-->
-<!--        <input class="query" type="text" name="query" v-model="query"/>-->
-<!--        <input type="number" name="limit" v-model="limit" hidden/>-->
-<!--        <input type="number" name="offset" v-model="offset" hidden/>-->
-<!--        <button class="search-button" type="submit">🔍</button>-->
-<!--      </form>-->
-<!--    </div>-->
-    <div id="articles">
-      <article-component
-          v-for="article in articles"
-          v-bind:key="article.id"
-          v-bind:article="article"
-      ></article-component>
+    <div class="articles-not-empty" v-if="articles.length > 0">
+      <div id="articles">
+        <article-component
+            v-for="article in articles"
+            v-bind:key="article.id"
+            v-bind:article="article"
+        ></article-component>
+      </div>
+      <div class="navigation-buttons">
+        <div class="navigation-button-prev" title="Previous">
+          <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
+        </div>
+        <div class="navigation-button-next" title="Next">
+          <button @click="getNextPage" :disabled="!hasAfter">▶</button>
+        </div>
+      </div>
     </div>
-    <div class="navigation-buttons">
-      <div class="navigation-button-prev" title="Previous">
-        <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
-      </div>
-      <div class="navigation-button-next" title="Next">
-        <button @click="getNextPage" :disabled="!hasAfter">▶</button>
-      </div>
+    <div class="articles-empty" v-if="articles.length === 0">
+      <h1>(´。＿。｀)</h1>
+      <p>Oops. There is nothing to show</p>
     </div>
   </div>
 </template>
@@ -97,5 +95,9 @@ button {
   display: block;
   border: none;
   outline: none;
+}
+
+.articles-empty {
+  padding: 120pt 0 0 0;
 }
 </style>
