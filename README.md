@@ -10,6 +10,7 @@ everything.
 
 * Backend
   * Spring (Boot, JPA, Security)
+  * Spring ElasticSearch (+ Heroku Bonsai as cloud search)
   * PostgreSQL 
   * Lombok
   * Flyway 
