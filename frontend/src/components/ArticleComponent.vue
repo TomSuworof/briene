@@ -55,6 +55,11 @@ export default {
   border-radius: 10px;
   margin: 0 0 10pt;
   padding: 10pt;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.article-container:hover {
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
 }
 
 .article-about {
