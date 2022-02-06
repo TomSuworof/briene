@@ -1,8 +1,5 @@
 <template>
   <div class="editor-page-content">
-    <!--    <div class="summary-wrapper" v-show="show_summary_wrapper">-->
-    <!--      <textarea></textarea>-->
-    <!--    </div>-->
     <form method="post">
       <div class="editor-wrapper">
         <div>
@@ -11,14 +8,16 @@
           </div>
           <div class="action-buttons">
             <div class="btn-container">
-              <button class="btn btn-outline-primary" id="save" @click="handleButton('save')" type="button" name="action"
-                      value="Save">
+              <button class="btn btn-outline-primary" id="save" @click="handleButton('save')" type="button"
+                      name="action"
+                      value="save">
                 <span>Save</span>
               </button>
             </div>
             <div class="btn-container">
-              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button" name="action"
-                      value="Publish">
+              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button"
+                      name="action"
+                      value="publish">
                 <span>Publish</span>
               </button>
             </div>
@@ -34,24 +33,27 @@
         </div>
       </div>
     </form>
+    <article-summary-modal/>
   </div>
 </template>
 
 <script>
 import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
+import { openModal, container } from "jenesius-vue-modal";
+import ArticleSummaryModal from "@/components/ArticleSummaryModal"
 
 export default {
   name: "ArticleEditor",
   components: {
-    VMdEditor
+    VMdEditor,
+    ArticleSummaryModal: container
   },
   data() {
     return {
       title: '',
       content: '',
-      summary: '',
-      // show_summary_wrapper: true
+      summary: ''
     }
   },
   computed: {
@@ -63,44 +65,13 @@ export default {
     }
   },
   methods: {
-    contentNotEmpty: function () {
-      return this.content !== '';
-    },
-    titleNotEmpty: function () {
-      return this.title !== '';
-    },
-    formIsValid: function () {
-      return this.contentNotEmpty() && this.titleNotEmpty();
-    },
-    showWarningEmpty: function () {
-      alert('Fields can not be empty');
-    },
-    showWarningArticleExists: function () {
-      alert('Such article already exists. Try to make different or remove old one');
-    },
     handleButton: function (action) {
-      if (this.formIsValid()) {
-        let maxLength = 255
-
-        this.summary = prompt(`Enter summary for article (max ${maxLength} characters):`, this.summary);
-        if (this.summary.length > maxLength) {
-          alert(`Summary should be less than ${maxLength} characters`);
-        } else {
-          this.uploadArticle(action);
-        }
-      } else {
-        this.showWarningEmpty();
-      }
-    },
-    uploadArticle: function (action) {
-      ArticlesService.uploadArticle(this.title, this.content, this.summary, action)
-          .then(() => {
-            this.$router.push('/articles');
-          })
-          .catch(err => {
-            console.log(err);
-            this.showWarningArticleExists();
-          });
+      openModal(ArticleSummaryModal, {
+        title: this.title,
+        content: this.content,
+        summary: this.summary,
+        action: action,
+      })
     },
     saveArticleToLocalStorage: function () {
       localStorage.setItem('recentArticle', JSON.stringify({
@@ -190,15 +161,7 @@ export default {
   background: transparent;
 }
 
-/*.summary-wrapper {*/
-/*  position: absolute;*/
-/*  top: 50%;*/
-/*  left: 50%;*/
-/*  width: 300pt;*/
-/*  background: white;*/
-/*  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;*/
-/*  border-radius: 10px;*/
-/*  margin: 0 0 10pt;*/
-/*  padding: 10pt;*/
-/*}*/
+.editor {
+  border-radius: 9px;
+}
 </style>

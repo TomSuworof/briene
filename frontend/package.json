@@ -11,6 +11,7 @@
     "clean": "rm -rf node_modules target"
   },
   "dependencies": {
+    "jenesius-vue-modal": "^1.4.7",
     "@kangc/v-md-editor": "^2.3.13",
     "axios": "^0.21.1",
     "core-js": "^3.16.2",

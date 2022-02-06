@@ -362,9 +362,12 @@ export default {
   display: inline-block;
 }
 
-#bio {
+textarea {
+  padding: 5pt;
+  border-radius: 9px;
   width: 100%;
   height: 100pt;
+  resize: none;
 }
 
 .bio {

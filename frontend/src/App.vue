@@ -101,7 +101,7 @@ export default {
 
 .form-control {
   background: white;
-  border-radius: 10px;
+  border-radius: 9px;
   margin: 0 0 10pt;
   padding: 10pt;
 }
@@ -110,6 +110,10 @@ export default {
   background-color: #FEFEFE;
   box-shadow: none;
   border-color: #EEEEEE;
+}
+
+button {
+  border-radius: 9px !important;
 }
 
 </style>

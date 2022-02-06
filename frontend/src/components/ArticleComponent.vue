@@ -52,14 +52,14 @@ export default {
 .article-container {
   background: white;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 10px;
+  border-radius: 9px;
   margin: 0 0 10pt;
   padding: 10pt;
   transition: box-shadow 0.3s ease-in-out;
 }
 
 .article-container:hover {
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 9px rgba(0, 0, 0, 0.2);
 }
 
 .article-about {
