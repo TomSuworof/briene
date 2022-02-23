@@ -61,6 +61,7 @@ public class Article {
     @JoinTable(name = "t_articles_tags",
             joinColumns = { @JoinColumn(name = "article_id") },
             inverseJoinColumns = { @JoinColumn(name = "tags_id") })
+    @org.springframework.data.annotation.Transient
     private Set<Tag> tags;
 
     @Override
