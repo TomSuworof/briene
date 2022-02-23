@@ -21,6 +21,15 @@
         </div>
       </div>
     </div>
+    <div class="article-tags tags-container">
+      <ul class="tags-list">
+        <li class="tag-item" v-for="tag in article.tags">
+          <div>
+            <a :href="'/tags/' + tag">#{{ tag }}</a>
+          </div>
+        </li>
+      </ul>
+    </div>
     <hr/>
     <div id="article-content">
       <v-md-editor :model-value="article.content" mode="preview"></v-md-editor>
@@ -220,4 +229,20 @@ button {
   cursor: pointer;
 }
 
+.tags-container {
+  padding: 5pt 0 0 0;
+}
+
+.tags-list {
+  padding-left: 0;
+}
+
+.tag-item {
+  display: inline-block;
+  margin: 0 5pt 5pt 0;
+  padding: 5pt;
+  border-radius: 9px;
+  border: 1px solid;
+  position: relative;
+}
 </style>

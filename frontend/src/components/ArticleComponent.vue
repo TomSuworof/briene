@@ -30,7 +30,7 @@
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in article.tags">
           <div>
-            <router-link v-bind:to="'/tags/' + tag">#{{ tag }}</router-link>
+            <a :href="'/tags/' + tag">#{{ tag }}</a>
           </div>
         </li>
       </ul>
