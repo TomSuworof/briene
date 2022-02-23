@@ -29,7 +29,9 @@
     <div class="article-tags tags-container">
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in article.tags">
-          <div >#{{ tag }}</div>
+          <div>
+            <router-link v-bind:to="'/tags/' + tag">#{{ tag }}</router-link>
+          </div>
         </li>
       </ul>
     </div>

@@ -1,25 +1,23 @@
 <template>
-  <div>
-    <div class="author-page-content" v-if="author">
-      <div class="header row">
-        <div>
-          <h1>{{ author.username }}</h1>
-        </div>
+  <div class="author-page-content" v-if="author">
+    <div class="header row">
+      <div>
+        <h1>{{ author.username }}</h1>
       </div>
-      <div class="author-bio">
-        <p>{{ author.bio }}</p>
+    </div>
+    <div class="author-bio">
+      <p>{{ author.bio }}</p>
+    </div>
+    <div class="articles">
+      <div v-if="articles.length > 0">
+        <article-component
+            v-for="article in articles"
+            v-bind:key="article.id"
+            v-bind:article="article"
+        ></article-component>
       </div>
-      <div class="articles">
-        <div v-if="articles.length > 0">
-          <article-component
-              v-for="article in articles"
-              v-bind:key="article.id"
-              v-bind:article="article"
-          ></article-component>
-        </div>
-        <div v-else-if="articles.length === 0">
-          <p>No articles</p>
-        </div>
+      <div v-else-if="articles.length === 0">
+        <p>No articles</p>
       </div>
     </div>
   </div>

@@ -18,8 +18,8 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("/getArticlesByTag")
-    public ResponseEntity<PageResponseDTO> getArticlesByTag(@RequestParam String tagName, @RequestParam Integer limit, @RequestParam Integer offset) {
-        PageResponseDTO response = tagService.getPageWithArticles(tagName, limit, offset);
+    public ResponseEntity<PageResponseDTO> getArticlesByTag(@RequestParam String tag, @RequestParam Integer limit, @RequestParam Integer offset) {
+        PageResponseDTO response = tagService.getPageWithArticles(tag, limit, offset);
 
         if (!response.isHasBefore() && !response.isHasAfter()) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
