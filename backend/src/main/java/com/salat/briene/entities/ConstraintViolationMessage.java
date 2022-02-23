@@ -10,11 +10,11 @@ public interface ConstraintViolationMessage {
 
     String ROLE_NAME_EMPTY = "Role cannot be called by empty string";
 
+    String TAG_NAME_EMPTY = "Tag cannot be called by empty string";
+
     String USER_USERNAME_EMPTY = "Username cannot be empty";
     String USER_EMAIL_EMPTY = "Email cannot be empty";
     String USER_EMAIL_INVALID = "Invalid email";
     String USER_BIO_LIMIT = "Bio should be less than 255 characters";
-    String USER_SECRET_QUESTION_EMPTY = "Secret question cannot be empty: Is is used in password reset procedure";
-    String USER_SECRET_ANSWER_EMPTY = "Secret answer cannot be empty: Is is used in password reset procedure";
     String USER_PASSWORD_EMPTY = "Password cannot be empty";
 }

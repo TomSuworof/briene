@@ -1,9 +1,11 @@
 package com.salat.briene.payload.response;
 
 import com.salat.briene.entities.Article;
+import com.salat.briene.entities.Tag;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 // ArticleDTO provides short form of article without content
@@ -17,6 +19,7 @@ public class ArticleDTO {
     protected String summary;
     protected final OffsetDateTime publicationDate;
     protected final String state;
+    protected final List<String> tags;
 
     public ArticleDTO(Article article) {
         this.id = article.getId();
@@ -25,5 +28,6 @@ public class ArticleDTO {
         this.summary = article.getSummary();
         this.publicationDate = article.getPublicationDate();
         this.state = article.getState().getDescription();
+        this.tags = article.getTags().stream().map(Tag::getName).toList();
     }
 }

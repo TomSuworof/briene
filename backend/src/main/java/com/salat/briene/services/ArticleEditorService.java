@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ArticleEditorService {
     private final ArticleService articleService;
+    private final TagService tagService;
 
     public void uploadArticle(User author, ArticleUploadRequest articleUploadRequest, String action) {
         Article article = new Article();
@@ -19,6 +20,7 @@ public class ArticleEditorService {
         article.setContent(articleUploadRequest.getContent());
         article.setSummary(articleUploadRequest.getSummary());
         article.setState(ArticleState.getFromAction(action.toLowerCase()));
+        article.setTags(tagService.mapToTags(articleUploadRequest.getTags()));
         articleService.saveArticle(article);
     }
 }

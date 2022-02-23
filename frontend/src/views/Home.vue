@@ -1,7 +1,7 @@
 <template>
   <div class="home-page-content">
     <div class="header">
-      <h1>Briene</h1>
+      <h1><pre>{{ logo }}</pre></h1>
     </div>
     <div>
       <h2>Recent articles</h2>
@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      logo: '<briene>',
       articles: []
     }
   },

@@ -9,6 +9,6 @@ public class ArticleWithContent extends ArticleDTO {
 
     public ArticleWithContent(Article article) {
         super(article);
-        this.content = new String(article.getContent());
+        this.content = article.getContent();
     }
 }

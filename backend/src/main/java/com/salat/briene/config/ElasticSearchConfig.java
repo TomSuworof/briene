@@ -33,6 +33,7 @@ import java.net.URI;
                 ArticleRepository.class,
                 PasswordResetRepository.class,
                 RoleRepository.class,
+                TagRepository.class,
                 UserRepository.class
         }, type = FilterType.ASSIGNABLE_TYPE))
 @Configuration

@@ -26,6 +26,13 @@
     <div class="article-summary">
       <p>{{ article.summary }}</p>
     </div>
+    <div class="article-tags tags-container">
+      <ul class="tags-list">
+        <li class="tag-item" v-for="tag in article.tags">
+          <div >#{{ tag }}</div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -79,5 +86,22 @@ export default {
 .article-action-container, .article-title-container, .article-action-button {
   display: inline-block;
   margin: 0 20pt 0 0;
+}
+
+.tags-container {
+  padding: 5pt 0 0 0;
+}
+
+.tags-list {
+  padding-left: 0;
+}
+
+.tag-item {
+  display: inline-block;
+  margin: 0 5pt 5pt 0;
+  padding: 5pt;
+  border-radius: 9px;
+  border: 1px solid;
+  position: relative;
 }
 </style>

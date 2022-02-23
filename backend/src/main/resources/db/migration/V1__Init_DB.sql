@@ -50,3 +50,15 @@ create table if not exists t_user_bookmarks
     bookmarked_article_id uuid not null constraint references_to_not_null_bookmarked_article references t_articles not null,
     constraint t_user_bookmarks_pkey primary key (bookmarked_article_id, bookmarked_by_user_id)
 );
+
+create table t_tags
+(
+    id   uuid         not null primary key,
+    name varchar(255) not null
+);
+
+create table t_articles_tags
+(
+    article_id uuid not null constraint references_to_not_null_article_id references t_articles,
+    tags_id    uuid not null constraint references_to_not_null_tags_is references t_tags
+);

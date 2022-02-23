@@ -53,7 +53,8 @@ export default {
     return {
       title: '',
       content: '',
-      summary: ''
+      summary: '',
+      tags: [],
     }
   },
   computed: {
@@ -70,6 +71,7 @@ export default {
         title: this.title,
         content: this.content,
         summary: this.summary,
+        tags: this.tags,
         action: action,
       })
     },
@@ -77,7 +79,8 @@ export default {
       localStorage.setItem('recentArticle', JSON.stringify({
         'title': this.title,
         'summary': this.summary,
-        'content': this.content
+        'content': this.content,
+        'tags': this.tags,
       }));
     },
     loadArticleFromLocalStorage: function () {
@@ -88,6 +91,7 @@ export default {
         this.title = article.title;
         this.summary = article.summary;
         this.content = article.content;
+        this.tags = article.tags;
       }
     },
     toBase64: function (file) {
@@ -124,6 +128,7 @@ export default {
             this.title = response.data.title;
             this.content = response.data.content;
             this.summary = response.data.summary;
+            this.tags = response.data.tags;
           }).catch(err => {
         console.log(err);
         this.$router.replace('/error'); // redirecting to '/error'

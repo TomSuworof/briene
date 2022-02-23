@@ -19,12 +19,13 @@ class ArticlesService {
         return http.get(`/articles/${id}?raw=true`, { headers: authHeader() });
     }
 
-    uploadArticle(title, content, summary, action) {
+    uploadArticle(title, content, summary, action, tags) {
         return http.post('/articles/upload',
             {
-                title: title,
-                content: content,
-                summary: summary,
+                title,
+                content,
+                summary,
+                tags
             },
             {
                 headers: authHeader(),

@@ -11,20 +11,22 @@
       <h3>Tags</h3>
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in tags">
-          <div class="tag-item-name">{{ tag.name }}</div>
+          <div class="tag-item-name">{{ tag }}</div>
           <div class="tag-item-close-button">
-            <button @click="removeTag(tag.id)" class="fa fa-close"></button>
+            <button @click="removeTag(tag)" class="fa fa-close"></button>
           </div>
         </li>
         <li class="tag-item" v-if="showTagInput">
           <form @submit.prevent="addTag" autocomplete="off">
             <input name="tagValue" class="add-tag-input" list="tagsList"/>
             <datalist id="tagsList">
-              <option v-for="suggestedTag in suggestedTags">{{ suggestedTag.name }}</option>
+              <option v-for="suggestedTag in suggestedTags">{{ suggestedTag }}</option>
             </datalist>
           </form>
         </li>
-        <li class="tag-item" v-if="!showTagInput"><button @click="openAddTagInput()" class="add-tag-button">➕</button></li>
+        <li class="tag-item" v-if="!showTagInput">
+          <button @click="openAddTagInput()" class="add-tag-button">➕</button>
+        </li>
       </ul>
     </div>
     <div class="action-buttons">
@@ -49,8 +51,9 @@
 </template>
 
 <script>
-import { closeModal } from "jenesius-vue-modal";
+import {closeModal} from "jenesius-vue-modal";
 import ArticlesService from "@/api/ArticlesService";
+import TagService from "@/api/TagService";
 
 export default {
   setup: () => ({
@@ -62,29 +65,18 @@ export default {
   }),
   name: "ArticleSummaryModal",
   props: {
-    title: { required: true },
-    content: { required: true },
-    summary: { required: true },
-    action: { required: true },
+    title: {required: true},
+    content: {required: true},
+    summary: {required: true},
+    tags: {required: true},
+    action: {required: true},
   },
   data() {
     return {
       maxLength: 255,
-      tags: [
-        {id: 1, name: 'Lifestyle'},
-        {id: 2, name: 'Philosophy'},
-        {id: 3, name: 'Philosophy'},
-        {id: 4, name: 'Philosophy'},
-        {id: 5, name: 'Philosophy'},
-      ],
       showTagInput: false,
-      suggestedTags: [
-        {name: 'Lifestyle'},
-        {name: 'Philosophy'},
-        {name: 'Philosophy'},
-        {name: 'Philosophy'},
-        {name: 'Philosophy'},
-      ]
+
+      suggestedTags: []
     };
   },
   methods: {
@@ -120,7 +112,7 @@ export default {
       }
     },
     uploadArticle: function () {
-      ArticlesService.uploadArticle(this.title, this.content, this.summary, this.action)
+      ArticlesService.uploadArticle(this.title, this.content, this.summary, this.action, this.tags)
           .then(() => {
             this.closeThisModal(); // remember to close. otherwise, scrollbar will disappear
             this.$router.push('/articles');
@@ -133,24 +125,25 @@ export default {
     closeThisModal: function () {
       this.cancel();
     },
-    openAddTagInput: function() {
+    openAddTagInput: function () {
       this.showTagInput = true;
     },
-    addTag: function(submitEvent) {
+    addTag: function (submitEvent) {
       let newTagName = submitEvent.target.elements.tagValue.value;
-      if (newTagName !== '') {
-        this.tags.push({id: this.tags.length + 1, name: newTagName});
-      }
+      this.suggestedTags.splice(this.suggestedTags.indexOf(newTagName), 1);
+      this.tags.push(newTagName);
       this.showTagInput = false;
     },
-    removeTag: function(tagId) {
-      this.tags = this.tags.filter(tag => {
-        return tag.id !== tagId;
-      });
-    }
+    removeTag: function (tagName) {
+      this.tags.splice(this.tags.indexOf(tagName), 1);
+    },
+  },
+  mounted() {
+    TagService.getTagsWithExclusion(this.tags)
+        .then(response => this.suggestedTags = response.data)
+        .catch(err => console.log(err));
   }
 }
-// todo change logic if id generation
 </script>
 
 <style scoped>
@@ -214,11 +207,6 @@ textarea {
 
 input {
   border: none;
-}
-
-/*todo*/
-.tags-container {
-  display: none;
 }
 
 .tag-item-name, .tag-item-close-button {

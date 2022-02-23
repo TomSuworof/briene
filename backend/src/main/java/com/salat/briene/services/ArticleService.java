@@ -10,6 +10,7 @@ import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import com.salat.briene.repositories.ArticleSearchRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -94,33 +95,28 @@ public class ArticleService {
 
     public PageResponseDTO getPageWithArticlesByState(ArticleState state, Integer limit, Integer offset) {
         // here we will store response
-        List<Article> articles;
-        long allArticlesSize;
+        Page<Article> articles;
 
         if (state.equals(ArticleState.ALL)) {
-            // if all articles were requested, then execute SELECT and COUNT for all articles
             articles = getAllArticlesPaginated(limit, offset);
-            allArticlesSize = articleRepository.count();
         } else {
-            // if articles were requested with state, then execute SELECT and COUNT for articles with the state
             articles = getArticlesByStatePaginated(state, limit, offset);
-            allArticlesSize = articleRepository.countArticlesByState(state);
         }
 
         // return response after filtering
         return new PageResponseDTO(
-                offset > 0 && allArticlesSize > 0,
-                (offset + limit) < allArticlesSize,
-                articles
+                offset > 0 && articles.getTotalElements() > 0,
+                (offset + limit) < articles.getTotalElements(),
+                articles.getContent()
         );
     }
 
-    private List<Article> getArticlesByStatePaginated(ArticleState state, Integer limit, Integer offset) {
+    private Page<Article> getArticlesByStatePaginated(ArticleState state, Integer limit, Integer offset) {
         return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "publicationDate")));
     }
 
-    private List<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
-        return articleRepository.findAll(PageRequest.of(offset / limit, limit)).stream().toList();
+    private Page<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
+        return articleRepository.findAll(PageRequest.of(offset / limit, limit));
     }
 
 
