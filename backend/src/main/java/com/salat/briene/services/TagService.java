@@ -1,6 +1,7 @@
 package com.salat.briene.services;
 
 import com.salat.briene.entities.Article;
+import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.Tag;
 import com.salat.briene.exceptions.TagNotFoundException;
 import com.salat.briene.payload.response.PageResponseDTO;
@@ -26,7 +27,7 @@ public class TagService {
     public PageResponseDTO getPageWithArticles(String tagName, Integer limit, Integer offset) {
         Tag tag = tagRepository.findByName(tagName).orElseThrow(TagNotFoundException::new);
 
-        Page<Article> articles = articleRepository.findArticlesByTags_Id(tag.getId(), PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "publicationDate")));
+        Page<Article> articles = articleRepository.findArticlesByStateAndTags_Id(ArticleState.PUBLISHED, tag.getId(), PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "publicationDate")));
 
         return new PageResponseDTO(
                 offset > 0 && articles.getTotalElements() > 0,

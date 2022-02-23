@@ -44,5 +44,5 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     void deleteArticleById(@Param("articleId") UUID id);
 
 
-    Page<Article> findArticlesByTags_Id(UUID tagId, Pageable pageable);
+    Page<Article> findArticlesByStateAndTags_Id(ArticleState state, UUID tagId, Pageable pageable);
 }
