@@ -27,7 +27,7 @@
             <Field id="code" name="code" type="text" placeholder="Code" class="form-control"/>
           </div>
           <div class="form-group">
-            <Field id="psw" name="newPassword" type="password" placeholder="Code" class="form-control"/>
+            <Field id="psw" name="newPassword" type="password" placeholder="New password" class="form-control"/>
           </div>
           <div class="container-for-message">
             <div id="message" class="message">
@@ -102,10 +102,18 @@ export default {
 <style scoped>
 @import "../assets/css/password_checking_style.css";
 
-.password-reset-page-content {
-  margin: auto;
-  text-align: center;
+@media screen and (min-width: 720px) {
+  /* comes into effect for screens less than 720 pixels (inclusive) */
+  .password-reset-page-content {
+    margin: auto;
+    width: 300pt;
+  }
 }
+
+/*.password-reset-page-content {*/
+/*  margin: auto;*/
+/*  text-align: center;*/
+/*}*/
 
 .new-password-text-block {
   padding: 10pt;

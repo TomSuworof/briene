@@ -183,7 +183,7 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
     border-radius: 9px;
     margin: 0 0 10pt;
-    padding: 20pt 20pt 10pt 40pt;
+    padding: 30pt 60pt 10pt 60pt;
   }
 }
 

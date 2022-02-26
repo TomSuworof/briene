@@ -54,7 +54,6 @@ export default {
 </script>
 
 <style>
-
 @media screen and (max-width: 720px) {
   /* comes into effect for screens less than 720 pixels (inclusive) */
   .content {
@@ -63,7 +62,7 @@ export default {
 }
 
 @media screen and (min-width: 721px) {
-  /* comes into effect for screens larger than or equal to 481 pixels */
+  /* comes into effect for screens larger than or equal to 721 pixels */
   .content {
     padding: 3% 10% 80pt 10%;
   }
@@ -112,7 +111,7 @@ export default {
   border-color: #EEEEEE;
 }
 
-button {
+button, .btn {
   border-radius: 9px !important;
 }
 

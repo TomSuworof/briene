@@ -24,7 +24,7 @@
               </button>
             </div>
             <div class="sign-up-button">
-              <router-link to="/register" class="btn btn-block btn-light">Sign Up</router-link>
+              <router-link to="/register" class="btn btn-outline-primary btn-block">Sign Up</router-link>
             </div>
           </div>
           <div class="form-group">
