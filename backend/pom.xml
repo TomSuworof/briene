@@ -138,6 +138,7 @@
                                         <include>static/</include>
                                         <include>index.html</include>
                                         <include>favicon.ico</include>
+                                        <include>robots.txt</include>
                                     </includes>
                                 </resource>
                             </resources>
