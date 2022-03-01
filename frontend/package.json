@@ -35,7 +35,8 @@
     "eslint-plugin-vue": "^7.16.0",
     "node-sass": "6.0.1",
     "sass-loader": "10.2.0",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "generate-robotstxt": "^8.0.3"
   },
   "eslintConfig": {
     "root": true,
