@@ -13,7 +13,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableWebSecurity
@@ -46,9 +56,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         return super.authenticationManagerBean();
     }
 
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        List<String> allowOrigins = Arrays.asList("*");
+//        configuration.setAllowedOrigins(allowOrigins);
+//        configuration.setAllowedMethods(Collections.singletonList("*"));
+//        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//
+//        // in case authentication is enabled this flag MUST be set, otherwise CORS requests will fail
+//        configuration.setAllowCredentials(true);
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+//                .cors().configurationSource(corsConfigurationSource())
+//                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
                 .and()
                 .httpBasic()
@@ -65,23 +91,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
-
-//        httpSecurity
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
-//                .and()
-//                .httpBasic()
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/api/admin/**").hasRole("ADMIN") // if in use, somehow always disable access
-//                .antMatchers("/api/articles/**",
-//                        "/api/auth/**",
-//                        "/api/authors/**",
-//                        "/api/bookmarks/**").permitAll()
-//                .antMatchers("/api/users/**").authenticated()
-//                //.anyRequest().authenticated() // protect all other requests
-//                .and()
-//                .csrf().disable();
-//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 
         httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
