@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = {"https://localhost:8081", "https://briene.herokuapp.com/"})
+//@CrossOrigin(origins = "*")
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin")
