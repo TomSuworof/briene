@@ -21,7 +21,7 @@ public class SpaRedirectFilterConfiguration {
         FilterRegistrationBean<OncePerRequestFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(createRedirectFilter());
         registration.addUrlPatterns("/*");
-        registration.setName("frontendRedirectFiler");
+        registration.setName("frontendRedirectFilter");
         registration.setOrder(1);
         return registration;
     }

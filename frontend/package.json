@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.0.1",
   "private": true,
-  "description": "A Vue.js side of briene",
+  "description": "Frontend side of briene",
   "author": "Tom Suworof",
   "scripts": {
     "serve": "vue-cli-service serve",
