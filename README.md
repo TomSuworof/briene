@@ -58,3 +58,6 @@ Mentioned endpoints:
 * Admin
   * Get users
   * Get all articles
+* Tags
+  * Get articles by tag
+  * Get tags with exclusion
