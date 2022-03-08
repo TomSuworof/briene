@@ -65,6 +65,39 @@ export default {
       return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm")
     }
   },
+  methods: {
+    makeQuote: function (citedText) {
+      let citedArticleUrl = window.location.href;
+      let citedArticleTitle = document.getElementById("article-title").innerText;
+
+      if (citedArticleUrl.endsWith('/')) {
+        citedArticleUrl = citedArticleUrl.slice(0, -1);
+      }
+
+      let quote = `
+<figure>
+  <blockquote>
+    ${citedText}
+  </blockquote>
+  <p>- <a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>${citedArticleTitle}</i></a></p>
+</figure>`;
+
+      navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
+    },
+    editBookmarks: function (action) {
+      if (this.currentUser === null) {
+        this.$router.push('/login');
+      }
+
+      BookmarksService.editBookmark(this.$route.params.articleId, action)
+          .then(response => {
+            console.log(response);
+            this.inBookmarks = !this.inBookmarks;
+          }).catch(err => {
+        console.log(err);
+      });
+    }
+  },
   created() {
     let articleId = this.$route.params.articleId;
 
@@ -116,39 +149,6 @@ export default {
       makeQuoteFunction(selectedString);
       control.style.display = 'none';
     });
-  },
-  methods: {
-    makeQuote: function (citedText) {
-      let citedArticleUrl = window.location.href;
-      let citedArticleTitle = document.getElementById("article-title").innerText;
-
-      if (citedArticleUrl.endsWith('/')) {
-        citedArticleUrl = citedArticleUrl.slice(0, -1);
-      }
-
-      let quote = `
-<figure>
-  <blockquote>
-    ${citedText}
-  </blockquote>
-  <p>- <a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>${citedArticleTitle}</i></a></p>
-</figure>`;
-
-      navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
-    },
-    editBookmarks: function (action) {
-      if (this.currentUser === null) {
-        this.$router.push('/login');
-      }
-
-      BookmarksService.editBookmark(this.$route.params.articleId, action)
-          .then(response => {
-            console.log(response);
-            this.inBookmarks = !this.inBookmarks;
-          }).catch(err => {
-        console.log(err);
-      });
-    }
   },
   beforeUnmount() {
     document.title = 'Briene';

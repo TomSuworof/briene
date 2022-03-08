@@ -42,6 +42,7 @@ export default {
     AuthorsService.getAuthorData(this.$route.params.authorName)
         .then(response => {
           this.author = response.data;
+          document.title = this.author.username;
           this.articles = this.author.articles.sort((article1, article2) => {
             if (article1.publicationDate < article2.publicationDate) {
               return -1;
@@ -56,6 +57,9 @@ export default {
           console.log(err);
           this.$router.replace('/error'); // redirecting to '/error'
         });
+  },
+  beforeUnmount() {
+    document.title = 'Briene';
   }
 }
 </script>
