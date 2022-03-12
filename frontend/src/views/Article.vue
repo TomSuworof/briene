@@ -2,10 +2,10 @@
   <div class="article-page-content">
     <div class="article-about row">
       <div class="article-author">
-        <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
+        <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
       </div>
       <div class="article-publication-date">
-        <p>{{ finePublicationDate }}</p>
+        <time :datetime="htmlPublicationDate">{{ finePublicationDate }}</time>
       </div>
     </div>
     <div class="title">
@@ -14,10 +14,14 @@
       </div>
       <div class="bookmarking">
         <div v-if="!inBookmarks" title="Add to bookmarks">
-          <button @click="editBookmarks('add')">❤</button>
+          <button @click="editBookmarks('add')">
+            <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks icon"/>
+          </button>
         </div>
         <div v-if="inBookmarks" title="Remove from bookmarks">
-          <button @click="editBookmarks('remove')">💔</button>
+          <button @click="editBookmarks('remove')">
+            <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks icon"/>
+          </button>
         </div>
       </div>
     </div>
@@ -62,7 +66,10 @@ export default {
       return this.$store.state.auth.user;
     },
     finePublicationDate: function () {
-      return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm")
+      return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm");
+    },
+    htmlPublicationDate: function () {
+      return this.article.publicationDate;
     }
   },
   methods: {
@@ -185,6 +192,10 @@ export default {
     margin: 0 0 10pt;
     padding: 30pt 60pt 10pt 60pt;
   }
+}
+
+#article-content >>> img, iframe {
+  box-shadow: rgba(0, 0, 0, 0.5) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
 }
 
 .article-author {

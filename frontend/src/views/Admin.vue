@@ -85,8 +85,8 @@ export default {
       users: [],
       articles: [],
       actions: [
-        {function: this.editArticle, message: '🖊 Edit'},
-        {function: this.removeArticle, message: '❌ Remove'}
+        { function: this.editArticle, icon: '🖊', message: 'Edit' },
+        { function: this.removeArticle, icon: '❌', message: 'Remove' },
       ]
     };
   },

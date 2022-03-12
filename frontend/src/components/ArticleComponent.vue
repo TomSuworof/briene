@@ -1,5 +1,10 @@
 <template>
   <div class="article-container">
+    <div class="article-action-container">
+      <div class="article-action-button" v-for="action in actions" v-bind:key="action.id">
+        <button class="action-button" @click="action.function(article.id)" :title="action.message">{{ action.icon }}</button>
+      </div>
+    </div>
     <div class="article-about row">
       <div>
         <div class="article-author">
@@ -10,18 +15,13 @@
         </div>
       </div>
       <div class="article-publication-date">
-        <p>{{ getFinePublicationDate(article) }}</p>
+        <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
       </div>
     </div>
     <div class="article-title-container">
       <h3 class="article-title">
         <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
       </h3>
-    </div>
-    <div class="article-action-container" v-for="action in actions" v-bind:key="action.id">
-      <div class="article-action-button">
-        <a @click="action.function(article.id)" href="#">{{ action.message }}</a>
-      </div>
     </div>
     <div class="article-summary">
       <p>{{ article.summary }}</p>
@@ -45,8 +45,8 @@ export default {
   name: "ArticleComponent",
   props: ["article", "actions", "state"],
   methods: {
-    getFinePublicationDate: function (article) {
-      return moment(Date.parse(article.publicationDate)).format("DD.MM.YYYY HH:mm")
+    getFinePublicationDate: function (publicationDate) {
+      return moment(Date.parse(publicationDate)).format("DD.MM.YYYY HH:mm");
     },
   }
 }
@@ -59,10 +59,11 @@ export default {
 }
 
 .article-container {
+  position: relative;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
   border-radius: 9px;
-  margin: 0 0 10pt;
+  margin: 0 0 20pt;
   padding: 10pt;
   transition: box-shadow 0.3s ease-in-out;
 }
@@ -85,9 +86,24 @@ export default {
   color: #999;
 }
 
-.article-action-container, .article-title-container, .article-action-button {
+.article-action-container {
+  position: absolute;
+  right: -10pt;
+  top: -15pt;
+}
+
+.action-button {
+  background: none;
+  border: none;
+}
+
+.article-action-button {
   display: inline-block;
-  margin: 0 20pt 0 0;
+  padding: 2pt;
+  margin: 2pt;
+  border-radius: 150px;
+  border: 1px solid;
+  background: white;
 }
 
 .tags-container {

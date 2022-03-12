@@ -211,12 +211,12 @@ export default {
       showUserData: true,
 
       actionsForBookmarks: [
-        { function: this.removeFromBookmarks, message: '❌ Remove from bookmarks' }
+        { function: this.removeFromBookmarks, icon: '❌', message: 'Remove from bookmarks' }
       ],
 
       actionsForMyArticles: [
-        { function: this.editArticle, message: '🖊 Edit' },
-        { function: this.removeArticle, message: '❌ Remove' },
+        { function: this.editArticle, icon: '🖊', message: 'Edit' },
+        { function: this.removeArticle, icon: '❌', message: 'Remove' },
       ],
 
       schema,
