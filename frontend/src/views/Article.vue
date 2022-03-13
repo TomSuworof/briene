@@ -194,7 +194,7 @@ export default {
   }
 }
 
-#article-content >>> img, iframe {
+:deep(#article-content) img, iframe {
   box-shadow: rgba(0, 0, 0, 0.5) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
 }
 

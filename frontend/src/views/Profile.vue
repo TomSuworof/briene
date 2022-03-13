@@ -15,7 +15,10 @@
     </div>
     <div v-show="showUserData" class="show-user-basic-data">
       <div class="user-data-action-edit">
-        <a @click="editUserData" href="#">🖊 Edit my info</a>
+        <a @click="editUserData" href="#">
+          <img src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit profile info"/>
+          Edit my info
+        </a>
       </div>
       <div class="user-data">
         <p>
@@ -215,8 +218,8 @@ export default {
       ],
 
       actionsForMyArticles: [
-        { function: this.editArticle, icon: '🖊', message: 'Edit' },
-        { function: this.removeArticle, icon: '❌', message: 'Remove' },
+        { function: this.editArticle, icon: '<img src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
+        { function: this.removeArticle, icon: '<img src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
       ],
 
       schema,

@@ -2,7 +2,9 @@
   <div class="article-container">
     <div class="article-action-container">
       <div class="article-action-button" v-for="action in actions" v-bind:key="action.id">
-        <button class="action-button" @click="action.function(article.id)" :title="action.message">{{ action.icon }}</button>
+        <button class="action-button" @click="action.function(article.id)" :title="action.message">
+          <span v-html="action.icon"/>
+        </button>
       </div>
     </div>
     <div class="article-about row">
@@ -99,7 +101,7 @@ export default {
 
 .article-action-button {
   display: inline-block;
-  padding: 2pt;
+  padding: 2pt 0 4pt 0;
   margin: 2pt;
   border-radius: 150px;
   border: 1px solid;
