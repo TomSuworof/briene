@@ -14,7 +14,10 @@
             <th class="user-column">Roles</th>
             <th class="user-column-actions">Actions</th>
           </tr>
-          <tr class="user-row" v-for="user in users"  v-bind:key="user.id">
+          <tr class="user-row" v-if="loadingUsers">
+            <ShimmerBlock/>
+          </tr>
+          <tr class="user-row" v-if="!loadingUsers" v-for="user in users" v-bind:key="user.id">
             <td class="user-column">{{ user.id }}</td>
             <td class="user-column">{{ user.username }}</td>
             <td class="user-column">{{ user.email }}</td>
@@ -52,17 +55,22 @@
           <a href="#" class="article-type" @click="getAllArticles('published')">Published</a>
           <a href="#" class="article-type" @click="getAllArticles('drafts')">Drafts</a>
         </div>
-        <div v-if="articles.length > 0">
-          <article-component
-              v-for="article in articles"
-              :key="article.id"
-              :article="article"
-              :actions="actions"
-              :state="article.state"
-          ></article-component>
+        <div v-if="loadingArticles">
+          <ShimmerBlock/>
         </div>
-        <div v-else-if="articles.length === 0">
-          <p>No articles</p>
+        <div v-if="!loadingArticles">
+          <div v-if="articles.length > 0">
+            <article-component
+                v-for="article in articles"
+                :key="article.id"
+                :article="article"
+                :actions="actions"
+                :state="article.state"
+            ></article-component>
+          </div>
+          <div v-else-if="articles.length === 0">
+            <p>No articles</p>
+          </div>
         </div>
       </div>
     </div>
@@ -71,6 +79,7 @@
 
 <script>
 import ArticleComponent from "@/components/ArticleComponent";
+import ShimmerBlock from "@/components/ShimmerBlock";
 import AdminService from "@/api/AdminService";
 import ArticlesService from "@/api/ArticlesService";
 import * as accordion from "@/assets/js/accordion";
@@ -78,15 +87,28 @@ import * as accordion from "@/assets/js/accordion";
 export default {
   name: "Admin",
   components: {
-    ArticleComponent
+    ArticleComponent,
+    ShimmerBlock,
   },
   data() {
     return {
+      loadingUsers: true,
       users: [],
+
+      loadingArticles: true,
       articles: [],
+
       actions: [
-        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
-        { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
+        {
+          function: this.editArticle,
+          icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>',
+          message: 'Edit'
+        },
+        {
+          function: this.removeArticle,
+          icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>',
+          message: 'Remove'
+        },
       ]
     };
   },
@@ -103,15 +125,18 @@ export default {
   },
   methods: {
     getAllUsers: function () {
+      this.loadingUsers = true;
       AdminService.getAllUsers()
           .then(response => {
             this.users = response.data;
+            this.loadingUsers = false;
           }).catch(err => {
-            console.log(err);
-            this.users = [];
+        console.log(err);
+        this.users = [];
       });
     },
-    getAllArticles: function(state) {
+    getAllArticles: function (state) {
+      this.loadingArticles = true;
       AdminService.getAllArticles(state)
           .then(response => {
             this.articles = response.data.sort((article1, article2) => {
@@ -123,13 +148,14 @@ export default {
               }
               return 0;
             }).reverse(); // newer first;
+            this.loadingArticles = false;
           })
           .catch(err => {
             console.log(err);
             this.articles = [];
           });
     },
-    editUser: function(action, id) {
+    editUser: function (action, id) {
       AdminService.editUser(action, id)
           .then(response => {
             console.log(response);
@@ -157,10 +183,10 @@ export default {
     if (this.isAdmin) {
       this.getAllUsers();
       this.getAllArticles('all');
+      this.$nextTick(accordion.setupAccordion);
     } else {
       this.$router.push('/error');
     }
-    this.$nextTick(accordion.setupAccordion);
   }
 }
 </script>

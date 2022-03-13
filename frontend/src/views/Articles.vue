@@ -3,7 +3,10 @@
     <div class="header">
         <h1>Articles</h1>
     </div>
-    <div id="articles">
+    <div v-if="loadingArticles">
+      <ShimmerBlock/>
+    </div>
+    <div v-if="!loadingArticles" id="articles">
       <article-component
           v-for="article in articles"
           v-bind:key="article.id"
@@ -24,14 +27,17 @@
 <script>
 import ArticleComponent from "@/components/ArticleComponent";
 import ArticlesService from "@/api/ArticlesService";
+import ShimmerBlock from "@/components/ShimmerBlock";
 
 export default {
   name: "Articles",
   components: {
+    ShimmerBlock,
     ArticleComponent
   },
   data() {
     return {
+      loadingArticles: false,
       articles: [],
 
       hasBefore: false,
@@ -51,6 +57,7 @@ export default {
       this.getArticlesPaginated(this.limit, this.offset);
     },
     getArticlesPaginated: function (limit, offset) {
+      this.loadingArticles = true;
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
             this.articles = response.data.articles.sort((article1, article2) => {
@@ -62,6 +69,7 @@ export default {
               }
               return 0;
             }).reverse(); // newer first
+            this.loadingArticles = false;
             this.hasBefore = response.data.hasBefore;
             this.hasAfter = response.data.hasAfter;
           })

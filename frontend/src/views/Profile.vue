@@ -114,7 +114,10 @@
         <h2>Bookmarks</h2>
         <hr/>
       </div>
-      <div class="accordion__content">
+      <div v-if="loadingBookmarks">
+        <ShimmerBlock/>
+      </div>
+      <div v-if="!loadingBookmarks" class="accordion__content">
         <div v-show="bookmarks.length > 0">
           <article-component
               v-for="article in bookmarks"
@@ -133,7 +136,10 @@
         <h2>My articles</h2>
         <hr/>
       </div>
-      <div class="accordion__content">
+      <div v-if="loadingArticles">
+        <ShimmerBlock/>
+      </div>
+      <div v-if="!loadingArticles" class="accordion__content">
         <div class="articles-types">
           <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
           <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
@@ -166,10 +172,12 @@ import AuthorsService from "@/api/AuthorsService";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import * as accordion from "@/assets/js/accordion";
+import ShimmerBlock from "@/components/ShimmerBlock";
 
 export default {
   name: 'Profile',
   components: {
+    ShimmerBlock,
     ArticleComponent,
     ArticleContainer: ArticleComponent,
     Form,
@@ -200,7 +208,10 @@ export default {
     });
 
     return {
+      loadingBookmarks: false,
       bookmarks: [],
+
+      loadingArticles: false,
       articles: [],
 
       password: undefined,
@@ -214,7 +225,7 @@ export default {
       showUserData: true,
 
       actionsForBookmarks: [
-        { function: this.removeFromBookmarks, icon: '❌', message: 'Remove from bookmarks' }
+        { function: this.removeFromBookmarks, icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove from bookmarks' }
       ],
 
       actionsForMyArticles: [
@@ -289,9 +300,11 @@ export default {
           });
     },
     getMyBookmarks: function () {
+      this.loadingBookmarks = true;
       BookmarksService.getBookmarksOfUser()
           .then(response => {
             this.bookmarks = response.data;
+            this.loadingBookmarks = false;
           })
           .catch(err => {
             console.log(err);
@@ -299,6 +312,7 @@ export default {
           });
     },
     getMyArticles: function (state) {
+      this.loadingArticles = true;
       ArticlesService.getMyArticles(state)
           .then(response => {
             this.articles = response.data.sort((article1, article2) => {
@@ -310,6 +324,7 @@ export default {
               }
               return 0;
             }).reverse(); // newer first;
+            this.loadingArticles = false;
           })
           .catch(err => {
             console.log(err);

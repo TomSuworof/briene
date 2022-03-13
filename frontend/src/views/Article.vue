@@ -15,12 +15,14 @@
       <div class="bookmarking">
         <div v-if="!inBookmarks" title="Add to bookmarks">
           <button @click="editBookmarks('add')">
-            <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks icon"/>
+            <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png"
+                 alt="Add to bookmarks icon"/>
           </button>
         </div>
         <div v-if="inBookmarks" title="Remove from bookmarks">
           <button @click="editBookmarks('remove')">
-            <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks icon"/>
+            <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png"
+                 alt="Remove from bookmarks icon"/>
           </button>
         </div>
       </div>
@@ -35,7 +37,10 @@
       </ul>
     </div>
     <hr/>
-    <div id="article-content">
+    <div v-if="loadingArticle">
+      <ShimmerBlock/>
+    </div>
+    <div v-show="!loadingArticle" id="article-content">
       <v-md-editor :model-value="article.content" mode="preview"></v-md-editor>
     </div>
     <div class="control" id="control">
@@ -49,15 +54,18 @@ import moment from 'moment';
 import ArticlesService from "@/api/ArticlesService";
 import BookmarksService from "@/api/BookmarksService";
 import VMdEditor from '@kangc/v-md-editor';
+import ShimmerBlock from "@/components/ShimmerBlock";
 
 export default {
   name: "Article",
   components: {
+    ShimmerBlock,
     VMdEditor
   },
   data() {
     return {
       inBookmarks: false,
+      loadingArticle: false,
       article: ''
     }
   },
@@ -103,29 +111,35 @@ export default {
           }).catch(err => {
         console.log(err);
       });
+    },
+    loadIsInBookmarks: function (articleId) {
+      BookmarksService.isArticleInBookmarksOfUser(articleId)
+          .then(response => {
+            this.inBookmarks = response.data;
+          }).catch(err => {
+        console.log(err);
+        this.inBookmarks = false;
+      });
+    },
+    loadArticleContent: function (articleId) {
+      this.loadingArticle = true;
+      ArticlesService.getArticleForRender(articleId)
+          .then(response => {
+            this.article = response.data;
+            this.loadingArticle = false;
+            // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
+            document.title = this.article.title;
+          })
+          .catch(err => {
+            console.log(err);
+            this.$router.replace('/error'); // redirecting to '/error'
+          });
     }
   },
   created() {
     let articleId = this.$route.params.articleId;
-
-    BookmarksService.isArticleInBookmarksOfUser(articleId)
-        .then(response => {
-          this.inBookmarks = response.data;
-        }).catch(err => {
-      console.log(err);
-      this.inBookmarks = false;
-    });
-
-    ArticlesService.getArticleForRender(articleId)
-        .then(response => {
-          this.article = response.data;
-          // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
-          document.title = this.article.title;
-        })
-        .catch(err => {
-          console.log(err);
-          this.$router.replace('/error'); // redirecting to '/error'
-        });
+    this.loadIsInBookmarks(articleId);
+    this.loadArticleContent(articleId);
   },
   mounted() {
     let articleContent = document.getElementById('article-content');
