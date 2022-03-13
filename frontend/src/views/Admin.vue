@@ -85,8 +85,8 @@ export default {
       users: [],
       articles: [],
       actions: [
-        { function: this.editArticle, icon: '<img src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
-        { function: this.removeArticle, icon: '<img src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
+        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
+        { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
       ]
     };
   },

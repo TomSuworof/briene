@@ -106,7 +106,7 @@ export default {
 
       let result = await this.toBase64(files[0]);
 
-      let template = `<br><img id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
+      let template = `<br><img loading="lazy" id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
       this.content += template;
     },
   },
