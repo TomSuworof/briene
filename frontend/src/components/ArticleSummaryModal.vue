@@ -25,7 +25,9 @@
           </form>
         </li>
         <li class="tag-item" v-if="!showTagInput">
-          <button @click="openAddTagInput()" class="add-tag-button">➕</button>
+          <button @click="openAddTagInput()" class="add-tag-button">
+            <img loading="eager" src="https://img.icons8.com/material/24/000000/plus-math--v2.png" alt="Add tag"/>
+          </button>
         </li>
       </ul>
     </div>

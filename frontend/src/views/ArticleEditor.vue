@@ -28,7 +28,7 @@
               v-model="content"
               :disabled-menus="[]"
               @upload-image="handleUploadImage"
-              height="400pt"
+              height="367pt"
           />
         </div>
       </div>
@@ -166,7 +166,8 @@ export default {
   background: transparent;
 }
 
-.editor {
-  border-radius: 9px;
+.v-md-editor {
+  border-radius: 9px !important;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px !important;
 }
 </style>
