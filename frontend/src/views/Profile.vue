@@ -61,9 +61,9 @@
               <Field id="pswCurrent" type="password" name="password" class="form-control" placeholder="Password" v-model="password"/>
             </div>
             <div class="form-group">
-              <button class="btn btn-primary btn-block" :disabled="loading">
+              <button class="button button-primary" :disabled="loading">
                 <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-                Save
+                <span>Save</span>
               </button>
             </div>
           </Form>
@@ -103,7 +103,7 @@
               </div>
             </div>
             <div class="form-group">
-              <button class="btn btn-primary btn-block">Save</button>
+              <button class="button button-primary">Save</button>
             </div>
           </Form>
         </div>
@@ -229,7 +229,7 @@ export default {
       ],
 
       actionsForMyArticles: [
-        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
+        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
         { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
       ],
 
@@ -380,10 +380,15 @@ export default {
   display: inline-block;
 }
 
+.form-group {
+  max-width: 300pt;
+}
+
 textarea {
   padding: 5pt;
   border-radius: 9px;
   width: 100%;
+  max-width: 300pt;
   height: 100pt;
   resize: none;
 }

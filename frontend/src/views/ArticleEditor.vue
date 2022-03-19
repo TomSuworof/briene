@@ -8,14 +8,14 @@
           </div>
           <div class="action-buttons">
             <div class="btn-container">
-              <button class="btn btn-outline-primary" id="save" @click="handleButton('save')" type="button"
+              <button class="button button-outline" id="save" @click="handleButton('save')" type="button"
                       name="action"
                       value="save">
                 <span>Save</span>
               </button>
             </div>
             <div class="btn-container">
-              <button class="btn btn-primary" id="publish" @click="handleButton('publish')" type="button"
+              <button class="button button-primary" id="publish" @click="handleButton('publish')" type="button"
                       name="action"
                       value="publish">
                 <span>Publish</span>
@@ -155,7 +155,7 @@ export default {
 
 .btn-container {
   display: inline-block;
-  margin: 0 5pt 5pt 0;
+  /*margin: 0 5pt 5pt 0;*/
 }
 
 .title {

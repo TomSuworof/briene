@@ -2,8 +2,9 @@
   <div class="article-container">
     <div class="article-action-container">
       <div class="article-action-button" v-for="action in actions" v-bind:key="action.id">
-        <button class="action-button" @click="action.function(article.id)" :title="action.message">
-          <span v-html="action.icon"/>
+        <button class="button button-outline" @click="action.function(article.id)" :title="action.message">
+          <span class="button-icon" v-html="action.icon"/>
+          <span class="button-message">{{ action.message }}</span>
         </button>
       </div>
     </div>
@@ -31,9 +32,11 @@
     <div class="article-tags tags-container">
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in article.tags">
-          <div>
-            <a :href="'/tags/' + tag">#{{ tag }}</a>
-          </div>
+          <form :action="'/tags/' + tag">
+            <button class="button button-outline">
+              <span>#{{ tag }}</span>
+            </button>
+          </form>
         </li>
       </ul>
     </div>
@@ -66,12 +69,17 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
   border-radius: 9px;
   margin: 0 0 20pt;
-  padding: 10pt;
-  transition: box-shadow 0.3s ease-in-out;
+  padding: 15pt;
+  transition: background 0.1s ease-in-out;
+  border: solid 1px transparent;
 }
 
 .article-container:hover {
-  box-shadow: 0 1px 9px rgba(0, 0, 0, 0.2);
+  background: #F1F1F1;
+}
+
+.article-container:active {
+  border: solid 1px black;
 }
 
 .article-about {
@@ -94,18 +102,8 @@ export default {
   top: -15pt;
 }
 
-.action-button {
-  background: none;
-  border: none;
-}
-
 .article-action-button {
   display: inline-block;
-  padding: 2pt 0 4pt 0;
-  margin: 2pt;
-  border-radius: 150px;
-  border: 1px solid;
-  background: white;
 }
 
 .tags-container {
@@ -118,10 +116,6 @@ export default {
 
 .tag-item {
   display: inline-block;
-  margin: 0 5pt 5pt 0;
-  padding: 5pt;
-  border-radius: 9px;
-  border: 1px solid;
   position: relative;
 }
 </style>

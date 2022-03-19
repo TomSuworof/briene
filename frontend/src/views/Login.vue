@@ -18,13 +18,17 @@
           </div>
           <div class="form-group center">
             <div class="log-in-button">
-              <button class="btn btn-primary btn-block" :disabled="loading">
+              <button class="button button-primary" :disabled="loading">
                 <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-                <span>Login</span>
+                <span>Log In</span>
               </button>
             </div>
             <div class="sign-up-button">
-              <router-link to="/register" class="btn btn-outline-primary btn-block">Sign Up</router-link>
+              <form action="/register">
+                <button class="button button-outline">
+                  <span>Sign Up</span>
+                </button>
+              </form>
             </div>
           </div>
           <div class="form-group">
@@ -100,7 +104,8 @@ export default {
 }
 
 .log-in-button, .sign-up-button {
-  padding: 3pt 0;
+  display: inline-block;
+  margin: 1pt;
 }
 
 .center {

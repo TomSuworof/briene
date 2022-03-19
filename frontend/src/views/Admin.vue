@@ -29,14 +29,14 @@
             <td class="user-column-actions">
               <div class="user-actions">
                 <div class="user-action">
-                  <button @click="editUser('make_admin', user.id)" class="btn btn-primary btn-block">Make admin</button>
+                  <button @click="editUser('make_admin', user.id)" class="button button-primary">Make admin</button>
                 </div>
                 <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_USER') ||
                     user.roles.map(role => role.name).includes('ROLE_ADMIN')">
-                  <button @click="editUser('delete', user.id)" class="btn btn-danger btn-block">Delete (block)</button>
+                  <button @click="editUser('delete', user.id)" class="button button-danger">Delete (block)</button>
                 </div>
                 <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_BLOCKED')">
-                  <button @click="editUser('make_user', user.id)" class="btn btn-success btn-block">Make user</button>
+                  <button @click="editUser('make_user', user.id)" class="button button-success">Make user</button>
                 </div>
               </div>
             </td>
@@ -99,16 +99,8 @@ export default {
       articles: [],
 
       actions: [
-        {
-          function: this.editArticle,
-          icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit"/>',
-          message: 'Edit'
-        },
-        {
-          function: this.removeArticle,
-          icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>',
-          message: 'Remove'
-        },
+        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
+        { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
       ]
     };
   },
@@ -117,8 +109,8 @@ export default {
       return this.$store.state.auth.user;
     },
     isAdmin() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_ADMIN');
+      if (this.currentUser && this.currentUser.roles) {
+        return this.currentUser.roles.includes('ROLE_ADMIN');
       }
       return false;
     },

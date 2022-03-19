@@ -34,14 +34,14 @@
     <div class="action-buttons">
       <div class="button-row">
         <div class="btn-container">
-          <button class="btn btn-outline-primary" id="cancel" @click="handleButton('Cancel')" type="button"
+          <button class="button button-outline" id="cancel" @click="handleButton('Cancel')" type="button"
                   name="action"
                   value="Save">
             <span>Cancel</span>
           </button>
         </div>
         <div class="btn-container">
-          <button class="btn btn-primary" id="done" @click="handleButton('Done')" type="button"
+          <button class="button button-primary" id="done" @click="handleButton('Done')" type="button"
                   name="action"
                   value="Done">
             <span>Done</span>
@@ -197,7 +197,7 @@ textarea {
   display: inline-block;
   margin: 0 5pt 5pt 0;
   padding: 5pt;
-  border-radius: 9px;
+  border-radius: 22px;
   border: 1px solid;
   position: relative;
 }
@@ -213,7 +213,7 @@ input {
 
 .tag-item-name, .tag-item-close-button {
   display: inline-block;
-  margin: 0 5pt 0 0;
+  margin: 0 3pt 0 5pt;
 }
 
 .fa-close {

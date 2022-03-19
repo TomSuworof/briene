@@ -6,9 +6,9 @@
         <div class="form-group">
           <Field id="username" name="username" type="text" placeholder="Username" class="form-control"/>
         </div>
-        <div class="form-group">
+        <div class="form-group center">
           <div class="send-button">
-            <button class="btn btn-primary btn-block" :disabled="loading">
+            <button class="button button-primary" :disabled="loading">
               <span v-show="loading" class="spinner-border spinner-border-sm"></span>
               <span>This is me, send request</span>
             </button>
@@ -40,7 +40,7 @@
           </div>
           <div class="form-group">
             <div class="change-password-button">
-              <button class="btn btn-primary btn-block" :disabled="loading">
+              <button class="button button-primary" :disabled="loading">
                 <span v-show="loading" class="spinner-border spinner-border-sm"></span>
                 <span>Change password</span>
               </button>
@@ -110,12 +110,11 @@ export default {
   }
 }
 
-/*.password-reset-page-content {*/
-/*  margin: auto;*/
-/*  text-align: center;*/
-/*}*/
-
 .new-password-text-block {
   padding: 10pt;
+}
+
+.center {
+  text-align: center;
 }
 </style>

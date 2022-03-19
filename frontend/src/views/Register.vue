@@ -51,9 +51,9 @@
             </div>
             <ErrorMessage name="agreement" class="error-feedback"/>
           </div>
-          <div class="form-group">
+          <div class="form-group center">
             <div class="sign-up-button">
-              <button class="btn btn-primary btn-block" :disabled="loading">
+              <button class="button button-primary" :disabled="loading">
                 <span v-show="loading" class="spinner-border spinner-border-sm"></span>
                 <span>Sign Up</span>
               </button>
@@ -161,5 +161,9 @@ export default {
 .agreement-checkbox, .agreement-checkbox-text {
   padding: 3pt;
   display: inline-block;
+}
+
+.center {
+  text-align: center;
 }
 </style>

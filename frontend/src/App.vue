@@ -111,8 +111,58 @@ export default {
   border-color: #EEEEEE;
 }
 
-button, .btn {
-  border-radius: 9px !important;
+.button {
+  height: 5vh;
+  padding: 2pt 15pt;
+  margin: 2pt;
+  border-radius: 22px;
+  border: 1px solid;
+  background: #f8f9fa;
+}
+
+.button:focus {
+  box-shadow: 0 0 0 0.2rem rgb(100 100 100 / 50%);
+}
+
+.button-primary {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.button-primary:hover {
+  background: #0069d9;
+  border-color: #007bff;
+  color: white;
+}
+
+.button-outline:hover {
+  background: #e2e6ea;
+}
+
+.button-danger {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.button-danger:hover {
+  background: #c82333;
+}
+
+.button-success {
+  background: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+
+.button-success:hover {
+  background: #218838;
+}
+
+.button-icon, .button-message {
+  display: inline-block;
+  margin: 2pt;
 }
 
 </style>
