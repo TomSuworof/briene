@@ -3,6 +3,7 @@
     <div class="header">
         <h1>Articles</h1>
     </div>
+    <hr align="left">
     <div v-if="loadingArticles">
       <ShimmerBlock/>
     </div>

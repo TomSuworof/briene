@@ -15,10 +15,10 @@
     </div>
     <div v-show="showUserData" class="show-user-basic-data">
       <div class="user-data-action-edit">
-        <a @click="editUserData" href="#">
-          <img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit profile info"/>
-          Edit my info
-        </a>
+        <button class="button button-outline" @click="editUserData">
+          <span class="button-icon"><img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit profile info"/></span>
+          <span class="button-message">Edit my info</span>
+        </button>
       </div>
       <div class="user-data">
         <p>
@@ -110,9 +110,9 @@
       </div>
     </div>
     <div class="articles-bookmarks accordion">
-      <div class="accordion__intro">
+      <div class="accordion__intro bookmarks-title">
         <h2>Bookmarks</h2>
-        <hr/>
+        <hr align="left">
       </div>
       <div v-if="loadingBookmarks">
         <ShimmerBlock/>
@@ -134,7 +134,7 @@
     <div class="articles-block accordion">
       <div class="accordion__intro">
         <h2>My articles</h2>
-        <hr/>
+        <hr align="left">
       </div>
       <div v-if="loadingArticles">
         <ShimmerBlock/>
@@ -398,12 +398,16 @@ textarea {
   padding: 0 0 5pt;
 }
 
+.bookmarks-title {
+  padding: 0 0 10pt 0;
+}
+
 .article-type {
   margin: 0 20pt 0 0;
 }
 
 .articles-types {
-  padding: 5pt 0;
+  padding: 5pt 0 20pt 0;
 }
 
 .show-user-basic-data,

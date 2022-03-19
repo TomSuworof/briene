@@ -3,7 +3,7 @@
     <div class="admin-dashboard-users accordion">
       <div class="admin-dashboard-title accordion__intro">
         <h1>Users</h1>
-        <hr/>
+        <hr align="left">
       </div>
       <div class="accordion__content">
         <table class="admin-dashboard-table table">
@@ -47,7 +47,7 @@
     <div class="admin-dashboard-articles accordion">
       <div class="accordion__intro">
         <h1>Articles</h1>
-        <hr/>
+        <hr align="left">
       </div>
       <div class="accordion__content">
         <div class="articles-types">
@@ -207,7 +207,7 @@ export default {
 }
 
 .articles-types {
-  padding: 5pt 0;
+  padding: 5pt 0 20pt 0;
 }
 
 .article-type {

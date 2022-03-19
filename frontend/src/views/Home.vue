@@ -6,6 +6,7 @@
     <div>
       <h2>Recent articles</h2>
     </div>
+    <hr align="left">
     <div v-if="loadingArticles">
       <ShimmerBlock/>
     </div>

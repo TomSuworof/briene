@@ -36,7 +36,7 @@
         </li>
       </ul>
     </div>
-    <hr/>
+    <hr>
     <div v-if="loadingArticle">
       <ShimmerBlock/>
     </div>
@@ -178,6 +178,10 @@ export default {
 </script>
 
 <style scoped>
+
+hr {
+  max-width: unset !important;
+}
 
 @media screen and (max-width: 720px) {
   /* comes into effect for screens less than 720 pixels (inclusive) */

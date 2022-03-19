@@ -54,6 +54,18 @@ export default {
 </script>
 
 <style>
+a {
+  color: black;
+}
+
+a:hover {
+  color: #F7C71B;
+}
+
+hr {
+  max-width: 700pt;
+}
+
 @media screen and (max-width: 720px) {
   /* comes into effect for screens less than 720 pixels (inclusive) */
   .content {
@@ -111,8 +123,14 @@ export default {
   border-color: #EEEEEE;
 }
 
+button {
+  border: none;
+  background: none;
+  border-radius: 22px;
+}
+
 .button {
-  height: 5vh;
+  height: 2.3rem;
   padding: 2pt 15pt;
   margin: 2pt;
   border-radius: 22px;
@@ -125,15 +143,19 @@ export default {
 }
 
 .button-primary {
-  background: #007bff;
-  border-color: #007bff;
+  background: #F7C71B;
+  border-color: #F7C71B;
   color: white;
 }
 
 .button-primary:hover {
-  background: #0069d9;
-  border-color: #007bff;
+  background: #D7A70A;
   color: white;
+}
+
+.button-outline {
+  background-color: white;
+  border-color: #7C640C;
 }
 
 .button-outline:hover {
@@ -151,13 +173,13 @@ export default {
 }
 
 .button-success {
-  background: #28a745;
-  border-color: #28a745;
+  background: #A6A228;
+  border-color: #A6A228;
   color: white;
 }
 
 .button-success:hover {
-  background: #218838;
+  background: #85821F;
 }
 
 .button-icon, .button-message {

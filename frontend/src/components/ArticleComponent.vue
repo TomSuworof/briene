@@ -1,6 +1,13 @@
 <template>
   <div class="article-container">
-    <div class="article-action-container">
+    <div class="article-action-container-dots" v-if="actions !== undefined">
+      <button @click="showActions">
+        <span>
+          <img loading="eager" src="https://img.icons8.com/material/24/000000/more--v2.png" alt="Show actions menu"/>
+        </span>
+      </button>
+    </div>
+    <div class="article-action-container" v-if="actionsShowed">
       <div class="article-action-button" v-for="action in actions" v-bind:key="action.id">
         <button class="button button-outline" @click="action.function(article.id)" :title="action.message">
           <span class="button-icon" v-html="action.icon"/>
@@ -21,22 +28,20 @@
         <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
       </div>
     </div>
-    <div class="article-title-container">
-      <h3 class="article-title">
-        <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-      </h3>
-    </div>
-    <div class="article-summary">
-      <p>{{ article.summary }}</p>
+    <div @click="$router.push('/articles/' + article.id)">
+      <div class="article-title-container">
+        <h3 class="article-title">
+          <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
+        </h3>
+      </div>
+      <div class="article-summary">
+        <p>{{ article.summary }}</p>
+      </div>
     </div>
     <div class="article-tags tags-container">
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in article.tags">
-          <form :action="'/tags/' + tag">
-            <button class="button button-outline">
-              <span>#{{ tag }}</span>
-            </button>
-          </form>
+          <a :href="'/tags/' + tag">{{ tag }}</a>
         </li>
       </ul>
     </div>
@@ -49,21 +54,34 @@ import moment from "moment";
 export default {
   name: "ArticleComponent",
   props: ["article", "actions", "state"],
+  data() {
+    return {
+      actionsShowed: false,
+    }
+  },
   methods: {
     getFinePublicationDate: function (publicationDate) {
       return moment(Date.parse(publicationDate)).format("DD.MM.YYYY HH:mm");
     },
+    showActions: function () {
+      this.actionsShowed = true;
+    }
   }
 }
 
 </script>
 
 <style scoped>
+.article-title {
+  font-weight: bold;
+}
+
 .article-title, .article-summary {
   overflow-wrap: break-word;
 }
 
 .article-container {
+  max-width: 700pt;
   position: relative;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
@@ -75,7 +93,7 @@ export default {
 }
 
 .article-container:hover {
-  background: #F1F1F1;
+  background: #F7F7F7;
 }
 
 .article-container:active {
@@ -96,10 +114,16 @@ export default {
   color: #999;
 }
 
+.article-action-container-dots {
+  position: absolute;
+  right: 5pt;
+  top: 5pt;
+}
+
 .article-action-container {
   position: absolute;
-  right: -10pt;
-  top: -15pt;
+  right: -40pt;
+  top: -1pt;
 }
 
 .article-action-button {
@@ -115,7 +139,10 @@ export default {
 }
 
 .tag-item {
+  font-size: 12px;
+  text-decoration: underline;
   display: inline-block;
   position: relative;
+  margin: 0 10pt 0 0;
 }
 </style>
