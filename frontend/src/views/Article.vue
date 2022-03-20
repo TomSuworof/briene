@@ -30,9 +30,7 @@
     <div class="article-tags tags-container">
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in article.tags">
-          <div>
-            <a :href="'/tags/' + tag">#{{ tag }}</a>
-          </div>
+          <a :href="'/tags/' + tag">#{{ tag }}</a>
         </li>
       </ul>
     </div>
@@ -238,6 +236,7 @@ button {
 
 .article-title {
   overflow-wrap: break-word;
+  font-weight: bold;
 }
 
 .article-about {
@@ -267,11 +266,10 @@ button {
 }
 
 .tag-item {
+  font-size: 12px;
+  text-decoration: underline;
   display: inline-block;
-  margin: 0 5pt 5pt 0;
-  padding: 5pt;
-  border-radius: 9px;
-  border: 1px solid;
   position: relative;
+  margin: 0 10pt 0 0;
 }
 </style>
