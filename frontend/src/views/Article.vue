@@ -30,7 +30,7 @@
     <div class="article-tags tags-container">
       <ul class="tags-list">
         <li class="tag-item" v-for="tag in article.tags">
-          <a :href="'/tags/' + tag">#{{ tag }}</a>
+          <a :href="'/tags/' + tag">{{ tag }}</a>
         </li>
       </ul>
     </div>
@@ -236,6 +236,9 @@ button {
 
 .article-title {
   overflow-wrap: break-word;
+}
+
+#article-title {
   font-weight: bold;
 }
 

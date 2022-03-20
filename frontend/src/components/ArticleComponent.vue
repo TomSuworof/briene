@@ -28,15 +28,13 @@
         <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
       </div>
     </div>
-    <div @click="$router.push('/articles/' + article.id)">
-      <div class="article-title-container">
-        <h3 class="article-title">
-          <a v-bind:href="'/articles/' + article.id">{{ article.title }}</a>
-        </h3>
-      </div>
-      <div class="article-summary">
-        <p>{{ article.summary }}</p>
-      </div>
+    <div class="article-title-container">
+      <h3 class="article-title">
+        <a :href="'/articles/' + article.id">{{ article.title }}</a>
+      </h3>
+    </div>
+    <div class="article-summary">
+      <p>{{ article.summary }}</p>
     </div>
     <div class="article-tags tags-container">
       <ul class="tags-list">
