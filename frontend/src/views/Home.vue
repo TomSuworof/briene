@@ -4,7 +4,7 @@
       <h1><pre>{{ logo }}</pre></h1>
     </div>
     <div>
-      <h2>Recent articles</h2>
+      <h2>Fresh articles</h2>
     </div>
     <hr align="left">
     <div v-if="loadingArticles">
