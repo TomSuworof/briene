@@ -161,6 +161,7 @@ export default {
 .title {
   width: 100%;
   font-size: 20pt;
+  font-weight: bold;
   outline: transparent;
   border: transparent;
   background: transparent;

@@ -14,13 +14,10 @@
           v-bind:article="article"
       ></article-component>
     </div>
-    <div class="navigation-buttons">
-      <div class="navigation-button-prev" title="Previous">
-        <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
-      </div>
-      <div class="navigation-button-next" title="Next">
-        <button @click="getNextPage" :disabled="!hasAfter">▶</button>
-      </div>
+    <div class="load-more-button">
+      <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
+        <span>Load more</span>
+      </button>
     </div>
   </div>
 </template>
@@ -44,24 +41,19 @@ export default {
       hasBefore: false,
       hasAfter: true,
 
-      limit: 10,
+      limit: 5,
       offset: 0,
     }
   },
   methods: {
-    getPreviousPage: function () {
-      this.offset -= this.limit;
-      this.getArticlesPaginated(this.limit, this.offset);
-    },
-    getNextPage: function () {
+    loadMoreArticles: function () {
       this.offset += this.limit;
-      this.getArticlesPaginated(this.limit, this.offset);
+      this.getNextArticles(this.limit, this.offset);
     },
-    getArticlesPaginated: function (limit, offset) {
-      this.loadingArticles = true;
+    getNextArticles: function (limit, offset) {
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
-            this.articles = response.data.articles.sort((article1, article2) => {
+            let articles = response.data.articles.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -70,7 +62,7 @@ export default {
               }
               return 0;
             }).reverse(); // newer first
-            this.loadingArticles = false;
+            this.articles = this.articles.concat(articles);
             this.hasBefore = response.data.hasBefore;
             this.hasAfter = response.data.hasAfter;
           })
@@ -80,21 +72,13 @@ export default {
     },
   },
   created() {
-    this.getArticlesPaginated(this.limit, this.offset);
+    this.loadingArticles = true;
+    this.getNextArticles(this.limit, this.offset);
+    this.loadingArticles = false;
   }
 }
 </script>
 
 <style scoped>
-.navigation-button-prev, .navigation-button-next {
-  display: inline-block;
-  margin: 0 10pt 0;
-}
 
-button {
-  background: white;
-  display: block;
-  border: none;
-  outline: none;
-}
 </style>
