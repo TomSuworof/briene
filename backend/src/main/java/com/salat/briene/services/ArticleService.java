@@ -6,19 +6,21 @@ import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import com.salat.briene.repositories.ArticleSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,33 +69,32 @@ public class ArticleService {
     }
 
 
-    public List<Article> getArticlesByState(ArticleState state) {
+    public PageResponseDTO<ArticleDTO> getPageWithArticlesByAuthorAndStatePaginated(User author, ArticleState state, Integer limit, Integer offset) {
+        Page<Article> articles;
+
         if (state.equals(ArticleState.ALL)) {
-            return getAllArticles();
+            articles = getAllArticlesByAuthorPaginated(author, limit, offset);
         } else {
-            return articleRepository.findArticlesByState(state);
+            articles = getArticlesByAuthorAndStatePaginated(author, state, limit, offset);
         }
+
+        return new PageResponseDTO<>(
+                offset > 0 && articles.getTotalElements() > 0,
+                (offset + limit) < articles.getTotalElements(),
+                articles.getContent().stream().map(ArticleDTO::new).collect(Collectors.toList())
+        );
     }
 
-    private List<Article> getAllArticles() {
-        return articleRepository.findAll();
+    private Page<Article> getAllArticlesByAuthorPaginated(User author, Integer limit, Integer offset) {
+        return articleRepository.findArticlesByAuthor(author, getDefaultPageable(limit, offset));
     }
 
-
-    public List<Article> getArticlesByAuthorAndState(User author, ArticleState state) {
-        if (state.equals(ArticleState.ALL)) {
-            return getArticlesByAuthor(author);
-        } else {
-            return articleRepository.findArticlesByAuthorAndState(author, state);
-        }
-    }
-
-    private List<Article> getArticlesByAuthor(User author) {
-        return articleRepository.findArticlesByAuthor(author);
+    private Page<Article> getArticlesByAuthorAndStatePaginated(User author, ArticleState state, Integer limit, Integer offset) {
+        return articleRepository.findArticlesByAuthorAndState(author, state, getDefaultPageable(limit, offset));
     }
 
 
-    public PageResponseDTO getPageWithArticlesByState(ArticleState state, Integer limit, Integer offset) {
+    public PageResponseDTO<ArticleDTO> getPageWithArticlesByState(ArticleState state, Integer limit, Integer offset) {
         // here we will store response
         Page<Article> articles;
 
@@ -104,19 +105,19 @@ public class ArticleService {
         }
 
         // return response after filtering
-        return new PageResponseDTO(
+        return new PageResponseDTO<>(
                 offset > 0 && articles.getTotalElements() > 0,
                 (offset + limit) < articles.getTotalElements(),
-                articles.getContent()
+                articles.getContent().stream().map(ArticleDTO::new).collect(Collectors.toList())
         );
     }
 
     private Page<Article> getArticlesByStatePaginated(ArticleState state, Integer limit, Integer offset) {
-        return articleRepository.findArticlesByState(state, PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "publicationDate")));
+        return articleRepository.findArticlesByState(state, getDefaultPageable(limit, offset));
     }
 
     private Page<Article> getAllArticlesPaginated(Integer limit, Integer offset) {
-        return articleRepository.findAll(PageRequest.of(offset / limit, limit));
+        return articleRepository.findAll(getDefaultPageable(limit, offset));
     }
 
 
@@ -125,5 +126,10 @@ public class ArticleService {
             return false;
         }
         return user.is(RoleEnum.ADMIN) || article.getAuthor().equals(user);
+    }
+
+
+    private Pageable getDefaultPageable(Integer limit, Integer offset) {
+        return PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "publicationDate"));
     }
 }

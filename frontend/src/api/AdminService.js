@@ -2,19 +2,25 @@ import http from './http-common';
 import authHeader from "@/api/AuthHeader";
 
 class AdminService {
-    getAllUsers() {
-        return http.get('admin/users',
+    getUsersPaginated(limit, offset) {
+        return http.get('/admin/users',
             {
                 headers: authHeader(),
+                params: {
+                    limit: limit,
+                    offset: offset
+                }
             });
     }
 
-    getAllArticles(state) {
+    getArticlesPaginated(state, limit, offset) {
         return http.get('admin/articles',
             {
                 headers: authHeader(),
                 params: {
                     state: state,
+                    limit: limit,
+                    offset: offset
                 }
             });
     }

@@ -12,7 +12,7 @@ import java.util.UUID;
 // It is helpful and recommended using when you need to get a list of articles
 
 @Getter
-public class ArticleDTO {
+public class ArticleDTO implements ObjectDTO {
     protected final UUID id;
     protected final String title;
     protected final String author;

@@ -6,7 +6,8 @@
         <hr align="left">
       </div>
       <div class="accordion__content">
-        <table class="admin-dashboard-table table">
+        <div class="users">
+          <table class="admin-dashboard-table table">
           <tr>
             <th class="user-column">ID</th>
             <th class="user-column">Username</th>
@@ -42,6 +43,15 @@
             </td>
           </tr>
         </table>
+        </div>
+        <div class="user-navigation-buttons">
+          <div class="navigation-button-prev" title="Previous">
+            <button class="navigation-button" @click="getPreviousUsersPage" :disabled="!hasUsersBefore">◀</button>
+          </div>
+          <div class="navigation-button-next" title="Next">
+            <button class="navigation-button" @click="getNextUsersPage" :disabled="!hasUsersAfter">▶</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="admin-dashboard-articles accordion">
@@ -51,25 +61,35 @@
       </div>
       <div class="accordion__content">
         <div class="articles-types">
-          <a href="#" class="article-type" @click="getAllArticles('all')">All</a>
-          <a href="#" class="article-type" @click="getAllArticles('published')">Published</a>
-          <a href="#" class="article-type" @click="getAllArticles('drafts')">Drafts</a>
+          <a href="#" class="article-type" :aria-selected="articlesState === 'all'" @click="resetArticlesState('all')">All</a>
+          <a href="#" class="article-type" @click="resetArticlesState('published')">Published</a>
+          <a href="#" class="article-type" @click="resetArticlesState('drafts')">Drafts</a>
         </div>
-        <div v-if="loadingArticles">
-          <ShimmerBlock/>
-        </div>
-        <div v-if="!loadingArticles">
-          <div v-if="articles.length > 0">
-            <article-component
-                v-for="article in articles"
-                :key="article.id"
-                :article="article"
-                :actions="actions"
-                :state="article.state"
-            ></article-component>
+        <div class="articles">
+          <div v-if="loadingArticles">
+            <ShimmerBlock/>
           </div>
-          <div v-else-if="articles.length === 0">
-            <p>No articles</p>
+          <div v-if="!loadingArticles">
+            <div v-if="articles.length > 0">
+              <article-component
+                  v-for="article in articles"
+                  :key="article.id"
+                  :article="article"
+                  :actions="actions"
+                  :state="article.state"
+              ></article-component>
+            </div>
+            <div v-else-if="articles.length === 0">
+              <p>No articles</p>
+            </div>
+          </div>
+        </div>
+        <div class="navigation-buttons">
+          <div class="navigation-button-prev" title="Previous">
+            <button class="navigation-button" @click="getPreviousArticlesPage" :disabled="!hasArticlesBefore">◀</button>
+          </div>
+          <div class="navigation-button-next" title="Next">
+            <button class="navigation-button" @click="getNextArticlesPage" :disabled="!hasArticlesAfter">▶</button>
           </div>
         </div>
       </div>
@@ -94,13 +114,30 @@ export default {
     return {
       loadingUsers: true,
       users: [],
+      hasUsersBefore: false,
+      hasUsersAfter: false,
+      usersLimit: 5,
+      usersOffset: 0,
 
       loadingArticles: true,
+      articlesState: 'all',
       articles: [],
+      hasArticlesBefore: false,
+      hasArticlesAfter: false,
+      articlesLimit: 5,
+      articlesOffset: 0,
 
       actions: [
-        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
-        { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>', message: 'Remove' },
+        {
+          function: this.editArticle,
+          icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>',
+          message: 'Edit'
+        },
+        {
+          function: this.removeArticle,
+          icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>',
+          message: 'Remove'
+        },
       ]
     };
   },
@@ -116,22 +153,47 @@ export default {
     },
   },
   methods: {
-    getAllUsers: function () {
-      this.loadingUsers = true;
-      AdminService.getAllUsers()
-          .then(response => {
-            this.users = response.data;
-            this.loadingUsers = false;
-          }).catch(err => {
-        console.log(err);
-        this.users = [];
-      });
+    getPreviousUsersPage: function () {
+      this.usersOffset -= this.usersLimit;
+      this.getUsersPaginated(this.usersLimit, this.usersOffset);
     },
-    getAllArticles: function (state) {
-      this.loadingArticles = true;
-      AdminService.getAllArticles(state)
+    getNextUsersPage: function () {
+      this.usersOffset += this.usersLimit;
+      this.getUsersPaginated(this.usersLimit, this.usersOffset);
+    },
+    getUsersPaginated: function (limit, offset) {
+      this.loadingUsers = true;
+      AdminService.getUsersPaginated(limit, offset)
           .then(response => {
-            this.articles = response.data.sort((article1, article2) => {
+            this.users = response.data.entities;
+            this.hasUsersBefore = response.data.hasBefore;
+            this.hasUsersAfter = response.data.hasAfter;
+            this.loadingUsers = false;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    },
+
+    resetArticlesState: function (state) {
+      this.articlesState = state;
+      this.articlesOffset = 0;
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
+    },
+
+    getPreviousArticlesPage: function () {
+      this.articlesOffset -= this.articlesLimit;
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
+    },
+    getNextArticlesPage: function () {
+      this.articlesOffset += this.articlesLimit;
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
+    },
+    getArticlesPaginated: function (state, limit, offset) {
+      this.loadingArticles = true;
+      AdminService.getArticlesPaginated(state, limit, offset)
+          .then(response => {
+            this.articles = response.data.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -139,14 +201,16 @@ export default {
                 return 1;
               }
               return 0;
-            }).reverse(); // newer first;
+            }).reverse(); // newer first
             this.loadingArticles = false;
+            this.hasArticlesBefore = response.data.hasBefore;
+            this.hasArticlesAfter = response.data.hasAfter;
           })
-          .catch(err => {
-            console.log(err);
-            this.articles = [];
+          .catch(e => {
+            console.log(e);
           });
     },
+
     editUser: function (action, id) {
       AdminService.editUser(action, id)
           .then(response => {
@@ -173,8 +237,8 @@ export default {
   },
   created() {
     if (this.isAdmin) {
-      this.getAllUsers();
-      this.getAllArticles('all');
+      this.getUsersPaginated(this.usersLimit, this.usersOffset);
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
       this.$nextTick(accordion.setupAccordion);
     } else {
       this.$router.push('/error');
@@ -213,4 +277,5 @@ export default {
 .article-type {
   margin: 0 20pt 0 0;
 }
+
 </style>

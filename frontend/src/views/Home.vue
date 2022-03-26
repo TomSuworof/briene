@@ -55,7 +55,7 @@ export default {
       this.loadingArticles = true;
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
-            this.articles = response.data.articles.sort((article1, article2) => {
+            this.articles = response.data.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -74,7 +74,7 @@ export default {
     },
   },
   created() {
-    this.getLastArticles(10, 0);
+    this.getLastArticles(5, 0);
   }
 }
 </script>

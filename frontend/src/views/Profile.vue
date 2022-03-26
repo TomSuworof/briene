@@ -141,21 +141,31 @@
       </div>
       <div v-if="!loadingArticles" class="accordion__content">
         <div class="articles-types">
-          <a href="#" class="article-type" @click="getMyArticles('all')">All</a>
-          <a href="#" class="article-type" @click="getMyArticles('published')">Published</a>
-          <a href="#" class="article-type" @click="getMyArticles('drafts')">Drafts</a>
+          <a href="#" class="article-type" @click="resetArticlesState('all')">All</a>
+          <a href="#" class="article-type" @click="resetArticlesState('published')">Published</a>
+          <a href="#" class="article-type" @click="resetArticlesState('drafts')">Drafts</a>
         </div>
-        <div v-show="articles.length > 0">
-          <article-component
-              v-for="article in articles"
-              :key="article.id"
-              :article="article"
-              :actions="actionsForMyArticles"
-              :state="article.state"
-          ></article-component>
+        <div class="articles">
+          <div v-show="articles.length > 0">
+            <article-component
+                v-for="article in articles"
+                :key="article.id"
+                :article="article"
+                :actions="actionsForMyArticles"
+                :state="article.state"
+            ></article-component>
+          </div>
+          <div v-show="articles.length === 0">
+            <p>No articles</p>
+          </div>
         </div>
-        <div v-show="articles.length === 0">
-          <p>No articles</p>
+        <div class="navigation-buttons">
+          <div class="navigation-button-prev" title="Previous">
+            <button class="navigation-button" @click="getPreviousArticlesPage" :disabled="!hasArticlesBefore">◀</button>
+          </div>
+          <div class="navigation-button-next" title="Next">
+            <button class="navigation-button" @click="getNextArticlesPage" :disabled="!hasArticlesAfter">▶</button>
+          </div>
         </div>
       </div>
     </div>
@@ -211,8 +221,13 @@ export default {
       loadingBookmarks: false,
       bookmarks: [],
 
-      loadingArticles: false,
+      loadingArticles: true,
+      articlesState: 'all',
       articles: [],
+      hasArticlesBefore: false,
+      hasArticlesAfter: false,
+      articlesLimit: 5,
+      articlesOffset: 0,
 
       password: undefined,
       email: undefined,
@@ -255,6 +270,7 @@ export default {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
     },
+
     editUserData: function () {
       this.showUserData = !this.showUserData;
       this.$nextTick(pswChecker.passwordChecking); // waits for rendering
@@ -290,8 +306,9 @@ export default {
             });
       }
     },
+
     getMyBio: function() {
-      AuthorsService.getAuthorData(this.currentUser.username)
+      AuthorsService.getAuthorData(this.currentUser.username, 0, 0)
           .then(response => {
             this.bio = response.data.bio;
           })
@@ -311,26 +328,43 @@ export default {
             this.bookmarks = [];
           });
     },
-    getMyArticles: function (state) {
+
+    resetArticlesState: function (state) {
+      this.articlesState = state;
+      this.articlesOffset = 0;
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
+    },
+
+    getPreviousArticlesPage: function () {
+      this.articlesOffset -= this.articlesLimit;
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
+    },
+    getNextArticlesPage: function () {
+      this.articlesOffset += this.articlesLimit;
+      this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
+    },
+    getArticlesPaginated: function (state, limit, offset) {
       this.loadingArticles = true;
-      ArticlesService.getMyArticles(state)
+      ArticlesService.getMyArticlesPaginated(state, limit, offset)
           .then(response => {
-            this.articles = response.data.sort((article1, article2) => {
-              if (article2.publicationDate > article1.publicationDate) {
+            this.articles = response.data.entities.sort((article1, article2) => {
+              if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
               if (article1.publicationDate > article2.publicationDate) {
                 return 1;
               }
               return 0;
-            }).reverse(); // newer first;
+            }).reverse(); // newer first
             this.loadingArticles = false;
+            this.hasArticlesBefore = response.data.hasBefore;
+            this.hasArticlesAfter = response.data.hasAfter;
           })
-          .catch(err => {
-            console.log(err);
-            this.articles = [];
+          .catch(e => {
+            console.log(e);
           });
     },
+
     removeFromBookmarks: function (articleId) {
       BookmarksService.editBookmark(articleId, 'remove')
           .then(() => {
@@ -346,7 +380,7 @@ export default {
     removeArticle: function (articleId) {
       ArticlesService.delete(articleId)
           .then(() => {
-            this.getMyArticles('all');
+            this.resetArticlesState('all');
           })
           .catch(err => {
             console.log(err);
@@ -361,7 +395,7 @@ export default {
     this.email = this.currentUser.email;
     this.getMyBio();
     this.getMyBookmarks();
-    this.getMyArticles('all');
+    this.getArticlesPaginated('all', this.articlesLimit, this.articlesOffset);
   },
 };
 </script>

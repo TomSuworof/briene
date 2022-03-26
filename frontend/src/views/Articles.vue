@@ -38,7 +38,6 @@ export default {
       loadingArticles: false,
       articles: [],
 
-      hasBefore: false,
       hasAfter: true,
 
       limit: 5,
@@ -53,7 +52,7 @@ export default {
     getNextArticles: function (limit, offset) {
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
-            let articles = response.data.articles.sort((article1, article2) => {
+            let articles = response.data.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -63,7 +62,6 @@ export default {
               return 0;
             }).reverse(); // newer first
             this.articles = this.articles.concat(articles);
-            this.hasBefore = response.data.hasBefore;
             this.hasAfter = response.data.hasAfter;
           })
           .catch(e => {

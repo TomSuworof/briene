@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Getter
-public class UserDTO {
+public class UserDTO implements ObjectDTO {
     private final UUID id;
     private final String username;
     private final String email;

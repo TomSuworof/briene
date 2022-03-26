@@ -2,7 +2,6 @@ package com.salat.briene.repositories;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
-import com.salat.briene.entities.Tag;
 import com.salat.briene.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,14 +20,12 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     Optional<Article> findArticleByTitleAndState(String title, ArticleState state);
 
-    List<Article> findArticlesByState(ArticleState state);
-
-
     Page<Article> findArticlesByState(ArticleState state, Pageable pageable);
 
-    List<Article> findArticlesByAuthor(User author);
 
-    List<Article> findArticlesByAuthorAndState(User author, ArticleState state);
+    Page<Article> findArticlesByAuthor(User author, Pageable pageable);
+
+    Page<Article> findArticlesByAuthorAndState(User author, ArticleState state, Pageable pageable);
 
     @Transactional // it is better to use transaction, because we delete from several tables
     @Modifying // without this there wil be error: The statement did not return a result set

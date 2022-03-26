@@ -4,18 +4,23 @@ import com.salat.briene.entities.*;
 import com.salat.briene.exceptions.*;
 import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.payload.request.UserDataRequest;
+import com.salat.briene.payload.response.PageResponseDTO;
+import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -119,5 +124,20 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+
+    public PageResponseDTO<UserDTO> getUsersPaginated(Integer limit, Integer offset) {
+        Page<User> users = getAllUsersPaginated(limit, offset);
+
+        return new PageResponseDTO<>(
+                offset > 0 && users.getTotalElements() > 0,
+                (offset + limit) < users.getTotalElements(),
+                users.stream().map(UserDTO::new).collect(Collectors.toList())
+        );
+    }
+
+    private Page<User> getAllUsersPaginated(Integer limit, Integer offset) {
+        return userRepository.findAll(PageRequest.of(offset / limit, limit));
     }
 }

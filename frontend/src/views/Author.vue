@@ -23,6 +23,11 @@
         <p>No articles</p>
       </div>
     </div>
+    <div class="load-more-button">
+      <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
+        <span>Load more</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -42,16 +47,24 @@ export default {
       author: undefined,
       loadingArticles: false,
       articles: [],
+
+      hasAfter: true,
+
+      limit: 5,
+      offset: 0,
     }
   },
   methods: {
-    loadAuthorData: function (authorName) {
-      this.loadingArticles = true;
-      AuthorsService.getAuthorData(authorName)
+    loadMoreArticles: function () {
+      this.offset += this.limit;
+      this.loadAuthorData(this.author.username, this.limit, this.offset);
+    },
+    loadAuthorData: function (authorName, limit, offset) {
+      AuthorsService.getAuthorData(authorName, limit, offset)
           .then(response => {
             this.author = response.data;
             document.title = this.author.username;
-            this.articles = this.author.articles.sort((article1, article2) => {
+            let articles = this.author.articles.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -60,7 +73,8 @@ export default {
               }
               return 0;
             }).reverse(); // newer first;
-            this.loadingArticles = false;
+            this.articles = this.articles.concat(articles);
+            this.hasAfter = this.author.articles.hasAfter;
           })
           .catch(err => {
             console.log(err);
@@ -69,7 +83,9 @@ export default {
     }
   },
   created() {
-    this.loadAuthorData(this.$route.params.authorName);
+    this.loadingArticles = true;
+    this.loadAuthorData(this.$route.params.authorName, this.limit, this.offset);
+    this.loadingArticles = false;
   },
   beforeUnmount() {
     document.title = 'Briene';

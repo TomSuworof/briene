@@ -1,21 +1,17 @@
 package com.salat.briene.payload.response;
 
-import com.salat.briene.entities.Article;
 import com.salat.briene.entities.User;
 import lombok.Getter;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class AuthorDTO {
     private final String username;
     private final String bio;
-    private final List<ArticleDTO> articles;
+    private final PageResponseDTO<ArticleDTO> articles;
 
-    public AuthorDTO(User user, List<Article> articles) {
+    public AuthorDTO(User user, PageResponseDTO<ArticleDTO> articles) {
         this.username = user.getUsername();
         this.bio = user.getBio();
-        this.articles = articles.stream().map(ArticleDTO::new).collect(Collectors.toList());
+        this.articles = articles;
     }
 }

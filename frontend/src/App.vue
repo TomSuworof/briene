@@ -194,4 +194,17 @@ button {
   margin: 2pt;
 }
 
+
+.navigation-button-prev, .navigation-button-next {
+  display: inline-block;
+  margin: 0 10pt 0;
+}
+
+.navigation-button {
+  background: white;
+  display: block;
+  border: none;
+  outline: none;
+}
+
 </style>

@@ -1,6 +1,7 @@
 package com.salat.briene.controllers;
 
 import com.salat.briene.entities.Tag;
+import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.services.TagService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("/getArticlesByTag")
-    public ResponseEntity<PageResponseDTO> getArticlesByTag(@RequestParam String tag, @RequestParam Integer limit, @RequestParam Integer offset) {
-        PageResponseDTO response = tagService.getPageWithArticles(tag, limit, offset);
+    public ResponseEntity<PageResponseDTO<ArticleDTO>> getArticlesByTag(@RequestParam String tag, @RequestParam Integer limit, @RequestParam Integer offset) {
+        PageResponseDTO<ArticleDTO> response = tagService.getPageWithArticles(tag, limit, offset);
 
         if (!response.isHasBefore() && !response.isHasAfter()) {
             return ResponseEntity.status(HttpStatus.OK).body(response);

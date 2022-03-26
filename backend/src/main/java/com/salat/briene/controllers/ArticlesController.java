@@ -16,9 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "*")
 @Controller
@@ -33,8 +31,8 @@ public class ArticlesController {
     private final UserService userService;
 
     @GetMapping("/get")
-    public ResponseEntity<PageResponseDTO> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
-        PageResponseDTO response = articleService.getPageWithArticlesByState(ArticleState.PUBLISHED, limit, offset);
+    public ResponseEntity<PageResponseDTO<ArticleDTO>> getArticlesPaginated(@RequestParam Integer limit, @RequestParam Integer offset) {
+        PageResponseDTO<ArticleDTO> response = articleService.getPageWithArticlesByState(ArticleState.PUBLISHED, limit, offset);
 
         if (!response.isHasBefore() && !response.isHasAfter()) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -44,21 +42,19 @@ public class ArticlesController {
     }
 
     @GetMapping("/my_articles")
-    public ResponseEntity<List<ArticleDTO>> getMyArticles(@RequestParam String state, Authentication authentication) {
+    public ResponseEntity<PageResponseDTO<ArticleDTO>> getMyArticlesPaginated(@RequestParam String state, @RequestParam Integer limit, @RequestParam Integer offset, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
+        PageResponseDTO<ArticleDTO> response = articleService.getPageWithArticlesByAuthorAndStatePaginated(currentUser, ArticleState.getFromDescription(state), limit, offset);
 
-        List<ArticleDTO> articles = articleService.getArticlesByAuthorAndState(currentUser, ArticleState.getFromDescription(state))
-                .stream().map(ArticleDTO::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(articles);
+        if (!response.isHasBefore() && !response.isHasAfter()) {
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArticleWithContent> getArticle(
-            @RequestParam(required = false) Boolean raw,
-            @PathVariable UUID id,
-            Authentication authentication) {
+    public ResponseEntity<ArticleWithContent> getArticle(@RequestParam(required = false) Boolean raw, @PathVariable UUID id, Authentication authentication) {
         ArticleWithContent article = null;
 
         if (raw == null) {
@@ -97,10 +93,7 @@ public class ArticlesController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> publishArticle(
-            @RequestBody ArticleUploadRequest article,
-            @RequestParam String action,
-            Authentication authentication) {
+    public ResponseEntity<String> publishArticle(@RequestBody ArticleUploadRequest article, @RequestParam String action, Authentication authentication) {
         User userFromToken = userService.getUserFromAuthentication(authentication);
         articleEditorService.uploadArticle(userFromToken, article, action);
         return ResponseEntity.ok().body(ARTICLE_UPLOADED);

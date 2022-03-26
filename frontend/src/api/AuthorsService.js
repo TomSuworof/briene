@@ -5,8 +5,13 @@ class ArticlesService {
         return http.get('/authors')
     }
 
-    getAuthorData(authorName) {
-        return http.get(`/authors/${authorName}`)
+    getAuthorData(authorName, limit, offset) {
+        return http.get(`/authors/${authorName}`, {
+            params: {
+                limit: limit,
+                offset: offset
+            }
+        })
     }
 }
 

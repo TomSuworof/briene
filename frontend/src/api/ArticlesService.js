@@ -35,12 +35,14 @@ class ArticlesService {
             });
     }
 
-    getMyArticles(state) {
+    getMyArticlesPaginated(state, limit, offset) {
         return http.get('/articles/my_articles',
             {
                 headers: authHeader(),
                 params: {
                     state: state,
+                    limit: limit,
+                    offset: offset
                 }
             });
     }
