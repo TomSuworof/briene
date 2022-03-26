@@ -308,7 +308,7 @@ export default {
     },
 
     getMyBio: function() {
-      AuthorsService.getAuthorData(this.currentUser.username, 0, 0)
+      AuthorsService.getAuthorData(this.currentUser.username, 1, 0)
           .then(response => {
             this.bio = response.data.bio;
           })
