@@ -12,7 +12,7 @@
             </div>
             <input type="number" name="limit" v-model="limit" hidden/>
             <input type="number" name="offset" v-model="offset" hidden/>
-            <button type="submit" hidden/>
+            <button type="submit" hidden title="Submit search request"/>
           </form>
         </div>
       </div>

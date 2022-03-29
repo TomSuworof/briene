@@ -1,13 +1,11 @@
 <template>
   <div class="article-container">
-    <div class="article-action-container-dots" v-if="actions !== undefined">
-      <button @click="showActions">
+    <button id="button" class="article-action-container-dots" v-if="actions !== undefined">
         <span>
           <img loading="eager" src="https://img.icons8.com/material/24/000000/more--v2.png" alt="Show actions menu"/>
         </span>
-      </button>
-    </div>
-    <div class="article-action-container" v-if="actionsShowed">
+    </button>
+    <div class="article-action-container">
       <div class="article-action-button" v-for="action in actions" v-bind:key="action.id">
         <button class="button button-outline" @click="action.function(article.id)" :title="action.message">
           <span class="button-icon" v-html="action.icon"/>
@@ -61,9 +59,9 @@ export default {
     getFinePublicationDate: function (publicationDate) {
       return moment(Date.parse(publicationDate)).format("DD.MM.YYYY HH:mm");
     },
-    showActions: function () {
-      this.actionsShowed = true;
-    }
+    // showActions: function () {
+    //   this.actionsShowed = true;
+    // }
   }
 }
 
@@ -121,11 +119,16 @@ export default {
 .article-action-container {
   position: absolute;
   right: -40pt;
-  top: -1pt;
+  top: -60pt;
 }
 
-.article-action-button {
-  display: inline-block;
+.article-action-container {
+  visibility: hidden;
+}
+
+#button + .article-action-container:active,
+#button:focus + .article-action-container {
+  visibility: visible;
 }
 
 .tags-container {
@@ -143,4 +146,5 @@ export default {
   position: relative;
   margin: 0 10pt 0 0;
 }
+
 </style>

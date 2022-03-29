@@ -2,6 +2,7 @@ package com.salat.briene.services;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
+import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.payload.response.SearchResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,10 +68,10 @@ public class SearchService {
 
         return new SearchResponseDTO(
                 articleSearchHits.getSuggest(),
-                new PageResponseDTO(
+                new PageResponseDTO<>(
                         offset > 0 && articleSearchHits.getTotalHits() > 0,
                         (offset + limit) < articleSearchHits.getTotalHits(),
-                        articles.stream().skip(offset).limit(Math.min(articleSearchHits.getTotalHits(), limit)).toList())
+                        articles.stream().skip(offset).limit(Math.min(articleSearchHits.getTotalHits(), limit)).map(ArticleDTO::new).collect(Collectors.toList()))
         );
     }
 }

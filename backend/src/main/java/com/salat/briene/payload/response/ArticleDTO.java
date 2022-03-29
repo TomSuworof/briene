@@ -5,8 +5,7 @@ import com.salat.briene.entities.Tag;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 // ArticleDTO provides short form of article without content
 // It is helpful and recommended using when you need to get a list of articles
@@ -28,6 +27,13 @@ public class ArticleDTO implements ObjectDTO {
         this.summary = article.getSummary();
         this.publicationDate = article.getPublicationDate();
         this.state = article.getState().getDescription();
-        this.tags = article.getTags().stream().map(Tag::getName).toList();
+
+        Set<Tag> tags = article.getTags();
+
+        if (tags == null) {
+            this.tags = Collections.emptyList();
+        } else {
+            this.tags = tags.stream().map(Tag::getName).toList();
+        }
     }
 }
