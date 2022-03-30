@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import BootstrapVue3 from 'bootstrap-vue-3';
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
@@ -34,4 +35,5 @@ createApp(App)
     .use(VMdEditor)
     .use(router)
     .use(store)
+    .use(BootstrapVue3)
     .mount("#app");

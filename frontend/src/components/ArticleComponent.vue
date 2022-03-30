@@ -1,17 +1,16 @@
 <template>
   <div class="article-container">
-    <button id="button" class="article-action-container-dots" v-if="actions !== undefined">
-        <span>
-          <img loading="eager" src="https://img.icons8.com/material/24/000000/more--v2.png" alt="Show actions menu"/>
-        </span>
-    </button>
-    <div class="article-action-container">
-      <div class="article-action-button" v-for="action in actions" v-bind:key="action.id">
-        <button class="button button-outline" @click="action.function(article.id)" :title="action.message">
+    <div v-if="actions !== undefined">
+      <b-dropdown no-caret="true" variant="link" id="dropdown-right" toggle-class="text-decoration-none" class="article-action-container">
+        <b-dropdown-item class="article-action-item"
+            href="#"
+            v-for="action in actions"
+            v-bind:key="action.id"
+            @click="action.function(article.id)">
           <span class="button-icon" v-html="action.icon"/>
           <span class="button-message">{{ action.message }}</span>
-        </button>
-      </div>
+        </b-dropdown-item>
+      </b-dropdown>
     </div>
     <div class="article-about row">
       <div>
@@ -58,10 +57,7 @@ export default {
   methods: {
     getFinePublicationDate: function (publicationDate) {
       return moment(Date.parse(publicationDate)).format("DD.MM.YYYY HH:mm");
-    },
-    // showActions: function () {
-    //   this.actionsShowed = true;
-    // }
+    }
   }
 }
 
@@ -110,25 +106,10 @@ export default {
   color: #999;
 }
 
-.article-action-container-dots {
+.article-action-container {
   position: absolute;
   right: 5pt;
   top: 5pt;
-}
-
-.article-action-container {
-  position: absolute;
-  right: -40pt;
-  top: -60pt;
-}
-
-.article-action-container {
-  visibility: hidden;
-}
-
-#button + .article-action-container:active,
-#button:focus + .article-action-container {
-  visibility: visible;
 }
 
 .tags-container {

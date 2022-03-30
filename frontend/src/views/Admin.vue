@@ -135,7 +135,7 @@ export default {
         },
         {
           function: this.removeArticle,
-          icon: '<img loading="eager" src="https://img.icons8.com/material/24/fa314a/delete-sign--v1.png" alt="Delete"/>',
+          icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/trash--v1.png" alt="Delete"/>',
           message: 'Remove'
         },
       ]
