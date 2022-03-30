@@ -21,7 +21,12 @@
           <router-link to="/article_editor">New article</router-link>
         </div>
         <div class="header-button-profile">
-          <router-link to="/profile">Profile</router-link>
+          <div v-if="currentUser">
+            <router-link to="/profile">Profile</router-link>
+          </div>
+          <div v-if="!currentUser">
+            <router-link to="/login">Login</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -40,6 +45,11 @@ export default {
       limit: 10,
       offset: 0
     }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
   },
   methods: {
     search: function () {

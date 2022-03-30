@@ -117,7 +117,11 @@ export default {
       ArticlesService.uploadArticle(this.title, this.content, this.summary, this.action, this.tags)
           .then(() => {
             this.closeThisModal(); // remember to close. otherwise, scrollbar will disappear
-            this.$router.push('/articles');
+            if (this.action === 'publish') {
+              this.$router.push('/articles');
+            } else if (this.action === 'save') {
+              alert('Article was saved');
+            }
           })
           .catch(err => {
             console.log(err);

@@ -141,9 +141,9 @@
       </div>
       <div v-if="!loadingArticles" class="accordion__content">
         <div class="articles-types">
-          <a href="#" class="article-type" @click="resetArticlesState('all')">All</a>
-          <a href="#" class="article-type" @click="resetArticlesState('published')">Published</a>
-          <a href="#" class="article-type" @click="resetArticlesState('drafts')">Drafts</a>
+          <button v-bind:class="getButtonClass('all')"  @click="resetArticlesState('all')">All</button>
+          <button v-bind:class="getButtonClass('published')" @click="resetArticlesState('published')">Published</button>
+          <button v-bind:class="getButtonClass('drafts')" @click="resetArticlesState('drafts')">Drafts</button>
         </div>
         <div class="articles">
           <div v-show="articles.length > 0">
@@ -386,6 +386,14 @@ export default {
             console.log(err);
           });
     },
+
+    getButtonClass(buttonTitle) {
+      if (buttonTitle === this.articlesState) {
+        return 'article-type button button-primary';
+      } else {
+        return 'article-type button button-outline';
+      }
+    }
   },
   created() {
     this.$nextTick(pswChecker.passwordChecking);
