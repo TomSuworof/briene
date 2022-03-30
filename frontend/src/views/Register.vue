@@ -49,7 +49,9 @@
                 <router-link to="/terms_of_use">terms of use</router-link>
               </p>
             </div>
-            <ErrorMessage name="agreement" class="error-feedback"/>
+            <div>
+              <ErrorMessage name="agreement" class="error-feedback"/>
+            </div>
           </div>
           <div class="form-group center">
             <div class="sign-up-button">

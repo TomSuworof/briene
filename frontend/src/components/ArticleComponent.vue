@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container">
+  <div class="article-container" @click.self="$router.push('/articles/' + article.id)">
     <div v-if="actions !== undefined">
       <b-dropdown no-caret="true" variant="link" id="dropdown-right" toggle-class="text-decoration-none" class="article-action-container">
         <b-dropdown-item class="article-action-item"

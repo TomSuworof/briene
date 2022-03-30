@@ -4,14 +4,14 @@
       <div class="editor-wrapper">
         <div>
           <div class="title-wrapper">
-            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title"/>
+            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title" autofocus/>
           </div>
           <div class="action-buttons">
             <div class="btn-container">
               <button class="button button-outline" id="save" @click="handleButton('save')" type="button"
                       name="action"
                       value="save">
-                <span>Save</span>
+                <span>Save as draft</span>
               </button>
             </div>
             <div class="btn-container">
@@ -145,12 +145,16 @@ export default {
 
 <style scoped>
 
+.action-buttons {
+  float: right;
+}
+
 .title-wrapper, .action-buttons {
   display: inline-block;
 }
 
 .title-wrapper {
-  width: 85%;
+  width: 75%;
 }
 
 .btn-container {
@@ -162,12 +166,14 @@ export default {
   width: 100%;
   font-size: 20pt;
   font-weight: bold;
-  outline: transparent;
-  border: transparent;
   background: transparent;
+  outline: 0;
+  border-width: 0 0 1px;
+  border-color: #AAAAAA;
 }
 
 .v-md-editor {
+  margin: 10pt 0;
   border-radius: 9px !important;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px !important;
 }
