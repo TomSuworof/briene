@@ -4,58 +4,62 @@
       <h1><pre>{{ logo }}</pre></h1>
     </div>
     <div>
-      <h2>Fresh articles</h2>
+      <h2>Articles</h2>
     </div>
     <hr align="left">
-    <div v-if="loadingArticles">
-      <ShimmerBlock/>
-    </div>
-    <div v-if="!loadingArticles" id="articles">
-      <article-component
-          v-for="article in articles"
-          v-bind:key="article.id"
-          v-bind:article="article"
-      ></article-component>
-    </div>
-    <div class="articles-button">
-      <router-link to="/articles">Show more</router-link>
-    </div>
-    <div class="footer">
-      <div>
-        <router-link to="/terms_of_use">Terms of use</router-link>
+    <div class="articles">
+      <div v-if="loadingArticles">
+        <ShimmerBlock/>
       </div>
-      <div>
-        <a href="https://github.com/TomSuworof/briene" target="_blank">Source code</a>
+      <div v-if="!loadingArticles" id="articles">
+        <article-component
+            v-for="article in articles"
+            v-bind:key="article.id"
+            v-bind:article="article"
+        ></article-component>
+      </div>
+      <div class="load-more-button">
+        <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
+          <span>Load more</span>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ShimmerBlock from "@/components/ShimmerBlock";
 import ArticleComponent from "@/components/ArticleComponent";
 import ArticlesService from "@/api/ArticlesService";
-import ShimmerBlock from "@/components/ShimmerBlock";
 
 export default {
   name: "Home",
   components: {
     ShimmerBlock,
-    ArticleComponent,
-    ArticleContainer: ArticleComponent
+    ArticleComponent
   },
   data() {
     return {
       logo: '<briene>',
+
       loadingArticles: false,
-      articles: []
+      articles: [],
+
+      hasAfter: true,
+
+      limit: 5,
+      offset: 0,
     }
   },
   methods: {
-    getLastArticles: function (limit, offset) {
-      this.loadingArticles = true;
+    loadMoreArticles: function () {
+      this.offset += this.limit;
+      this.getNextArticles(this.limit, this.offset);
+    },
+    getNextArticles: function (limit, offset) {
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
-            this.articles = response.data.entities.sort((article1, article2) => {
+            let articles = response.data.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -64,8 +68,7 @@ export default {
               }
               return 0;
             }).reverse(); // newer first
-            this.loadingArticles = false;
-            this.hasBefore = response.data.hasBefore;
+            this.articles = this.articles.concat(articles);
             this.hasAfter = response.data.hasAfter;
           })
           .catch(e => {
@@ -74,7 +77,9 @@ export default {
     },
   },
   created() {
-    this.getLastArticles(5, 0);
+    this.loadingArticles = true;
+    this.getNextArticles(this.limit, this.offset);
+    this.loadingArticles = false;
   }
 }
 </script>
@@ -82,10 +87,5 @@ export default {
 <style scoped>
 .header {
   margin: 0 0 25pt;
-}
-
-.articles-button {
-  alignment: bottom;
-  margin: 0 0 50pt;
 }
 </style>

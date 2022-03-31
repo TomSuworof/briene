@@ -1,7 +1,7 @@
 <template>
   <div class="article-container" @click.self="$router.push('/articles/' + article.id)">
     <div v-if="actions !== undefined">
-      <b-dropdown no-caret="true" variant="link" id="dropdown-right" toggle-class="text-decoration-none" class="article-action-container">
+      <b-dropdown no-caret variant="link" id="dropdown-right" toggle-class="text-decoration-none" class="article-action-container">
         <b-dropdown-item class="article-action-item"
             href="#"
             v-for="action in actions"
@@ -85,7 +85,7 @@ export default {
 }
 
 .article-container:hover {
-  background: #F7F7F7;
+  background: #FCFFF2;
 }
 
 .article-container:active {

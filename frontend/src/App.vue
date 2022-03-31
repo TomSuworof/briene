@@ -33,6 +33,14 @@
     <div class="content">
       <router-view/>
     </div>
+    <div class="footer">
+      <div class="footer-link">
+        <router-link to="/terms_of_use">Terms of use</router-link>
+      </div>
+      <div class="footer-link">
+        <a href="https://github.com/TomSuworof/briene" target="_blank">Source code</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -103,9 +111,17 @@ hr {
   justify-content: space-between;
 }
 
-.main-link, .header-button-editor, .header-button-profile {
+.main-link, .header-button-editor, .header-button-profile, .footer-link {
   display: inline-block;
-  margin: 0 10pt 0 12pt;
+  margin: 0 10pt 10pt 12pt;
+}
+
+.footer {
+  padding: 4pt 0 0 0;
+  background: #FCFFF2;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 .input-box {
@@ -125,12 +141,14 @@ hr {
   border-radius: 9px;
   margin: 0 0 10pt;
   padding: 10pt;
+  transition: border-color, border-width 0.3s;
 }
 
 .form-control:focus {
   background-color: #FEFEFE;
   box-shadow: none;
-  border-color: #EEEEEE;
+  border-color: #f7c71b;
+  border-width: 2px;
 }
 
 button:disabled,
@@ -156,7 +174,7 @@ button {
 }
 
 .button:focus {
-  box-shadow: 0 0 0 0.2rem rgb(100 100 100 / 50%);
+  box-shadow: 0 0 0 0.2rem rgb(100 100 100 / 70%);
 }
 
 .button-primary {
@@ -166,7 +184,7 @@ button {
 }
 
 .button-primary:hover {
-  background: #D7A70A;
+  background: #E7B70A;
   color: white;
 }
 
@@ -176,7 +194,7 @@ button {
 }
 
 .button-outline:hover {
-  background: #e2e6ea;
+  background: #f2f6ea;
 }
 
 .button-danger {

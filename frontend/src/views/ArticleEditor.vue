@@ -169,7 +169,7 @@ export default {
   background: transparent;
   outline: 0;
   border-width: 0 0 1px;
-  border-color: #AAAAAA;
+  border-color: #CCC;
 }
 
 .v-md-editor {

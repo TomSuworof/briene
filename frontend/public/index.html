@@ -12,6 +12,11 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>Briene</title>
     <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
         /* force responsive resize and shadow */
         img, iframe {
             max-height: 90%;
@@ -45,8 +50,25 @@
             font-weight: 600 !important;
         }
 
+        .v-md-editor__toolbar-item:hover {
+            background-color: #f2f6ea !important;
+        }
+
         .v-md-editor__toolbar-item-save {
             display: none !important;
+        }
+
+        .dropdown-menu {
+            border-radius: 9px;
+            max-width: unset;
+        }
+
+        .btn-link {
+            color: #7C640C;
+        }
+
+        .dropdown-item:hover {
+            background: #f2f6ea;
         }
     </style>
 </head>

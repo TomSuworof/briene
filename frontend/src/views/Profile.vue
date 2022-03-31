@@ -444,10 +444,6 @@ textarea {
   padding: 0 0 10pt 0;
 }
 
-.article-type {
-  margin: 0 20pt 0 0;
-}
-
 .articles-types {
   padding: 5pt 0 20pt 0;
 }
