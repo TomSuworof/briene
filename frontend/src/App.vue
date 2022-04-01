@@ -118,7 +118,7 @@ hr {
 
 .footer {
   padding: 4pt 0 0 0;
-  background: #FCFFF2;
+  background: #FAFAF7;
   left: 0;
   bottom: 0;
   overflow: hidden;

@@ -44,6 +44,7 @@
           <button class="button button-primary" id="done" @click="handleButton('Done')" type="button"
                   name="action"
                   value="Done">
+            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
             <span>Done</span>
           </button>
         </div>
@@ -77,6 +78,7 @@ export default {
     return {
       maxLength: 255,
       showTagInput: false,
+      loading: false,
 
       suggestedTags: []
     };
@@ -114,8 +116,10 @@ export default {
       }
     },
     uploadArticle: function () {
+      this.loading = true;
       ArticlesService.uploadArticle(this.title, this.content, this.summary, this.action, this.tags)
           .then(() => {
+            this.loading = false;
             this.closeThisModal(); // remember to close. otherwise, scrollbar will disappear
             if (this.action === 'publish') {
               this.$router.push('/articles');

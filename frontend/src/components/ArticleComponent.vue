@@ -85,7 +85,7 @@ export default {
 }
 
 .article-container:hover {
-  background: #FCFFF2;
+  background: #FAFAF7;
 }
 
 .article-container:active {
