@@ -33,14 +33,7 @@
     <div class="content">
       <router-view/>
     </div>
-    <div class="footer">
-      <div class="footer-link">
-        <router-link to="/terms_of_use">Terms of use</router-link>
-      </div>
-      <div class="footer-link">
-        <a href="https://github.com/TomSuworof/briene" target="_blank">Source code</a>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -114,14 +107,6 @@ hr {
 .main-link, .header-button-editor, .header-button-profile, .footer-link {
   display: inline-block;
   margin: 0 10pt 10pt 12pt;
-}
-
-.footer {
-  padding: 4pt 0 0 0;
-  background: #FAFAF7;
-  left: 0;
-  bottom: 0;
-  overflow: hidden;
 }
 
 .input-box {

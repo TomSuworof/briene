@@ -13,8 +13,30 @@
     <title>Briene</title>
     <style>
         html {
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        body {
             position: relative;
+            margin: 0;
             min-height: 100%;
+        }
+
+        .footer {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 4pt 0 0 0;
+            background: #FAFAF7;
+            overflow: hidden;
         }
 
         img {
@@ -72,9 +94,17 @@
     </style>
 </head>
 <body>
-    <noscript>
-        <strong>We're sorry but our app won't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
+<!--    <noscript>-->
+<!--        <strong>We're sorry but our app won't work properly without JavaScript enabled. Please enable it to continue.</strong>-->
+<!--    </noscript>-->
     <div id="app"></div>
+    <footer class="footer">
+        <div class="footer-link">
+            <a href="/terms_of_use" title="Terms of use">Terms of use</a>
+        </div>
+        <div class="footer-link">
+            <a href="https://github.com/TomSuworof/briene" target="_blank" title="Source code">Source code</a>
+        </div>
+    </footer>
 </body>
 </html>
