@@ -122,7 +122,7 @@ export default {
             this.loading = false;
             this.closeThisModal(); // remember to close. otherwise, scrollbar will disappear
             if (this.action === 'publish') {
-              this.$router.push('/articles');
+              this.$router.push('/');
             } else if (this.action === 'save') {
               alert('Article was saved');
             }
