@@ -1,8 +1,5 @@
 <template>
   <div class="home-page-content">
-    <div class="header">
-      <h1><pre>{{ logo }}</pre></h1>
-    </div>
     <div>
       <h2>Articles</h2>
     </div>
@@ -40,8 +37,6 @@ export default {
   },
   data() {
     return {
-      logo: '<briene>',
-
       loadingArticles: false,
       articles: [],
 
@@ -85,7 +80,4 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  margin: 0 0 25pt;
-}
 </style>

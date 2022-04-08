@@ -1,8 +1,10 @@
 <template>
   <div class="whole-page">
     <div class="header-buttons row">
-      <div class="main-link">
-        <router-link to="/">Main</router-link>
+      <div class="header-buttons-left">
+        <div class="main-link">
+          <router-link to="/"><pre>{{ logo }}</pre></router-link>
+        </div>
       </div>
       <div class="search-bar">
         <div>
@@ -42,6 +44,8 @@ export default {
   name: "App",
   data() {
     return {
+      logo: '<briene>',
+
       query: '',
       limit: 10,
       offset: 0
@@ -65,6 +69,10 @@ export default {
 </script>
 
 <style>
+pre {
+  font-family: JetBrains Mono, monospace;
+}
+
 a {
   color: black;
 }
@@ -104,9 +112,15 @@ hr {
   justify-content: space-between;
 }
 
+.main-link {
+  font-weight: bold;
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
 .main-link, .header-button-editor, .header-button-profile, .footer-link {
   display: inline-block;
-  margin: 0 10pt 10pt 12pt;
+  margin: 0 10pt 10pt 20pt;
 }
 
 .input-box {
