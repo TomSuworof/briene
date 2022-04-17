@@ -88,14 +88,12 @@ export default {
       }
 
       let quote = `
-<figure>
-  <blockquote>
-    ${citedText}
-  </blockquote>
-  <p>- <a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>${citedArticleTitle}</i></a></p>
-</figure>`;
+>${citedText}
+>
+><a target="_blank" href="${citedArticleUrl}/#:~:text=${encodeURIComponent(citedText)}"><i>- ${citedArticleTitle}</i></a></p>
+`;
 
-      navigator.clipboard.writeText(quote).then(() => console.log('Quote copied to clipboard'));
+      navigator.clipboard.writeText(quote).then(() => alert('Quote copied to clipboard'));
     },
     editBookmarks: function (action) {
       if (this.currentUser === null) {
