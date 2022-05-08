@@ -23,8 +23,7 @@ everything.
   * Bootstrap
   * [Vue Markdown Editor](https://github.com/code-farmer-i/vue-markdown-editor)
   * Moment
-  * axios
-  * jQuery
+  * axiosU
 
 ## Quick start guide
 
