@@ -11,4 +11,5 @@ public class PageResponseDTO<T extends ObjectDTO> {
     private final boolean hasBefore;
     private final boolean hasAfter;
     private final List<T> entities;
+    private final long totalCount;
 }

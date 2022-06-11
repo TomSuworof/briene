@@ -15,6 +15,7 @@ import org.elasticsearch.search.sort.SortBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -22,9 +23,8 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -56,22 +56,21 @@ public class SearchService {
 
         SearchHits<Article> articleSearchHits = elasticsearchOperations.search(searchQuery, Article.class, IndexCoordinates.of(ARTICLES_INDEX));
 
-        List<Article> articles = new ArrayList<>();
+        List<UUID> uuids = articleSearchHits
+                .stream()
+                .map(SearchHit::getContent)
+                .filter(article -> article.getState().equals(ArticleState.PUBLISHED))
+                .map(Article::getId)
+                .toList();
 
-        articleSearchHits.forEach(searchHit -> {
-            Article article = searchHit.getContent();
-
-            if (article.getState().equals(ArticleState.PUBLISHED)) {
-                articles.add(searchHit.getContent());
-            }
-        });
+        List<Article> articles = articleRepository.findAllById(uuids);
 
         return new SearchResponseDTO(
                 articleSearchHits.getSuggest(),
                 new PageResponseDTO<>(
                         offset > 0 && articleSearchHits.getTotalHits() > 0,
                         (offset + limit) < articleSearchHits.getTotalHits(),
-                        articles.stream().skip(offset).limit(Math.min(articleSearchHits.getTotalHits(), limit)).map(ArticleDTO::new).collect(Collectors.toList()))
-        );
+                        articles.stream().skip(offset).limit(Math.min(articleSearchHits.getTotalHits(), limit)).map(ArticleDTO::new).toList(),
+                        articles.size()));
     }
 }

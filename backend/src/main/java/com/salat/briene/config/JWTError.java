@@ -12,5 +12,5 @@ public enum JWTError {
     TOKEN_IS_UNSUPPORTED("JWT token is unsupported: {}"),
     TOKEN_IS_EMPTY("JWT claims string is empty: {}");
 
-    private String message;
+    private final String message;
 }

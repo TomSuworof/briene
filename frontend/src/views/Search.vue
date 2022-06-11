@@ -16,13 +16,10 @@
               v-bind:article="article"
           ></article-component>
         </div>
-        <div class="navigation-buttons">
-          <div class="navigation-button-prev" title="Previous">
-            <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
-          </div>
-          <div class="navigation-button-next" title="Next">
-            <button @click="getNextPage" :disabled="!hasAfter">▶</button>
-          </div>
+        <div class="load-more-button">
+          <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
+            <span>Load more</span>
+          </button>
         </div>
       </div>
       <div class="articles-empty" v-if="articles.length === 0">
@@ -49,7 +46,6 @@ export default {
       articles: [],
       articlesLoading: false,
 
-      hasBefore: false,
       hasAfter: false,
 
       query: '',
@@ -63,7 +59,6 @@ export default {
       SearchService.search(this.query, this.limit, this.offset)
           .then(response => {
             this.articles = response.data.page.entities;
-            this.hasBefore = response.data.page.hasBefore;
             this.hasAfter = response.data.page.hasAfter;
             this.articlesLoading = false;
           })
@@ -71,14 +66,10 @@ export default {
             console.log(e);
           });
     },
-    getPreviousPage: function () {
-      this.offset -= this.limit;
-      this.search();
-    },
-    getNextPage: function () {
+    loadMoreArticles: function () {
       this.offset += this.limit;
       this.search();
-    },
+    }
   },
   created() {
     let params = this.$route.query;
@@ -93,17 +84,6 @@ export default {
 </script>
 
 <style scoped>
-.navigation-button-prev, .navigation-button-next {
-  display: inline-block;
-  margin: 0 10pt 0;
-}
-
-button {
-  background: white;
-  display: block;
-  border: none;
-  outline: none;
-}
 
 .articles-empty {
   padding: 120pt 0 0 0;

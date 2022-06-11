@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -122,6 +121,7 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.matches(passwordAnother, requiredUserPassword);
     }
 
+    @Deprecated
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -133,8 +133,8 @@ public class UserService implements UserDetailsService {
         return new PageResponseDTO<>(
                 offset > 0 && users.getTotalElements() > 0,
                 (offset + limit) < users.getTotalElements(),
-                users.stream().map(UserDTO::new).collect(Collectors.toList())
-        );
+                users.stream().map(UserDTO::new).toList(),
+                users.getTotalElements());
     }
 
     private Page<User> getAllUsersPaginated(Integer limit, Integer offset) {

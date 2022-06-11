@@ -33,8 +33,8 @@ public class TagService {
         return new PageResponseDTO<>(
                 offset > 0 && articles.getTotalElements() > 0,
                 (offset + limit) < articles.getTotalElements(),
-                articles.getContent().stream().map(ArticleDTO::new).collect(Collectors.toList())
-        );
+                articles.getContent().stream().map(ArticleDTO::new).toList(),
+                articles.getTotalElements());
     }
 
     public List<Tag> getTagsWithExclusion(List<String> excludedTagNames) {

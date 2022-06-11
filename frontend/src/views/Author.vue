@@ -1,12 +1,15 @@
 <template>
   <div class="author-page-content" v-if="author">
-    <div class="header row">
-      <div>
+    <div class="header">
+      <div class="author-username">
         <h1>{{ author.username }}</h1>
       </div>
-    </div>
-    <div class="author-bio">
-      <p>{{ author.bio }}</p>
+      <div class="author-bio">
+        <p>{{ author.bio }}</p>
+      </div>
+      <div class="author-article-count">
+        <p>Author has {{ author.articles.totalCount }} articles</p>
+      </div>
     </div>
     <div v-if="loadingArticles">
       <ShimmerBlock/>
@@ -52,6 +55,8 @@ export default {
 
       limit: 5,
       offset: 0,
+
+      totalCount: 0,
     }
   },
   methods: {
@@ -96,11 +101,14 @@ export default {
 <style scoped>
 .header {
   justify-content: space-between;
-  margin: 0 0 10pt;
+  /*padding: 0 0 0 5pt;*/
 }
 
 .author-bio {
   white-space: pre-line;
-  padding: 0 0 5pt;
+}
+
+.author-article-count {
+  padding: 0 0 15pt;
 }
 </style>

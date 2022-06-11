@@ -1,7 +1,7 @@
 <template>
   <div class="home-page-content">
     <div>
-      <h2>Articles</h2>
+      <h2>Fresh articles</h2>
     </div>
     <hr align="left">
     <div class="articles">
