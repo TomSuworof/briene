@@ -1,26 +1,24 @@
 <template>
   <div class="tag-page-content" v-if="tag">
-    <div class="header row">
-      <div>
-        <h1>#{{ tag }}</h1>
-      </div>
+    <div class="header">
+      <h1 id="tag-name">#{{ tag }}</h1>
+      <p>{{ totalCount }} {{ getFormOfArticles(totalCount) }} this tag</p>
     </div>
+    <hr align="left">
     <div class="articles-container">
       <div v-if="articles.length > 0">
         <div id="articles">
           <article-component
               v-for="article in articles"
-              v-bind:key="article.id"
-              v-bind:article="article"
+              :key="article.id"
+              :article="article"
+              :highlightedTag="tag"
           ></article-component>
         </div>
-        <div class="navigation-buttons">
-          <div class="navigation-button-prev" title="Previous">
-            <button @click="getPreviousPage" :disabled="!hasBefore">◀</button>
-          </div>
-          <div class="navigation-button-next" title="Next">
-            <button @click="getNextPage" :disabled="!hasAfter">▶</button>
-          </div>
+        <div class="load-more-button">
+          <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
+            <span>Load more</span>
+          </button>
         </div>
       </div>
       <div v-else-if="articles.length === 0">
@@ -49,22 +47,26 @@ export default {
 
       limit: 10,
       offset: 0,
+
+      totalCount: 0,
     }
   },
   methods: {
-    getPreviousPage: function () {
-      this.offset -= this.limit;
-      this.getArticlesPaginated(this.tag, this.limit, this.offset);
+    getFormOfArticles: function (count) {
+      if (count === 1) {
+        return 'article has'
+      }
+      return 'articles have'
     },
-    getNextPage: function () {
+    loadMoreArticles: function () {
       this.offset += this.limit;
       this.getArticlesPaginated(this.tag, this.limit, this.offset);
     },
     getArticlesPaginated: function (tag, limit, offset) {
+      this.tag = tag;
       TagService.getArticlesByTag(tag, limit, offset)
           .then(response => {
-            this.tag = tag;
-            this.articles = response.data.entities.sort((article1, article2) => {
+            let articles = response.data.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
                 return -1;
               }
@@ -73,8 +75,10 @@ export default {
               }
               return 0;
             }).reverse(); // newer first
+            this.articles = this.articles.concat(articles);
             this.hasBefore = response.data.hasBefore;
             this.hasAfter = response.data.hasAfter;
+            this.totalCount = response.data.totalCount;
           })
           .catch(e => {
             console.log(e);
@@ -89,20 +93,7 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  justify-content: space-between;
-  margin: 0 0 10pt;
-}
-
-.navigation-button-prev, .navigation-button-next {
-  display: inline-block;
-  margin: 0 10pt 0;
-}
-
-button {
-  background: white;
-  display: block;
-  border: none;
-  outline: none;
+#tag-name {
+  font-weight: bold;
 }
 </style>

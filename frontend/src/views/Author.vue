@@ -10,6 +10,7 @@
       <div class="author-article-count">
         <p>Author has {{ author.articles.totalCount }} articles</p>
       </div>
+      <hr align="left">
     </div>
     <div v-if="loadingArticles">
       <ShimmerBlock/>
@@ -101,14 +102,10 @@ export default {
 <style scoped>
 .header {
   justify-content: space-between;
-  /*padding: 0 0 0 5pt;*/
+  padding-bottom: 15pt;
 }
 
 .author-bio {
   white-space: pre-line;
-}
-
-.author-article-count {
-  padding: 0 0 15pt;
 }
 </style>

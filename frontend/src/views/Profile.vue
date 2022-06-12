@@ -2,7 +2,7 @@
   <div class="profile-page-content" v-show="currentUser !== null">
     <div class="header row">
       <div>
-        <h1>Profile</h1>
+        <h1 id="username">{{ currentUser.username }}</h1>
       </div>
       <div class="header-buttons">
         <div v-show="isAdmin" class="header-admin-button">
@@ -22,9 +22,6 @@
       </div>
       <div class="user-data">
         <p>
-          <strong>Username: </strong>{{ currentUser.username }}
-        </p>
-        <p>
           <strong>Email: </strong>{{ currentUser.email }}
         </p>
         <p>
@@ -40,11 +37,6 @@
         <h2>Basic information</h2>
         <div class="user-data">
           <Form @submit="submitChangesBaseInfo" method="post">
-            <div class="form-group">
-              <label><strong>Username:</strong></label>
-              <Field id="username" name="username" type="text" class="form-control" :disabled="true" v-model="currentUser.username"/>
-              <ErrorMessage name="username" class="error-feedback"/>
-            </div>
             <div class="form-group">
               <label><strong>Email:</strong></label>
               <Field id="email" name="email" type="email" class="form-control" v-model="email"/>
@@ -414,7 +406,11 @@ export default {
 
 .header {
   justify-content: space-between;
-  margin: 0 0 50pt;
+  margin: 0 0 10pt;
+}
+
+#username {
+  font-weight: bold;
 }
 
 .header-admin-button, .header-logout-button {

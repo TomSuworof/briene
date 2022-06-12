@@ -46,7 +46,7 @@
             </div>
             <div class="agreement-checkbox-text">
               <p>I agree with
-                <router-link to="/terms_of_use">terms of use</router-link>
+                <a href="/terms_of_use">terms of use</a>
               </p>
             </div>
             <div>
@@ -163,6 +163,10 @@ export default {
 .agreement-checkbox, .agreement-checkbox-text {
   padding: 3pt;
   display: inline-block;
+}
+
+.agreement-checkbox-text > p > a {
+  text-decoration: underline;
 }
 
 .center {

@@ -2,34 +2,10 @@
   <div class="article-summary-modal">
     <div>
       <h3>Summary</h3>
-      <p>Enter summary for article (max {{ maxLength }} characters):</p>
+      <p>Max {{ maxLength }} characters. This summary will be seen under title in article card</p>
     </div>
     <div class="article-summary-wrapper">
-      <textarea v-model="summary"></textarea>
-    </div>
-    <div class="tags-container">
-      <h3>Tags</h3>
-      <ul class="tags-list">
-        <li class="tag-item" v-for="tag in tags">
-          <div class="tag-item-name">{{ tag }}</div>
-          <div class="tag-item-close-button">
-            <button @click="removeTag(tag)" class="fa fa-close"></button>
-          </div>
-        </li>
-        <li class="tag-item" v-if="showTagInput">
-          <form @submit.prevent="addTag" autocomplete="off">
-            <input name="tagValue" class="add-tag-input" list="tagsList"/>
-            <datalist id="tagsList">
-              <option v-for="suggestedTag in suggestedTags">{{ suggestedTag }}</option>
-            </datalist>
-          </form>
-        </li>
-        <li class="tag-item" v-if="!showTagInput">
-          <button @click="openAddTagInput()" class="add-tag-button">
-            <img loading="eager" src="https://img.icons8.com/material/24/000000/plus-math--v2.png" alt="Add tag"/>
-          </button>
-        </li>
-      </ul>
+      <textarea v-model="summaryGot" :maxlength="maxLength"></textarea>
     </div>
     <div class="action-buttons">
       <div class="button-row">
@@ -56,7 +32,6 @@
 <script>
 import {closeModal} from "jenesius-vue-modal";
 import ArticlesService from "@/api/ArticlesService";
-import TagService from "@/api/TagService";
 
 export default {
   setup: () => ({
@@ -76,9 +51,11 @@ export default {
   },
   data() {
     return {
-      maxLength: 255,
+      maxLength: 500,
       showTagInput: false,
       loading: false,
+
+      summaryGot: '',
 
       suggestedTags: []
     };
@@ -104,9 +81,8 @@ export default {
         this.closeThisModal();
       } else if (buttonAction === 'Done') {
         if (this.formIsValid()) {
-          let maxLength = 255
-          if (this.summary !== null && this.summary.length > maxLength) {
-            alert(`Summary should be less than ${maxLength} characters`);
+          if (this.summary !== null && this.summary.length > this.maxLength) {
+            alert(`Summary should be less than ${this.maxLength} characters`);
           } else {
             this.uploadArticle();
           }
@@ -117,7 +93,7 @@ export default {
     },
     uploadArticle: function () {
       this.loading = true;
-      ArticlesService.uploadArticle(this.title, this.content, this.summary, this.action, this.tags)
+      ArticlesService.uploadArticle(this.title, this.content, this.summaryGot, this.action, this.tags)
           .then(() => {
             this.loading = false;
             this.closeThisModal(); // remember to close. otherwise, scrollbar will disappear
@@ -134,24 +110,13 @@ export default {
     },
     closeThisModal: function () {
       this.cancel();
-    },
-    openAddTagInput: function () {
-      this.showTagInput = true;
-    },
-    addTag: function (submitEvent) {
-      let newTagName = submitEvent.target.elements.tagValue.value;
-      this.suggestedTags.splice(this.suggestedTags.indexOf(newTagName), 1);
-      this.tags.push(newTagName);
-      this.showTagInput = false;
-    },
-    removeTag: function (tagName) {
-      this.tags.splice(this.tags.indexOf(tagName), 1);
-    },
+    }
   },
-  mounted() {
-    TagService.getTagsWithExclusion(this.tags)
-        .then(response => this.suggestedTags = response.data)
-        .catch(err => console.log(err));
+  created() {
+    this.summaryGot = this.summary;
+    if (this.summaryGot === undefined || this.summaryGot === '') {
+      this.summaryGot = this.content.substring(0, this.maxLength);
+    }
   }
 }
 </script>
@@ -172,7 +137,7 @@ textarea {
   padding: 5pt;
   border-radius: 9px;
   width: 100%;
-  height: 100pt;
+  height: 300pt;
   resize: none;
 }
 
@@ -193,44 +158,7 @@ textarea {
   margin: 0 5pt 0 0;
 }
 
-.tags-container {
-  padding: 10pt 0 0 0;
-}
-
-.tags-list {
-  padding-left: 0;
-}
-
-.tag-item {
-  display: inline-block;
-  margin: 0 5pt 5pt 0;
-  padding: 5pt;
-  border-radius: 22px;
-  border: 1px solid;
-  position: relative;
-}
-
-.add-tag-button {
-  background: none;
-  border: none;
-}
-
 input {
   border: none;
-}
-
-.tag-item-name, .tag-item-close-button {
-  display: inline-block;
-  margin: 0 3pt 0 5pt;
-}
-
-.fa-close {
-  text-align: center;
-  height: 1.7em;
-  width: 1.7em;
-  border-radius: 2em !important;
-  background: none;
-  border: 1px solid #AAA;
-  color: #AAA;
 }
 </style>

@@ -17,15 +17,15 @@
             <ErrorMessage name="password" class="error-feedback alert alert-danger"/>
           </div>
           <div class="form-group center">
-            <div class="sign-up-button">
-              <button class="button button-outline" @click="$router.push('/register')">
-                <span>Sign Up</span>
-              </button>
-            </div>
             <div class="log-in-button">
               <button class="button button-primary" :disabled="loading">
                 <span v-show="loading" class="spinner-border spinner-border-sm"></span>
                 <span>Log In</span>
+              </button>
+            </div>
+            <div class="sign-up-button">
+              <button class="button button-outline" @click="$router.push('/register')">
+                <span>Sign Up</span>
               </button>
             </div>
           </div>

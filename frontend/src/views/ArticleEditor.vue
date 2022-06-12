@@ -23,6 +23,30 @@
             </div>
           </div>
         </div>
+        <div class="tag-wrapper">
+          <ul class="tags-list">
+            <li class="tag-item">
+              <b>Tags:</b>
+            </li>
+            <li class="tag-item" v-for="tag in tags">
+              <div class="tag-item-name">{{ tag }}</div>
+              <div class="tag-item-close-button">
+                <button @click="removeTag(tag)" class="fa fa-close" title="Remove tag"></button>
+              </div>
+            </li>
+            <li class="tag-item" v-if="showTagInput">
+              <form @submit.prevent="addTag" autocomplete="off">
+                <input name="tagValue" class="add-tag-input" list="tagsList"/>
+                <datalist id="tagsList">
+                  <option v-for="suggestedTag in suggestedTags">{{ suggestedTag }}</option>
+                </datalist>
+              </form>
+            </li>
+            <li class="tag-item" v-if="!showTagInput">
+              <button @click="openAddTagInput()" class="fa fa-plus" title="Add tag"></button>
+            </li>
+          </ul>
+        </div>
         <div class="editor">
           <v-md-editor
               v-model="content"
@@ -42,6 +66,8 @@ import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
 import { openModal, container } from "jenesius-vue-modal";
 import ArticleSummaryModal from "@/components/ArticleSummaryModal"
+import TagService from "@/api/TagService";
+import articleSummaryModal from "../components/ArticleSummaryModal";
 
 export default {
   name: "ArticleEditor",
@@ -55,14 +81,14 @@ export default {
       content: '',
       summary: '',
       tags: [],
+
+      showTagInput: false,
+      suggestedTags: []
     }
   },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
-    },
-    currentAvailableHeight() {
-      return window.screen.height * 0.6;
     }
   },
   methods: {
@@ -109,6 +135,18 @@ export default {
       let template = `<br><img loading="lazy" id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
       this.content += template;
     },
+    openAddTagInput: function () {
+      this.showTagInput = true;
+    },
+    addTag: function (submitEvent) {
+      let newTagName = submitEvent.target.elements.tagValue.value;
+      this.suggestedTags.splice(this.suggestedTags.indexOf(newTagName), 1);
+      this.tags.push(newTagName);
+      this.showTagInput = false;
+    },
+    removeTag: function (tagName) {
+      this.tags.splice(this.tags.indexOf(tagName), 1);
+    },
   },
   created() {
     if (this.currentUser === undefined) {
@@ -136,6 +174,10 @@ export default {
     } else {
       this.loadArticleFromLocalStorage();
     }
+
+    TagService.getTagsWithExclusion(this.tags)
+        .then(response => this.suggestedTags = response.data)
+        .catch(err => console.log(err));
   },
   beforeUnmount() {
     this.saveArticleToLocalStorage();
@@ -170,6 +212,44 @@ export default {
   outline: 0;
   border-width: 0 0 1px;
   border-color: #CCC;
+}
+
+.tags-list {
+  padding-top: 10pt;
+  padding-left: 0;
+}
+
+.tag-item {
+  font-size: 12px;
+  text-decoration: underline;
+  display: inline-block;
+  position: relative;
+  margin: 0 10pt 0 0;
+  color: #666;
+}
+
+.tag-item-name, .tag-item-close-button {
+  display: inline-block;
+}
+
+.tag-item-name {
+  padding-right: 3pt;
+}
+
+.fa-plus {
+  color: #666 !important;
+  border: 1px solid #666 !important;
+}
+
+.fa-close, .fa-plus {
+  padding: 2pt;
+  text-align: center;
+  height: 1.7em;
+  width: 1.7em;
+  border-radius: 20px !important;
+  background: none;
+  border: 1px solid #AAA;
+  color: #AAA;
 }
 
 .v-md-editor {

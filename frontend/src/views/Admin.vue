@@ -281,5 +281,4 @@ export default {
 .articles-types {
   padding: 5pt 0 20pt 0;
 }
-
 </style>

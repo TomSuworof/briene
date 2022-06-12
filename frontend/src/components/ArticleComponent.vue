@@ -1,28 +1,24 @@
 <template>
   <div class="article-container" @click.self="$router.push('/articles/' + article.id)">
     <div v-if="actions !== undefined">
-      <b-dropdown no-caret variant="link" id="dropdown-right" toggle-class="text-decoration-none" class="article-action-container">
-        <b-dropdown-item class="article-action-item"
+      <div class="article-util-container">
+        <div class="article-state" v-show="state !== undefined">
+          <p>#{{ state }}</p>
+        </div>
+        <div class="article-action-item"
             href="#"
             v-for="action in actions"
             v-bind:key="action.id"
             @click="action.function(article.id)">
           <span class="button-icon" v-html="action.icon"/>
-          <span class="button-message">{{ action.message }}</span>
-        </b-dropdown-item>
-      </b-dropdown>
+        </div>
+      </div>
     </div>
-    <div class="article-about row">
+    <div class="article-about">
       <div>
         <div class="article-author">
           <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
         </div>
-        <div class="article-state" v-show="state !== undefined">
-          <p>#{{ state }}</p>
-        </div>
-      </div>
-      <div class="article-publication-date">
-        <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
       </div>
     </div>
     <div class="article-title-container">
@@ -33,9 +29,12 @@
     <div class="article-summary">
       <p>{{ article.summary }}</p>
     </div>
+    <div class="article-publication-date">
+      <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
+    </div>
     <div class="article-tags tags-container">
       <ul class="tags-list">
-        <li class="tag-item" v-for="tag in article.tags">
+        <li :class="getClassForTag(tag)" v-for="tag in article.tags">
           <a :href="'/tags/' + tag">{{ tag }}</a>
         </li>
       </ul>
@@ -48,7 +47,7 @@ import moment from "moment";
 
 export default {
   name: "ArticleComponent",
-  props: ["article", "actions", "state"],
+  props: ["article", "actions", "state", "highlightedTag"],
   data() {
     return {
       actionsShowed: false,
@@ -57,6 +56,13 @@ export default {
   methods: {
     getFinePublicationDate: function (publicationDate) {
       return moment(Date.parse(publicationDate)).format("DD.MM.YYYY HH:mm");
+    },
+    getClassForTag: function (tag) {
+      let tagClass = 'tag-item';
+      if (tag === this.highlightedTag) {
+        tagClass += ' tag-highlight';
+      }
+      return tagClass;
     }
   }
 }
@@ -72,20 +78,18 @@ export default {
   overflow-wrap: break-word;
 }
 
-.article-container {
+.article-summary > p {
   max-width: 700pt;
-  position: relative;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-  border-radius: 9px;
-  margin: 0 0 20pt;
-  padding: 15pt;
-  transition: background 0.1s ease-in-out;
-  border: solid 1px transparent;
+  margin-bottom: 0.6rem;
 }
 
-.article-container:hover {
-  background: #FAFAF7;
+.article-container {
+  min-width: 300pt;
+  max-width: 700pt;
+  position: relative;
+  border-radius: 9px;
+  margin-bottom: 30pt;
+  border: solid 1px transparent;
 }
 
 .article-container:active {
@@ -93,27 +97,27 @@ export default {
 }
 
 .article-about {
-  padding: 0 10pt 0;
   justify-content: space-between;
 }
 
-.article-author, .article-state, .article-publication-date {
-  padding: 2pt;
-  display: inline-block;
-}
-
-.article-publication-date {
-  color: #999;
-}
-
-.article-action-container {
+.article-util-container {
   position: absolute;
   right: 5pt;
   top: 5pt;
 }
 
-.tags-container {
-  padding: 5pt 0 0 0;
+.article-state, .article-action-item {
+  display: inline-block;
+  padding-left: 5pt;
+}
+
+.article-publication-date {
+  font-size: 12px;
+  padding-right: 7pt;
+}
+
+.article-publication-date, .tags-container {
+  display: inline-block;
 }
 
 .tags-list {
@@ -128,4 +132,11 @@ export default {
   margin: 0 10pt 0 0;
 }
 
+.tag-highlight {
+  background-color: #F7F71B;
+}
+
+.tag-item > a, .article-publication-date {
+  color: #666;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="shimmer-container" :style="blockStyle">
-    <b>{{ message }}</b>
+    <b><pre>{{ message }}</pre></b>
   </div>
 </template>
 
@@ -48,6 +48,5 @@ export default {
   text-align: center;
   border-radius: 9px;
   background: #FAFAF7;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
 }
 </style>

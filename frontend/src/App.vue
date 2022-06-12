@@ -19,6 +19,12 @@
         </div>
       </div>
       <div class="header-buttons-right">
+        <div class="header-button-editor-img">
+          <router-link to="/article_editor" class="fa fa-pencil"></router-link>
+        </div>
+        <div class="header-button-profile-img">
+          <router-link to="/profile" class="fa fa-user"></router-link>
+        </div>
         <div class="header-button-editor">
           <router-link to="/article_editor">New article</router-link>
         </div>
@@ -86,14 +92,38 @@ hr {
 }
 
 @media screen and (max-width: 720px) {
-  /* comes into effect for screens less than 720 pixels (inclusive) */
+  .header-button-editor-img, .header-button-profile-img {
+    padding-top: 7pt;
+    display: inline-block;
+    padding-left: 30pt;
+  }
+
+  .header-buttons, .header-buttons-left, .search-bar {
+    padding: 3pt !important;
+  }
+
+  .main-link {
+    margin: 0 0 10pt 10pt !important;
+  }
+
+  .search-bar {
+    width: 140pt;
+  }
+
+  .header-button-editor, .header-button-profile {
+    display: none !important;
+  }
+
   .content {
     padding: 3% 5% 80pt 5%;
   }
 }
 
 @media screen and (min-width: 721px) {
-  /* comes into effect for screens larger than or equal to 721 pixels */
+  .header-button-editor-img, .header-button-profile-img {
+    display: none;
+  }
+
   .content {
     padding: 3% 10% 80pt 10%;
   }
@@ -233,5 +263,4 @@ button {
   border: none;
   outline: none;
 }
-
 </style>

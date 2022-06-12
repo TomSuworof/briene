@@ -45,7 +45,7 @@ public class Article {
     @Field(type = FieldType.Text)
     private String content;
 
-    @Size(max = 255)
+    @Size(max = 500)
     @Field(type = FieldType.Text)
     private String summary;
 

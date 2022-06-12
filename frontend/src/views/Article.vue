@@ -1,31 +1,31 @@
 <template>
   <div class="article-page-content">
-    <div class="article-about row">
+    <div class="article-about">
       <div class="article-author">
         <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
-      </div>
-      <div class="article-publication-date">
-        <time :datetime="htmlPublicationDate">{{ finePublicationDate }}</time>
       </div>
     </div>
     <div class="title">
       <div class="article-title">
         <h1 id="article-title">{{ article.title }}</h1>
       </div>
-      <div class="bookmarking">
+      <div class="bookmarking" v-if="article.title !== undefined">
         <div v-if="!inBookmarks" title="Add to bookmarks">
           <button @click="editBookmarks('add')">
             <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png"
-                 alt="Add to bookmarks icon"/>
+                 alt="Add to bookmarks"/>
           </button>
         </div>
         <div v-if="inBookmarks" title="Remove from bookmarks">
           <button @click="editBookmarks('remove')">
             <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png"
-                 alt="Remove from bookmarks icon"/>
+                 alt="Remove from bookmarks"/>
           </button>
         </div>
       </div>
+    </div>
+    <div class="article-publication-date" v-if="article.publicationDate !== undefined">
+      <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
     </div>
     <div class="article-tags tags-container">
       <ul class="tags-list">
@@ -71,14 +71,14 @@ export default {
     currentUser() {
       return this.$store.state.auth.user;
     },
-    finePublicationDate: function () {
-      return moment(Date.parse(this.article.publicationDate)).format("DD.MM.YYYY HH:mm");
-    },
     htmlPublicationDate: function () {
       return this.article.publicationDate;
     }
   },
   methods: {
+    getFinePublicationDate: function (publicationDate) {
+      return moment(Date.parse(publicationDate)).format("DD.MM.YYYY HH:mm");
+    },
     makeQuote: function (citedText) {
       let citedArticleUrl = window.location.href;
       let citedArticleTitle = document.getElementById("article-title").innerText;
@@ -180,40 +180,18 @@ hr {
 }
 
 @media screen and (max-width: 720px) {
-  /* comes into effect for screens less than 720 pixels (inclusive) */
-  .article-about {
-    padding: 0 0 0 12pt;
-  }
-
   .article-page-content {
   }
 }
 
 @media screen and (min-width: 721px) {
-  /* comes into effect for screens larger than or equal to 481 pixels */
   .bookmarking {
     padding: 12pt 7pt 0 0;
   }
 
-  .article-about {
-    padding: 0 0 0 12pt;
-  }
-
   .article-page-content {
-    background: white;
-    box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-    border-radius: 9px;
-    margin: 0 0 10pt;
-    padding: 30pt 60pt 10pt 60pt;
+    padding: 0 60pt 10pt 60pt;
   }
-}
-
-:deep(#article-content) img, iframe {
-  box-shadow: rgba(0, 0, 0, 0.5) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;
-}
-
-.article-author {
-  margin: 0 0 10pt;
 }
 
 button {
@@ -258,8 +236,13 @@ button {
   cursor: pointer;
 }
 
-.tags-container {
-  padding: 5pt 0 0 0;
+.article-publication-date {
+  font-size: 12px;
+  padding-right: 7pt;
+}
+
+.article-publication-date, .tags-container {
+  display: inline-block;
 }
 
 .tags-list {
@@ -274,4 +257,7 @@ button {
   margin: 0 10pt 0 0;
 }
 
+.tag-item > a, .article-publication-date {
+  color: #666;
+}
 </style>
