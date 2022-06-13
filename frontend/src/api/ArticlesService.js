@@ -19,6 +19,14 @@ class ArticlesService {
         return http.get(`/articles/${id}?raw=true`, { headers: authHeader() });
     }
 
+    getNextArticle(id) {
+        return http.get('/articles/next', { params: { id } });
+    }
+
+    getPrevArticle(id) {
+        return http.get('/articles/prev', { params: { id } });
+    }
+
     uploadArticle(title, content, summary, action, tags) {
         return http.post('/articles/upload',
             {

@@ -92,6 +92,18 @@ public class ArticlesController {
         return new ArticleWithContent(article);
     }
 
+    @GetMapping("/next")
+    public ResponseEntity<ArticleDTO> getNextArticle(@RequestParam UUID id) {
+        ArticleDTO article = articleService.getNextArticle(id);
+        return ResponseEntity.ok().body(article);
+    }
+
+    @GetMapping("/prev")
+    public ResponseEntity<ArticleDTO> getPreviousArticle(@RequestParam UUID id) {
+        ArticleDTO article = articleService.getPreviousArticle(id);
+        return ResponseEntity.ok().body(article);
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<String> publishArticle(@RequestBody ArticleUploadRequest article, @RequestParam String action, Authentication authentication) {
         User userFromToken = userService.getUserFromAuthentication(authentication);

@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
 
     Page<Article> findArticlesByAuthor(User author, Pageable pageable);
+
+    List<Article> findArticlesByStateAndAuthor_Username(ArticleState state, String username);
 
     Page<Article> findArticlesByAuthorAndState(User author, ArticleState state, Pageable pageable);
 

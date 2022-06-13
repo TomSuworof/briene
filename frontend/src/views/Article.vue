@@ -1,48 +1,69 @@
 <template>
   <div class="article-page-content">
-    <div class="article-about">
-      <div class="article-author">
-        <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
-      </div>
-    </div>
-    <div class="title">
-      <div class="article-title">
-        <h1 id="article-title">{{ article.title }}</h1>
-      </div>
-      <div class="bookmarking" v-if="article.title !== undefined">
-        <div v-if="!inBookmarks" title="Add to bookmarks">
-          <button @click="editBookmarks('add')">
-            <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png"
-                 alt="Add to bookmarks"/>
-          </button>
-        </div>
-        <div v-if="inBookmarks" title="Remove from bookmarks">
-          <button @click="editBookmarks('remove')">
-            <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png"
-                 alt="Remove from bookmarks"/>
-          </button>
+    <div class="article-content-wrapper">
+      <div class="article-about">
+        <div class="article-author">
+          <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
         </div>
       </div>
+      <div class="title">
+        <div class="article-title">
+          <h1 id="article-title">{{ article.title }}</h1>
+        </div>
+        <div class="bookmarking" v-if="article.title !== undefined">
+          <div v-if="!inBookmarks" title="Add to bookmarks">
+            <button @click="editBookmarks('add')">
+              <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png"
+                   alt="Add to bookmarks"/>
+            </button>
+          </div>
+          <div v-if="inBookmarks" title="Remove from bookmarks">
+            <button @click="editBookmarks('remove')">
+              <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png"
+                   alt="Remove from bookmarks"/>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="article-publication-date" v-if="article.publicationDate !== undefined">
+        <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
+      </div>
+      <div class="article-tags tags-container">
+        <ul class="tags-list">
+          <li class="tag-item" v-for="tag in article.tags">
+            <a :href="'/tags/' + tag">{{ tag }}</a>
+          </li>
+        </ul>
+      </div>
+      <hr>
+      <div v-if="loadingArticle">
+        <ShimmerBlock/>
+      </div>
+      <div v-show="!loadingArticle" id="article-content">
+        <v-md-editor :model-value="article.content" mode="preview"></v-md-editor>
+      </div>
+      <div class="control" id="control">
+        <p id="quote">💬 Quote</p>
+      </div>
     </div>
-    <div class="article-publication-date" v-if="article.publicationDate !== undefined">
-      <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
-    </div>
-    <div class="article-tags tags-container">
-      <ul class="tags-list">
-        <li class="tag-item" v-for="tag in article.tags">
-          <a :href="'/tags/' + tag">{{ tag }}</a>
-        </li>
-      </ul>
-    </div>
-    <hr>
-    <div v-if="loadingArticle">
-      <ShimmerBlock/>
-    </div>
-    <div v-show="!loadingArticle" id="article-content">
-      <v-md-editor :model-value="article.content" mode="preview"></v-md-editor>
-    </div>
-    <div class="control" id="control">
-      <p id="quote">💬 Quote</p>
+    <div class="suggestions-wrapper">
+      <p><b>Read next</b></p>
+      <div class="suggestions">
+        <div class="next-article" v-if="nextArticle">
+<!--          <p class="suggestion-name">Ctrl ←</p>-->
+          <article-component
+              v-bind:key="nextArticle.id"
+              v-bind:article="nextArticle"
+          ></article-component>
+        </div>
+        <div class="prev-article" v-if="prevArticle">
+<!--          <p class="suggestion-name">Ctrl →</p>-->
+          <article-component
+              v-bind:key="prevArticle.id"
+              v-bind:article="prevArticle"
+          ></article-component>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -53,18 +74,23 @@ import ArticlesService from "@/api/ArticlesService";
 import BookmarksService from "@/api/BookmarksService";
 import VMdEditor from '@kangc/v-md-editor';
 import ShimmerBlock from "@/components/ShimmerBlock";
+import ArticleComponent from "@/components/ArticleComponent";
 
 export default {
   name: "Article",
   components: {
     ShimmerBlock,
-    VMdEditor
+    VMdEditor,
+    ArticleComponent
   },
   data() {
     return {
       inBookmarks: false,
       loadingArticle: false,
-      article: ''
+      article: '',
+
+      nextArticle: undefined,
+      prevArticle: undefined,
     }
   },
   computed: {
@@ -130,12 +156,35 @@ export default {
             console.log(err);
             this.$router.replace('/error'); // redirecting to '/error'
           });
+    },
+    getNextArticle: function (articleId) {
+      ArticlesService.getNextArticle(articleId)
+          .then(response => {
+            this.nextArticle = response.data;
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    },
+    getPrevArticle: function (articleId) {
+      ArticlesService.getPrevArticle(articleId)
+          .then(response => {
+            this.prevArticle = response.data;
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    },
+    addShortcutsForSuggestions: function () {
+
     }
   },
   created() {
     let articleId = this.$route.params.articleId;
     this.loadIsInBookmarks(articleId);
     this.loadArticleContent(articleId);
+    this.getNextArticle(articleId);
+    this.getPrevArticle(articleId);
   },
   mounted() {
     let articleContent = document.getElementById('article-content');
@@ -166,6 +215,8 @@ export default {
       makeQuoteFunction(selectedString);
       control.style.display = 'none';
     });
+
+    this.addShortcutsForSuggestions();
   },
   beforeUnmount() {
     document.title = 'Briene';
@@ -259,5 +310,22 @@ button {
 
 .tag-item > a, .article-publication-date {
   color: #666;
+}
+
+.article-content-wrapper {
+  padding-bottom: 60pt;
+}
+
+.suggestions {
+  display: flex;
+}
+
+.next-article, .prev-article {
+  float: left;
+  margin-right: 40pt;
+}
+
+.suggestion-name {
+  font-size: 12px;
 }
 </style>

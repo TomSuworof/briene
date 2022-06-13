@@ -74,7 +74,7 @@ export default {
       alert('Fields can not be empty');
     },
     showWarningArticleExists: function () {
-      alert('Such article already exists. Try to make different or remove old one');
+      alert('Such article already exists. Try to make different title or remove old one');
     },
     handleButton: function (buttonAction) {
       if (buttonAction === 'Cancel') {

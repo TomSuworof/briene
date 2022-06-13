@@ -1,7 +1,6 @@
 package com.salat.briene.entities;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -21,13 +20,11 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "t_articles")
-@NoArgsConstructor
 @Document(indexName = "articles")
 public class Article {
 
     @Id
     @NotNull
-    @GeneratedValue
     private UUID id;
 
     @NotBlank(message = ConstraintViolationMessage.ARTICLE_TITLE_EMPTY)
@@ -63,6 +60,10 @@ public class Article {
             inverseJoinColumns = { @JoinColumn(name = "tags_id") })
     @org.springframework.data.annotation.Transient
     private Set<Tag> tags;
+
+    public Article() {
+        this.id = UUID.randomUUID();
+    }
 
     @Override
     public boolean equals(Object o) {

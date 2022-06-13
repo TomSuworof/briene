@@ -6,6 +6,7 @@ import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
@@ -18,9 +19,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,23 +33,50 @@ public class ArticleService {
     public void saveArticle(Article newArticle) {
         newArticle.setPublicationDate(OffsetDateTime.now());
 
+        switch (newArticle.getState()) {
+            case PUBLISHED -> publish(newArticle);
+            case IN_EDITING -> saveDraft(newArticle);
+            default -> throw new IllegalArticleStateException();
+        }
+    }
+
+    private void saveDraft(Article newArticle) {
         Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
 
         if (oldArticleOpt.isPresent()) {
             Article oldArticle = oldArticleOpt.get();
-            if (newArticle.getState().equals(ArticleState.IN_EDITING)) {
+            newArticle.setId(oldArticle.getId());
+
+            articleRepository.delete(oldArticle);
+            articleSearchRepository.delete(oldArticle);
+        }
+
+        articleRepository.save(newArticle);
+        articleSearchRepository.save(newArticle);
+    }
+
+    private void publish(Article newArticle) {
+        Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
+
+        if (oldArticleOpt.isPresent()) {
+            Article oldArticle = oldArticleOpt.get();
+            newArticle.setPublicationDate(oldArticle.getPublicationDate());
+
+            String oldArticleAuthorUsername = oldArticle.getAuthor().getUsername();
+            String newArticleAuthorUsername = newArticle.getAuthor().getUsername();
+
+            if (oldArticleAuthorUsername.equals(newArticleAuthorUsername)) {
+                newArticle.setId(oldArticle.getId());
+
                 articleRepository.delete(oldArticle);
                 articleSearchRepository.delete(oldArticle);
-
-                articleRepository.save(newArticle);
-                articleSearchRepository.save(newArticle);
             } else {
                 throw new DuplicatedArticleException();
             }
-        } else {
-            articleRepository.save(newArticle);
-            articleSearchRepository.save(newArticle);
         }
+
+        articleRepository.save(newArticle);
+        articleSearchRepository.save(newArticle);
     }
 
     public void deleteArticleById(UUID articleId) {
@@ -64,6 +93,29 @@ public class ArticleService {
         if (articleOptional.isPresent()) {
             return articleOptional.get();
         } else {
+            throw new ArticleNotFoundException();
+        }
+    }
+
+
+    public ArticleDTO getNextArticle(UUID id) {
+        return getArticleWithOffset(id, 1);
+    }
+
+    public ArticleDTO getPreviousArticle(UUID id) {
+        return getArticleWithOffset(id, -1);
+    }
+
+    private ArticleDTO getArticleWithOffset(UUID id, int offset) {
+        Article article = getArticleById(id);
+        List<Article> articles = articleRepository.findArticlesByStateAndAuthor_Username(ArticleState.PUBLISHED, article.getAuthor().getUsername());
+        articles.sort(Comparator.comparing(Article::getPublicationDate));
+
+        int articleIndex = articles.indexOf(article);
+
+        try {
+            return new ArticleDTO(articles.get(articleIndex + offset));
+        } catch (IndexOutOfBoundsException e) {
             throw new ArticleNotFoundException();
         }
     }

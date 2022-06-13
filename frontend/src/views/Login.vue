@@ -54,6 +54,10 @@ export default {
     Field,
     ErrorMessage
   },
+  props: {
+    username: {required:false},
+    email: {required:false},
+  },
   data() {
     const schema = yup.object().shape({
       username: yup.string().required("Username if required!"),

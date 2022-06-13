@@ -45,12 +45,12 @@
               <Field type="checkbox" id="agreement" name="agreement" value="true"/>
             </div>
             <div class="agreement-checkbox-text">
-              <p>I agree with
-                <a href="/terms_of_use">terms of use</a>
-              </p>
+              <label for="agreement">
+                I agree with <a href="/terms_of_use">terms of use</a>
+              </label>
             </div>
-            <div>
-              <ErrorMessage name="agreement" class="error-feedback"/>
+            <div class="form-group">
+              <div v-if="message" class="alert alert-danger" role="alert" v-html="message"></div>
             </div>
           </div>
           <div class="form-group center">
@@ -105,7 +105,7 @@ export default {
     return {
       successful: false,
       loading: false,
-      message: "",
+      message: '',
       schema,
     };
   },
@@ -128,15 +128,27 @@ export default {
               this.loading = false;
               this.$router.push("/profile");
             }, (error) => {
-              this.message =
-                  (error.response &&
-                      error.response.data &&
-                      error.response.data.message) || error.message || error.toString();
               this.successful = false;
               this.loading = false;
+
+              let start = error.response.data.error.indexOf(']') + 2;
+              let message = this.capitalize(error.response.data.error.slice(start));
+
+              this.showSuggestionToLogin(message);
             });
       }
     },
+    capitalize: function (str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    showSuggestionToLogin: function (message) {
+      if (message.includes('email')) {
+        message += '. <a href="/login">Login</a>'
+      } else if (message.includes('username')) {
+        message += '. <a href="/login">Login</a>'
+      }
+      this.message = message;
+    }
   },
   created() {
     this.$nextTick(pswChecker.passwordChecking);
@@ -165,7 +177,7 @@ export default {
   display: inline-block;
 }
 
-.agreement-checkbox-text > p > a {
+.agreement-checkbox-text > label > a {
   text-decoration: underline;
 }
 
