@@ -46,7 +46,7 @@
         <p id="quote">💬 Quote</p>
       </div>
     </div>
-    <div class="suggestions-wrapper">
+    <div class="suggestions-wrapper" v-if="nextArticle || prevArticle">
       <p><b>Read next</b></p>
       <div class="suggestions">
         <div class="next-article" v-if="nextArticle">
