@@ -2,7 +2,7 @@
   <div class="author-page-content" v-if="author">
     <div class="header">
       <div class="author-username">
-        <h1>{{ author.username }}</h1>
+        <h1><b>{{ author.username }}</b></h1>
       </div>
       <div class="author-bio">
         <p>{{ author.bio }}</p>

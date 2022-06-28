@@ -1,9 +1,9 @@
-import { createApp } from "vue";
+import { createApp } from 'vue';
 import BootstrapVue3 from 'bootstrap-vue-3';
-import App from "@/App.vue";
-import router from "@/router";
-import store from "@/store";
-import setupInterceptors from "@/api/setupInterceptors";
+import App from '@/App.vue';
+import router from '@/router';
+import store from '@/store';
+import setupInterceptors from '@/api/setupInterceptors';
 
 setupInterceptors(store, router);
 
@@ -15,7 +15,7 @@ import '@kangc/v-md-editor/lib/theme/style/github.css';
 import createKatexPlugin from '@kangc/v-md-editor/lib/plugins/katex/cdn';
 import createMermaidPlugin from '@kangc/v-md-editor/lib/plugins/mermaid/cdn';
 import '@kangc/v-md-editor/lib/plugins/mermaid/mermaid.css';
-import enUS from '@kangc/v-md-editor/lib/lang/en-US';
+import enUS from '@kangc/v-md-editor/es/lang/en-US';
 
 VMdEditor
     .use(githubTheme, { Hljs: hljs })

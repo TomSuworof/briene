@@ -150,7 +150,7 @@ export default {
             this.article = response.data;
             this.loadingArticle = false;
             // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
-            document.title = this.article.title;
+            this.loadMeta();
           })
           .catch(err => {
             console.log(err);
@@ -177,6 +177,44 @@ export default {
     },
     addShortcutsForSuggestions: function () {
 
+    },
+    loadMeta: function () {
+      document.title = this.article.title;
+
+      const head = document.head;
+      let metaDescription = document.createElement('meta');
+      metaDescription.name = 'description'
+      metaDescription.content = this.article.summary;
+
+      let metaKeywords = document.createElement('meta')
+      metaKeywords.name = 'keywords';
+      metaKeywords.content = this.article.tags.join(', ');
+
+      let metaAuthor = document.createElement('meta')
+      metaAuthor.name = 'author';
+      metaAuthor.content = this.article.author;
+
+      let metaRobots = document.createElement('meta')
+      metaRobots.name = 'robots';
+      metaRobots.content = 'index,follow'
+
+      head.appendChild(metaDescription);
+      head.appendChild(metaKeywords);
+      head.appendChild(metaAuthor);
+      head.appendChild(metaRobots);
+
+      // useMeta({
+      //     'og:url': document.URL
+      //     // { property: 'og:image', content: this.aws_url + '/users/' + this.userData.profileurl + '-main.jpg' }
+      //   }
+      // });
+    },
+    clearMeta: function () {
+      document.title = 'Briene';
+      document.querySelector("[name='description']").remove()
+      document.querySelector("[name='keywords']").remove()
+      document.querySelector("[name='author']").remove()
+      document.querySelector("[name='robots']").remove()
     }
   },
   created() {
@@ -219,7 +257,7 @@ export default {
     this.addShortcutsForSuggestions();
   },
   beforeUnmount() {
-    document.title = 'Briene';
+    this.clearMeta();
   }
 }
 </script>
