@@ -182,25 +182,45 @@ export default {
       document.title = this.article.title;
 
       const head = document.head;
+
+      let metaOgUrl = document.createElement('meta');
+      metaOgUrl.setAttribute('property', 'og:url');
+      metaOgUrl.content = window.location.origin + window.location.pathname;
+      head.appendChild(metaOgUrl);
+
+      let metaOgTitle = document.createElement('meta');
+      metaOgTitle.setAttribute('property', 'og:title');
+      metaOgTitle.content = this.article.title;
+      head.appendChild(metaOgTitle);
+
+      let metaOgDescription = document.createElement('meta');
+      metaOgDescription.setAttribute('property', 'og:description');
+      metaOgDescription.content = this.article.summary;
+      head.appendChild(metaOgDescription);
+
+      let metaOgSiteName = document.createElement('meta');
+      metaOgSiteName.setAttribute('property', 'og:site_name');
+      metaOgSiteName.content = 'Briene';
+      head.appendChild(metaOgSiteName);
+
       let metaDescription = document.createElement('meta');
       metaDescription.name = 'description'
       metaDescription.content = this.article.summary;
+      head.appendChild(metaDescription);
 
       let metaKeywords = document.createElement('meta')
       metaKeywords.name = 'keywords';
       metaKeywords.content = this.article.tags.join(', ');
+      head.appendChild(metaKeywords);
 
       let metaAuthor = document.createElement('meta')
       metaAuthor.name = 'author';
       metaAuthor.content = this.article.author;
+      head.appendChild(metaAuthor);
 
       let metaRobots = document.createElement('meta')
       metaRobots.name = 'robots';
       metaRobots.content = 'index,follow'
-
-      head.appendChild(metaDescription);
-      head.appendChild(metaKeywords);
-      head.appendChild(metaAuthor);
       head.appendChild(metaRobots);
 
       // useMeta({
@@ -211,10 +231,14 @@ export default {
     },
     clearMeta: function () {
       document.title = 'Briene';
-      document.querySelector("[name='description']").remove()
-      document.querySelector("[name='keywords']").remove()
-      document.querySelector("[name='author']").remove()
-      document.querySelector("[name='robots']").remove()
+      document.querySelector("[property='og:url']").remove();
+      document.querySelector("[property='og:title']").remove();
+      document.querySelector("[property='og:description']").remove();
+      document.querySelector("[property='og:site_name']").remove();
+      document.querySelector("[name='description']").remove();
+      document.querySelector("[name='keywords']").remove();
+      document.querySelector("[name='author']").remove();
+      document.querySelector("[name='robots']").remove();
     }
   },
   created() {
