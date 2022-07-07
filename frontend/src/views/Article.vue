@@ -50,14 +50,14 @@
       <p><b>Read next</b></p>
       <div class="suggestions">
         <div class="next-article" v-if="nextArticle">
-<!--          <p class="suggestion-name">Ctrl ←</p>-->
+          <p class="suggestion-name">Ctrl ←</p>
           <article-component
               v-bind:key="nextArticle.id"
               v-bind:article="nextArticle"
           ></article-component>
         </div>
         <div class="prev-article" v-if="prevArticle">
-<!--          <p class="suggestion-name">Ctrl →</p>-->
+          <p class="suggestion-name">Ctrl →</p>
           <article-component
               v-bind:key="prevArticle.id"
               v-bind:article="prevArticle"
@@ -161,6 +161,7 @@ export default {
       ArticlesService.getNextArticle(articleId)
           .then(response => {
             this.nextArticle = response.data;
+            this.addShortcutsForNextArticle(response.data.id);
           })
           .catch(err => {
             console.log(err)
@@ -170,13 +171,24 @@ export default {
       ArticlesService.getPrevArticle(articleId)
           .then(response => {
             this.prevArticle = response.data;
+            this.addShortcutsForPrevArticle(response.data.id);
           })
           .catch(err => {
             console.log(err)
           })
     },
-    addShortcutsForSuggestions: function () {
-
+    addShortcutsForNextArticle: function (articleId) {
+      this.addShortcutsForSuggestion('ArrowLeft', articleId);
+    },
+    addShortcutsForPrevArticle: function (articleId) {
+      this.addShortcutsForSuggestion('ArrowRight', articleId);
+    },
+    addShortcutsForSuggestion: function (key, articleId) {
+      document.onkeydown = function (e) {
+        if (e.ctrlKey && e.key === key) {
+          window.location.href = window.location.origin + '/articles/' + articleId;
+        }
+      }
     },
     loadMeta: function () {
       document.title = this.article.title;
@@ -277,8 +289,6 @@ export default {
       makeQuoteFunction(selectedString);
       control.style.display = 'none';
     });
-
-    this.addShortcutsForSuggestions();
   },
   beforeUnmount() {
     this.clearMeta();
