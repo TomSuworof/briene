@@ -46,7 +46,7 @@
         <p id="quote">💬 Quote</p>
       </div>
     </div>
-    <div class="suggestions-wrapper" v-if="nextArticle || prevArticle">
+    <div class="read-next-wrapper" v-if="nextArticle || prevArticle">
       <p><b>Read next</b></p>
       <div class="suggestions">
         <div class="next-article" v-if="nextArticle">
@@ -63,6 +63,16 @@
               v-bind:article="prevArticle"
           ></article-component>
         </div>
+      </div>
+    </div>
+    <div class="suggestions-wrapper" v-if="suggestedArticles.length > 0">
+      <p><b>Read more</b></p>
+      <div class="suggestions">
+        <article-component
+            v-for="article in suggestedArticles"
+            v-bind:key="article.id"
+            v-bind:article="article"
+        ></article-component>
       </div>
     </div>
   </div>
@@ -91,6 +101,8 @@ export default {
 
       nextArticle: undefined,
       prevArticle: undefined,
+
+      suggestedArticles: []
     }
   },
   computed: {
@@ -174,7 +186,7 @@ export default {
             this.addShortcutsForPrevArticle(response.data.id);
           })
           .catch(err => {
-            console.log(err)
+            console.log(err);
           })
     },
     addShortcutsForNextArticle: function (articleId) {
@@ -189,6 +201,15 @@ export default {
           window.location.href = window.location.origin + '/articles/' + articleId;
         }
       }
+    },
+    getSuggestedArticles: function (articleId) {
+      ArticlesService.getSuggestedArticles(articleId)
+          .then(response => {
+            this.suggestedArticles = response.data;
+          })
+          .catch(err => {
+            console.log(err);
+          })
     },
     loadMeta: function () {
       document.title = this.article.title;
@@ -259,6 +280,7 @@ export default {
     this.loadArticleContent(articleId);
     this.getNextArticle(articleId);
     this.getPrevArticle(articleId);
+    this.getSuggestedArticles(articleId);
   },
   mounted() {
     let articleContent = document.getElementById('article-content');

@@ -27,6 +27,10 @@ class ArticlesService {
         return http.get('/articles/prev', { params: { id } });
     }
 
+    getSuggestedArticles(id) {
+        return http.get('/articles/suggested', { params: { id } });
+    }
+
     uploadArticle(title, content, summary, action, tags) {
         return http.post('/articles/upload',
             {

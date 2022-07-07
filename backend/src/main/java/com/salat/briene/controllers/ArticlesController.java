@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 //@CrossOrigin(origins = "*")
@@ -102,6 +103,12 @@ public class ArticlesController {
     public ResponseEntity<ArticleDTO> getPreviousArticle(@RequestParam UUID id) {
         ArticleDTO article = articleService.getPreviousArticle(id);
         return ResponseEntity.ok().body(article);
+    }
+
+    @GetMapping("/suggested")
+    public ResponseEntity<List<ArticleDTO>> getSuggestedArticles(@RequestParam UUID id) {
+        List<ArticleDTO> articles = articleService.getSuggestedArticles(id);
+        return ResponseEntity.ok().body(articles);
     }
 
     @PostMapping("/upload")

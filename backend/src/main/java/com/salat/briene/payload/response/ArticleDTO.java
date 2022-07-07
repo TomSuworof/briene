@@ -2,6 +2,7 @@ package com.salat.briene.payload.response;
 
 import com.salat.briene.entities.Article;
 import com.salat.briene.entities.Tag;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
@@ -11,6 +12,7 @@ import java.util.*;
 // It is helpful and recommended using when you need to get a list of articles
 
 @Getter
+@EqualsAndHashCode
 public class ArticleDTO implements ObjectDTO {
     protected final UUID id;
     protected final String title;

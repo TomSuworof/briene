@@ -1,9 +1,6 @@
 package com.salat.briene.services;
 
-import com.salat.briene.entities.Article;
-import com.salat.briene.entities.ArticleState;
-import com.salat.briene.entities.RoleEnum;
-import com.salat.briene.entities.User;
+import com.salat.briene.entities.*;
 import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
@@ -19,16 +16,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleSearchRepository articleSearchRepository;
+
+    private final TagService tagService;
 
     public void saveArticle(Article newArticle) {
         newArticle.setPublicationDate(OffsetDateTime.now());
@@ -118,6 +115,35 @@ public class ArticleService {
         } catch (IndexOutOfBoundsException e) {
             throw new ArticleNotFoundException();
         }
+    }
+
+
+    public List<ArticleDTO> getSuggestedArticles(UUID id) {
+        Article mainArticle = getArticleById(id);
+        Set<String> mainTags = mainArticle.getTags().stream().map(Tag::getName).collect(Collectors.toSet());
+
+        Set<ArticleDTO> suggestedArticles = new LinkedHashSet<>();
+
+        for (String tag : mainTags) {
+            suggestedArticles.addAll(tagService.getPageWithArticles(tag, 10, 0).getEntities());
+        }
+        suggestedArticles.remove(new ArticleDTO(mainArticle));
+
+        Map<ArticleDTO, Integer> rating = new HashMap<>();
+
+        for (ArticleDTO articleDTO : suggestedArticles) {
+            Set<String> tags = new HashSet<>(articleDTO.getTags());
+            tags.retainAll(mainTags);
+            rating.put(articleDTO, tags.size());
+        }
+
+        return rating
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .map(Map.Entry::getKey)
+                .limit(3) // make a parameter
+                .toList();
     }
 
 
