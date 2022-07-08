@@ -2,7 +2,7 @@
   <div class="admin-dashboard">
     <div class="admin-dashboard-users accordion">
       <div class="admin-dashboard-title accordion__intro">
-        <h1>Users</h1>
+        <h2>Users</h2>
         <hr align="left">
       </div>
       <div class="accordion__content">
@@ -56,7 +56,7 @@
     </div>
     <div class="admin-dashboard-articles accordion">
       <div class="accordion__intro">
-        <h1>Articles</h1>
+        <h2>Articles</h2>
         <hr align="left">
       </div>
       <div class="accordion__content">

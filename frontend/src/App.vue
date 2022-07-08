@@ -68,6 +68,9 @@ export default {
         query: { query: this.query, limit: this.limit, offset: this.offset }
       });
     }
+  },
+  mounted() {
+    this.query = new URLSearchParams(window.location.search).get('query');
   }
 }
 

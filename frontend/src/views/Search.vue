@@ -1,9 +1,9 @@
 <template>
   <div class="search-page-content">
-    <div class="header">
-      <p>Search results for:</p>
-      <h1><b>{{ query }}</b></h1>
+    <div>
+      <h2>Found articles</h2>
     </div>
+    <hr align="left">
     <div class="articles-loading" v-if="articlesLoading">
       <ShimmerBlock/>
     </div>
@@ -16,7 +16,7 @@
               v-bind:article="article"
           ></article-component>
         </div>
-        <div class="load-more-button">
+        <div class="load-more-button" v-if="hasAfter">
           <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
             <span>Load more</span>
           </button>

@@ -298,7 +298,6 @@ export default {
             });
       }
     },
-
     getMyBio: function() {
       AuthorsService.getAuthorData(this.currentUser.username, 1, 0)
           .then(response => {
@@ -326,7 +325,6 @@ export default {
       this.articlesOffset = 0;
       this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
     },
-
     getPreviousArticlesPage: function () {
       this.articlesOffset -= this.articlesLimit;
       this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
@@ -356,7 +354,6 @@ export default {
             console.log(e);
           });
     },
-
     removeFromBookmarks: function (articleId) {
       BookmarksService.editBookmark(articleId, 'remove')
           .then(() => {
@@ -378,7 +375,6 @@ export default {
             console.log(err);
           });
     },
-
     getButtonClass(buttonTitle) {
       if (buttonTitle === this.articlesState) {
         return 'article-type button button-primary';
