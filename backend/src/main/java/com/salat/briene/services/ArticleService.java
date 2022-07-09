@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,8 +27,6 @@ public class ArticleService {
     private final TagService tagService;
 
     public void saveArticle(Article newArticle) {
-        newArticle.setPublicationDate(OffsetDateTime.now());
-
         switch (newArticle.getState()) {
             case PUBLISHED -> publish(newArticle);
             case IN_EDITING -> saveDraft(newArticle);
@@ -38,7 +35,14 @@ public class ArticleService {
     }
 
     private void saveDraft(Article newArticle) {
-        Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
+        if (articleRepository.findByUrl(newArticle.getUrl()).isPresent()) {
+            throw new DuplicatedArticleException();
+        }
+
+        Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndStateAndAuthor_Username(
+                newArticle.getTitle(),
+                newArticle.getState(),
+                newArticle.getAuthor().getUsername());
 
         if (oldArticleOpt.isPresent()) {
             Article oldArticle = oldArticleOpt.get();
@@ -53,23 +57,44 @@ public class ArticleService {
     }
 
     private void publish(Article newArticle) {
-        Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndState(newArticle.getTitle(), newArticle.getState());
+        Optional<Article> oldArticleOfSameAuthor = articleRepository.findArticleByTitleAndStateAndAuthor_Username(
+                newArticle.getTitle(),
+                newArticle.getState(),
+                newArticle.getAuthor().getUsername());
 
-        if (oldArticleOpt.isPresent()) {
-            Article oldArticle = oldArticleOpt.get();
+        if (oldArticleOfSameAuthor.isPresent()) {
+            Optional<Article> oldArticleWithSameUrl = articleRepository.findByUrl(newArticle.getUrl());
+
+            if (oldArticleWithSameUrl.isPresent()) {
+                Article oldArticle = oldArticleWithSameUrl.get();
+
+                String oldArticleUsername = oldArticle.getAuthor().getUsername();
+                String newArticleUsername = newArticle.getAuthor().getUsername();
+
+                if (!oldArticleUsername.equals(newArticleUsername)) {
+                    // title, state, url are the same, but different authors - error
+                    throw new DuplicatedArticleException();
+                }
+            }
+
+            // title, state, url, author are the same - just update
+            Article oldArticle = oldArticleOfSameAuthor.get();
             newArticle.setPublicationDate(oldArticle.getPublicationDate());
 
-            String oldArticleAuthorUsername = oldArticle.getAuthor().getUsername();
-            String newArticleAuthorUsername = newArticle.getAuthor().getUsername();
+            newArticle.setId(oldArticle.getId());
 
-            if (oldArticleAuthorUsername.equals(newArticleAuthorUsername)) {
-                newArticle.setId(oldArticle.getId());
+            articleRepository.delete(oldArticle);
+            articleSearchRepository.delete(oldArticle);
 
-                articleRepository.delete(oldArticle);
-                articleSearchRepository.delete(oldArticle);
-            } else {
-                throw new DuplicatedArticleException();
-            }
+            articleRepository.save(newArticle);
+            articleSearchRepository.save(newArticle);
+
+            return;
+        }
+
+        // same url, but different titles, states or authors - error
+        if (articleRepository.findByUrl(newArticle.getUrl()).isPresent()) {
+            throw new DuplicatedArticleException();
         }
 
         articleRepository.save(newArticle);
@@ -94,17 +119,26 @@ public class ArticleService {
         }
     }
 
-
-    public ArticleDTO getNextArticle(UUID id) {
-        return getArticleWithOffset(id, 1);
+    public Article getArticleByUrl(String url) {
+        Optional<Article> articleOptional = articleRepository.findByUrl(url);
+        if (articleOptional.isPresent()) {
+            return articleOptional.get();
+        } else {
+            throw new ArticleNotFoundException();
+        }
     }
 
-    public ArticleDTO getPreviousArticle(UUID id) {
-        return getArticleWithOffset(id, -1);
+
+    public ArticleDTO getNextArticle(String url) {
+        return getArticleWithOffset(url, 1);
     }
 
-    private ArticleDTO getArticleWithOffset(UUID id, int offset) {
-        Article article = getArticleById(id);
+    public ArticleDTO getPreviousArticle(String url) {
+        return getArticleWithOffset(url, -1);
+    }
+
+    private ArticleDTO getArticleWithOffset(String url, int offset) {
+        Article article = getArticleByUrl(url);
         List<Article> articles = articleRepository.findArticlesByStateAndAuthor_Username(ArticleState.PUBLISHED, article.getAuthor().getUsername());
         articles.sort(Comparator.comparing(Article::getPublicationDate));
 
@@ -118,8 +152,8 @@ public class ArticleService {
     }
 
 
-    public List<ArticleDTO> getSuggestedArticles(UUID id) {
-        Article mainArticle = getArticleById(id);
+    public List<ArticleDTO> getSuggestedArticles(String url) {
+        Article mainArticle = getArticleByUrl(url);
         Set<String> mainTags = mainArticle.getTags().stream().map(Tag::getName).collect(Collectors.toSet());
 
         Set<ArticleDTO> suggestedArticles = new LinkedHashSet<>();

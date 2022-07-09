@@ -1,11 +1,18 @@
 <template>
   <div class="article-summary-modal">
-    <div>
-      <h3>Summary</h3>
+    <div class="article-summary-text">
+      <b>Summary</b>
       <p>Max {{ maxLength }} characters. This summary will be seen under title in article card</p>
     </div>
     <div class="article-summary-wrapper">
       <textarea v-model="summaryGot" :maxlength="maxLength"></textarea>
+    </div>
+    <div class="article-url-text">
+      <b>Custom URL</b>
+      <p>Max {{ 140 }} characters</p>
+    </div>
+    <div class="article-url-wrapper">
+      <input class="article-url" type="text" maxlength="140" placeholder="Custom URL" required v-model="urlGot"/>
     </div>
     <div class="action-buttons">
       <div class="button-row">
@@ -47,6 +54,7 @@ export default {
     content: {required: true},
     summary: {required: true},
     tags: {required: true},
+    url: {required: true},
     action: {required: true},
   },
   data() {
@@ -56,6 +64,7 @@ export default {
       loading: false,
 
       summaryGot: '',
+      urlGot: '',
 
       suggestedTags: []
     };
@@ -67,14 +76,17 @@ export default {
     titleNotEmpty: function () {
       return this.title !== '';
     },
+    urlNotEmpty: function () {
+      return this.urlGot !== '';
+    },
     formIsValid: function () {
-      return this.contentNotEmpty() && this.titleNotEmpty();
+      return this.contentNotEmpty() && this.titleNotEmpty() && this.urlNotEmpty();
     },
     showWarningEmpty: function () {
       alert('Fields can not be empty');
     },
     showWarningArticleExists: function () {
-      alert('Such article already exists. Try to make different title or remove old one');
+      alert('Such article already exists. Try to make different title or URL or remove old one');
     },
     handleButton: function (buttonAction) {
       if (buttonAction === 'Cancel') {
@@ -93,7 +105,7 @@ export default {
     },
     uploadArticle: function () {
       this.loading = true;
-      ArticlesService.uploadArticle(this.title, this.content, this.summaryGot, this.action, this.tags)
+      ArticlesService.uploadArticle(this.title, this.content, this.summaryGot, this.action, this.tags, this.urlGot)
           .then(() => {
             this.loading = false;
             this.closeThisModal(); // remember to close. otherwise, scrollbar will disappear
@@ -104,6 +116,7 @@ export default {
             }
           })
           .catch(err => {
+            this.loading = false;
             console.log(err);
             this.showWarningArticleExists();
           });
@@ -116,6 +129,11 @@ export default {
     this.summaryGot = this.summary;
     if (this.summaryGot === undefined || this.summaryGot === '') {
       this.summaryGot = this.content.substring(0, this.maxLength);
+    }
+
+    this.urlGot = this.url;
+    if (this.urlGot === undefined || this.urlGot === '') {
+      this.urlGot = this.title;
     }
   }
 }
@@ -137,8 +155,27 @@ textarea {
   padding: 5pt;
   border-radius: 9px;
   width: 100%;
-  height: 300pt;
+  height: 200pt;
   resize: none;
+}
+
+.article-url-text {
+  margin-top: 20pt;
+}
+
+.article-url-wrapper {
+  position: relative;
+  /*box-shadow: rgba(0, 0, 0) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px;*/
+  border: 1px solid #777;
+  border-radius: 9px;
+  margin: 0 0 10pt;
+  padding: 10pt;
+}
+
+.article-url {
+  width: 100%;
+  background: transparent;
+  outline: 0;
 }
 
 .action-buttons {

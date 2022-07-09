@@ -19,6 +19,7 @@ public class ArticleDTO implements ObjectDTO {
     protected final String author;
     protected String summary;
     protected final OffsetDateTime publicationDate;
+    protected final String url;
     protected final String state;
     protected final List<String> tags;
 
@@ -28,6 +29,7 @@ public class ArticleDTO implements ObjectDTO {
         this.author = article.getAuthor().getUsername();
         this.summary = article.getSummary();
         this.publicationDate = article.getPublicationDate();
+        this.url = article.getUrl();
         this.state = article.getState().getDescription();
 
         Set<Tag> tags = article.getTags();

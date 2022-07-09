@@ -6,23 +6,23 @@ class BookmarksService {
         return http.get('/bookmarks/getAll', { headers: authHeader() });
     }
 
-    isArticleInBookmarksOfUser(id) {
+    isArticleInBookmarksOfUser(url) {
         return http.get('/bookmarks/isIn',
             {
                 headers: authHeader(),
                 params: {
-                    id: id
+                    url: url
                 }
             })
     }
 
-    editBookmark(id, action) {
+    editBookmark(url, action) {
         return http.post('/bookmarks/edit',
             {},
             {
                 headers: authHeader(),
                 params : {
-                    id: id,
+                    url: url,
                     action: action
                 }
             });

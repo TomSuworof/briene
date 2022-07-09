@@ -11,33 +11,38 @@ class ArticlesService {
         });
     }
 
-    getArticleForRender(id) {
-        return http.get(`/articles/${id}`, { headers: authHeader() });
+    getArticleForRender(url) {
+        return http.get(`/articles/${url}`, { headers: authHeader() });
     }
 
     getArticleRaw(id) {
-        return http.get(`/articles/${id}?raw=true`, { headers: authHeader() });
+        return http.get(`/articles/edit/${id}`, { headers: authHeader() });
     }
 
-    getNextArticle(id) {
-        return http.get('/articles/next', { params: { id } });
+    getSharedArticle(id) {
+        return http.get(`/articles/share/${id}`);
     }
 
-    getPrevArticle(id) {
-        return http.get('/articles/prev', { params: { id } });
+    getNextArticle(url) {
+        return http.get('/articles/next', { params: { url } });
     }
 
-    getSuggestedArticles(id) {
-        return http.get('/articles/suggested', { params: { id } });
+    getPrevArticle(url) {
+        return http.get('/articles/prev', { params: { url } });
     }
 
-    uploadArticle(title, content, summary, action, tags) {
+    getSuggestedArticles(url) {
+        return http.get('/articles/suggested', { params: { url } });
+    }
+
+    uploadArticle(title, content, summary, action, tags, url) {
         return http.post('/articles/upload',
             {
                 title,
                 content,
                 summary,
-                tags
+                tags,
+                url
             },
             {
                 headers: authHeader(),

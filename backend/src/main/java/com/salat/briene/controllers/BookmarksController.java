@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "*")
@@ -44,18 +43,18 @@ public class BookmarksController {
     }
 
     @GetMapping("/isIn")
-    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam UUID id, Authentication authentication) {
+    public ResponseEntity<Boolean> isArticleInBookmarksOfUser(@RequestParam String url, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
-        Article article = articleService.getArticleById(id);
+        Article article = articleService.getArticleByUrl(url);
         return ResponseEntity.ok().body(currentUser.getBookmarkedArticles().contains(article));
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editBookmark(@RequestParam UUID id, @RequestParam String action, Authentication authentication) {
+    public ResponseEntity<String> editBookmark(@RequestParam String url, @RequestParam String action, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Set<Article> bookmarks = currentUser.getBookmarkedArticles();
 
-        Article article = articleService.getArticleById(id);
+        Article article = articleService.getArticleByUrl(url);
 
         switch (action.toLowerCase()) {
             case BOOKMARKS_ACTION_ADD -> bookmarks.add(article);

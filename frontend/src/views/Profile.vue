@@ -236,6 +236,7 @@ export default {
       ],
 
       actionsForMyArticles: [
+        { function: this.shareArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/link--v1.png"/>', message: 'Share' },
         { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
         { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/trash--v1.png" alt="Delete"/>', message: 'Remove' },
       ],
@@ -374,6 +375,10 @@ export default {
           .catch(err => {
             console.log(err);
           });
+    },
+    shareArticle: function (articleId) {
+      let link = window.location.origin + '/articles/share/' + articleId;
+      navigator.clipboard.writeText(link).then(() => alert('Link copied to clipboard'));
     },
     getButtonClass(buttonTitle) {
       if (buttonTitle === this.articlesState) {

@@ -54,6 +54,11 @@ public class Article {
     @Field(type = FieldType.Date)
     private OffsetDateTime publicationDate;
 
+    @NotNull
+    @Size(max = 140)
+    @Field(type = FieldType.Text)
+    private String url;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(name = "t_articles_tags",
             joinColumns = { @JoinColumn(name = "article_id") },

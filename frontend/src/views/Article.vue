@@ -138,7 +138,7 @@ export default {
         this.$router.push('/login');
       }
 
-      BookmarksService.editBookmark(this.$route.params.articleId, action)
+      BookmarksService.editBookmark(this.$route.params.articleUrl, action)
           .then(response => {
             console.log(response);
             this.inBookmarks = !this.inBookmarks;
@@ -146,8 +146,8 @@ export default {
         console.log(err);
       });
     },
-    loadIsInBookmarks: function (articleId) {
-      BookmarksService.isArticleInBookmarksOfUser(articleId)
+    loadIsInBookmarks: function (articleUrl) {
+      BookmarksService.isArticleInBookmarksOfUser(articleUrl)
           .then(response => {
             this.inBookmarks = response.data;
           }).catch(err => {
@@ -155,9 +155,9 @@ export default {
         this.inBookmarks = false;
       });
     },
-    loadArticleContent: function (articleId) {
+    loadArticleContent: function (articleUrl) {
       this.loadingArticle = true;
-      ArticlesService.getArticleForRender(articleId)
+      ArticlesService.getArticleForRender(articleUrl)
           .then(response => {
             this.article = response.data;
             this.loadingArticle = false;
@@ -169,41 +169,41 @@ export default {
             this.$router.replace('/error'); // redirecting to '/error'
           });
     },
-    getNextArticle: function (articleId) {
-      ArticlesService.getNextArticle(articleId)
+    getNextArticle: function (articleUrl) {
+      ArticlesService.getNextArticle(articleUrl)
           .then(response => {
             this.nextArticle = response.data;
-            this.addShortcutsForNextArticle(response.data.id);
-          })
-          .catch(err => {
-            console.log(err)
-          })
-    },
-    getPrevArticle: function (articleId) {
-      ArticlesService.getPrevArticle(articleId)
-          .then(response => {
-            this.prevArticle = response.data;
-            this.addShortcutsForPrevArticle(response.data.id);
+            this.addShortcutsForNextArticle(response.data.url);
           })
           .catch(err => {
             console.log(err);
           })
     },
-    addShortcutsForNextArticle: function (articleId) {
-      this.addShortcutsForSuggestion('ArrowLeft', articleId);
+    getPrevArticle: function (articleUrl) {
+      ArticlesService.getPrevArticle(articleUrl)
+          .then(response => {
+            this.prevArticle = response.data;
+            this.addShortcutsForPrevArticle(response.data.url);
+          })
+          .catch(err => {
+            console.log(err);
+          })
     },
-    addShortcutsForPrevArticle: function (articleId) {
-      this.addShortcutsForSuggestion('ArrowRight', articleId);
+    addShortcutsForNextArticle: function (articleUrl) {
+      this.addShortcutsForSuggestion('ArrowLeft', articleUrl);
     },
-    addShortcutsForSuggestion: function (key, articleId) {
+    addShortcutsForPrevArticle: function (articleUrl) {
+      this.addShortcutsForSuggestion('ArrowRight', articleUrl);
+    },
+    addShortcutsForSuggestion: function (key, articleUrl) {
       document.onkeydown = function (e) {
         if (e.ctrlKey && e.key === key) {
-          window.location.href = window.location.origin + '/articles/' + articleId;
+          window.location.href = window.location.origin + '/articles/' + articleUrl;
         }
       }
     },
-    getSuggestedArticles: function (articleId) {
-      ArticlesService.getSuggestedArticles(articleId)
+    getSuggestedArticles: function (articleUrl) {
+      ArticlesService.getSuggestedArticles(articleUrl)
           .then(response => {
             this.suggestedArticles = response.data;
           })
@@ -275,12 +275,12 @@ export default {
     }
   },
   created() {
-    let articleId = this.$route.params.articleId;
-    this.loadIsInBookmarks(articleId);
-    this.loadArticleContent(articleId);
-    this.getNextArticle(articleId);
-    this.getPrevArticle(articleId);
-    this.getSuggestedArticles(articleId);
+    let articleUrl = this.$route.params.articleUrl;
+    this.loadIsInBookmarks(articleUrl);
+    this.loadArticleContent(articleUrl);
+    this.getNextArticle(articleUrl);
+    this.getPrevArticle(articleUrl);
+    this.getSuggestedArticles(articleUrl);
   },
   mounted() {
     let articleContent = document.getElementById('article-content');

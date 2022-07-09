@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container" @click.self="$router.push('/articles/' + article.id)">
+  <div class="article-container" @click.self="$router.push('/articles/' + article.url)">
     <div v-if="actions !== undefined">
       <div class="article-util-container">
         <div class="article-state" v-show="state !== undefined">
@@ -23,7 +23,7 @@
     </div>
     <div class="article-title-container">
       <h3 class="article-title">
-        <a :href="'/articles/' + article.id">{{ article.title }}</a>
+        <a :href="'/articles/' + article.url">{{ article.title }}</a>
       </h3>
     </div>
     <div class="article-summary">

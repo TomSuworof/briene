@@ -7,6 +7,8 @@ import com.salat.briene.payload.request.ArticleUploadRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class ArticleEditorService {
@@ -21,6 +23,13 @@ public class ArticleEditorService {
         article.setSummary(articleUploadRequest.getSummary());
         article.setState(ArticleState.getFromAction(action.toLowerCase()));
         article.setTags(tagService.mapToTags(articleUploadRequest.getTags()));
+        article.setPublicationDate(OffsetDateTime.now());
+        article.setUrl(articleUploadRequest.getUrl());
+
+        if (article.getUrl() == null) {
+            article.setUrl(article.getTitle());
+        }
+
         articleService.saveArticle(article);
     }
 }

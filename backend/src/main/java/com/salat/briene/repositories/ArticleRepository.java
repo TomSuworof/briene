@@ -19,7 +19,11 @@ import java.util.UUID;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
+    Optional<Article> findByUrl(String url);
+
     Optional<Article> findArticleByTitleAndState(String title, ArticleState state);
+
+    Optional<Article> findArticleByTitleAndStateAndAuthor_Username(String title, ArticleState state, String username);
 
     Page<Article> findArticlesByState(ArticleState state, Pageable pageable);
 

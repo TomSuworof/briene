@@ -16,6 +16,7 @@ import Admin from "@/views/Admin";
 import Author from '@/views/Author';
 import PasswordReset from "@/views/PasswordReset";
 import Tag from "@/views/Tag";
+import ArticleShare from "@/views/ArticleShare";
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
@@ -30,7 +31,8 @@ const router = createRouter({
         { path: '/profile', component: Profile, meta: { requiresAuth: true } },
 
         { path: '/search', component: Search },
-        { path: '/articles/:articleId', component: Article },
+        { path: '/articles/share/:articleId', component: ArticleShare },
+        { path: '/articles/:articleUrl', component: Article },
         { path: '/article_editor', component: ArticleEditor, meta: { requiresAuth: true } },
 
         { path: '/admin', component: Admin, meta: { requiresAuth: true } },

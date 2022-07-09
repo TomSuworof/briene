@@ -80,6 +80,7 @@ export default {
       title: '',
       content: '',
       summary: '',
+      url: '',
       tags: [],
 
       showTagInput: false,
@@ -98,6 +99,7 @@ export default {
         content: this.content,
         summary: this.summary,
         tags: this.tags,
+        url: this.url,
         action: action,
       })
     },
@@ -107,6 +109,7 @@ export default {
         'summary': this.summary,
         'content': this.content,
         'tags': this.tags,
+        'url': this.url,
       }));
     },
     loadArticleFromLocalStorage: function () {
@@ -118,6 +121,7 @@ export default {
         this.summary = article.summary;
         this.content = article.content;
         this.tags = article.tags;
+        this.url = article.url;
       }
     },
     toBase64: function (file) {
@@ -167,6 +171,7 @@ export default {
             this.content = response.data.content;
             this.summary = response.data.summary;
             this.tags = response.data.tags;
+            this.url = response.data.url;
           }).catch(err => {
         console.log(err);
         this.$router.replace('/error'); // redirecting to '/error'

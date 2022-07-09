@@ -34,7 +34,8 @@ create table if not exists t_articles
     summary          text,
     title            varchar(255)             not null,
     author_id        uuid                     not null constraint references_to_not_null_author references t_users not null,
-    publication_date timestamp with time zone not null
+    publication_date timestamp with time zone not null,
+    url              text                     not null
 );
 
 create table if not exists t_users_roles

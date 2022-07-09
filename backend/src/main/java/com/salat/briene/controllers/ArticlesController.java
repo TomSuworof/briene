@@ -54,21 +54,9 @@ public class ArticlesController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ArticleWithContent> getArticle(@RequestParam(required = false) Boolean raw, @PathVariable UUID id, Authentication authentication) {
-        ArticleWithContent article = null;
-
-        if (raw == null) {
-            article = this.getArticleForRender(id, authentication);
-        } else if (raw) {
-            article = this.getArticleRaw(id, authentication);
-        }
-
-        return ResponseEntity.ok().body(article);
-    }
-
-    private ArticleWithContent getArticleForRender(UUID id, Authentication authentication) {
-        Article article = articleService.getArticleById(id);
+    @GetMapping("/{url}")
+    public ResponseEntity<ArticleWithContent> getArticle(@PathVariable String url, Authentication authentication) {
+        Article article = articleService.getArticleByUrl(url);
 
         if (article.getState().equals(ArticleState.IN_EDITING)) {
             User userFromToken = userService.getUserFromAuthentication(authentication);
@@ -78,10 +66,11 @@ public class ArticlesController {
             }
         }
 
-        return new ArticleWithContent(article);
+        return ResponseEntity.ok().body(new ArticleWithContent(article));
     }
 
-    private ArticleWithContent getArticleRaw(UUID id, Authentication authentication) {
+    @GetMapping("/edit/{id}")
+    public ResponseEntity<ArticleWithContent> getArticleForEdit(@PathVariable UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);
@@ -90,24 +79,30 @@ public class ArticlesController {
             throw new ArticleNotFoundException();
         }
 
-        return new ArticleWithContent(article);
+        return ResponseEntity.ok().body(new ArticleWithContent(article));
+    }
+
+    @GetMapping("/share/{id}")
+    public ResponseEntity<ArticleWithContent> getArticle(@PathVariable UUID id) {
+        ArticleWithContent article = new ArticleWithContent(articleService.getArticleById(id));
+        return ResponseEntity.ok().body(article);
     }
 
     @GetMapping("/next")
-    public ResponseEntity<ArticleDTO> getNextArticle(@RequestParam UUID id) {
-        ArticleDTO article = articleService.getNextArticle(id);
+    public ResponseEntity<ArticleDTO> getNextArticle(@RequestParam String url) {
+        ArticleDTO article = articleService.getNextArticle(url);
         return ResponseEntity.ok().body(article);
     }
 
     @GetMapping("/prev")
-    public ResponseEntity<ArticleDTO> getPreviousArticle(@RequestParam UUID id) {
-        ArticleDTO article = articleService.getPreviousArticle(id);
+    public ResponseEntity<ArticleDTO> getPreviousArticle(@RequestParam String url) {
+        ArticleDTO article = articleService.getPreviousArticle(url);
         return ResponseEntity.ok().body(article);
     }
 
     @GetMapping("/suggested")
-    public ResponseEntity<List<ArticleDTO>> getSuggestedArticles(@RequestParam UUID id) {
-        List<ArticleDTO> articles = articleService.getSuggestedArticles(id);
+    public ResponseEntity<List<ArticleDTO>> getSuggestedArticles(@RequestParam String url) {
+        List<ArticleDTO> articles = articleService.getSuggestedArticles(url);
         return ResponseEntity.ok().body(articles);
     }
 
