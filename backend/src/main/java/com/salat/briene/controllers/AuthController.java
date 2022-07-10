@@ -7,6 +7,7 @@ import com.salat.briene.payload.request.SignupRequest;
 import com.salat.briene.payload.response.JwtResponse;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.EmailException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<String> registerUser(@RequestBody SignupRequest signUpRequest) throws EmailException {
         userService.saveUser(signUpRequest);
         return ResponseEntity.ok().body(USER_REGISTERED);
     }

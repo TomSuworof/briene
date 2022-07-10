@@ -9,6 +9,7 @@ import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import com.salat.briene.repositories.ArticleSearchRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.EmailException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +26,9 @@ public class ArticleService {
     private final ArticleSearchRepository articleSearchRepository;
 
     private final TagService tagService;
+    private final AuthorService authorService;
 
-    public void saveArticle(Article newArticle) {
+    public void saveArticle(Article newArticle) throws EmailException {
         switch (newArticle.getState()) {
             case PUBLISHED -> publish(newArticle);
             case IN_EDITING -> saveDraft(newArticle);
@@ -56,7 +58,7 @@ public class ArticleService {
         articleSearchRepository.save(newArticle);
     }
 
-    private void publish(Article newArticle) {
+    private void publish(Article newArticle) throws EmailException {
         Optional<Article> oldArticleOfSameAuthor = articleRepository.findArticleByTitleAndStateAndAuthor_Username(
                 newArticle.getTitle(),
                 newArticle.getState(),
@@ -89,6 +91,8 @@ public class ArticleService {
             articleRepository.save(newArticle);
             articleSearchRepository.save(newArticle);
 
+            authorService.notifyAboutNewArticle(newArticle);
+
             return;
         }
 
@@ -99,6 +103,8 @@ public class ArticleService {
 
         articleRepository.save(newArticle);
         articleSearchRepository.save(newArticle);
+
+        authorService.notifyAboutNewArticle(newArticle);
     }
 
     public void deleteArticleById(UUID articleId) {

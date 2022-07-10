@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService {
         return loadUserByUsername(authentication.getName());
     }
 
-    public void saveUser(SignupRequest signupRequest) {
+    public void saveUser(SignupRequest signupRequest) throws EmailException {
         if (existsByUsername(signupRequest.getUsername())) {
             throw new DuplicatedUserByUsernameException();
         }
@@ -62,6 +62,8 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setRoles(Set.of(RoleEnum.USER.getAsObject()));
         userRepository.save(user);
+
+        mailService.sendRegistrationConfirm(user.getEmail(), user.getUsername());
     }
 
     private boolean existsByUsername(String username) {
@@ -111,7 +113,7 @@ public class UserService implements UserDetailsService {
             add(role);
         }});
 
-        mailService.send(userFromDB.getEmail(), "role_change", role.getName());
+        mailService.sendRoleChanged(userFromDB.getEmail(), role.getName());
         userRepository.save(userFromDB);
     }
 

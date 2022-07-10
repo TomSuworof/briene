@@ -32,7 +32,7 @@ public class PasswordResetService {
                 .getId().toString();
 
         String email = requiredUser.getEmail();
-        mailService.send(email, "password_change", code);
+        mailService.sendPasswordChangeCode(email, code);
 
         return hideEmail(email);
     }

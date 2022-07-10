@@ -49,6 +49,18 @@ public class User implements UserDetails {
     @org.springframework.data.annotation.Transient
     private Set<Article> bookmarkedArticles;
 
+    @ManyToMany
+    @JoinTable(name="t_followers",
+            joinColumns=@JoinColumn(name="author_id"),
+            inverseJoinColumns=@JoinColumn(name="follower_id")
+    )
+    @org.springframework.data.annotation.Transient
+    private Set<User> followers;
+
+    @ManyToMany(mappedBy = "followers")
+    @org.springframework.data.annotation.Transient
+    private Set<User> followings;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

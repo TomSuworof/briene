@@ -10,6 +10,7 @@ import com.salat.briene.services.ArticleEditorService;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.mail.EmailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -107,7 +108,7 @@ public class ArticlesController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> publishArticle(@RequestBody ArticleUploadRequest article, @RequestParam String action, Authentication authentication) {
+    public ResponseEntity<String> publishArticle(@RequestBody ArticleUploadRequest article, @RequestParam String action, Authentication authentication) throws EmailException {
         User userFromToken = userService.getUserFromAuthentication(authentication);
         articleEditorService.uploadArticle(userFromToken, article, action);
         return ResponseEntity.ok().body(ARTICLE_UPLOADED);

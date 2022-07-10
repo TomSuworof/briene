@@ -1,8 +1,9 @@
 import http from './http-common'
+import authHeader from "@/api/AuthHeader";
 
 class ArticlesService {
     getAll() {
-        return http.get('/authors')
+        return http.get('/authors');
     }
 
     getAuthorData(authorName, limit, offset) {
@@ -11,7 +12,40 @@ class ArticlesService {
                 limit: limit,
                 offset: offset
             }
-        })
+        });
+    }
+
+    subscribe(authorName) {
+        return http.post('/authors/subscribe',
+            {},
+            {
+                headers: authHeader(),
+                params: {
+                    author: authorName
+                }
+            });
+    }
+
+    unsubscribe(authorName) {
+        return http.post('/authors/unsubscribe',
+            {},
+            {
+                headers: authHeader(),
+                params: {
+                    author: authorName
+                }
+            });
+    }
+
+    isFollowing(authorName) {
+        return http.post('/authors/isFollowing',
+            {},
+            {
+                headers: authHeader(),
+                params: {
+                    author: authorName
+                }
+            });
     }
 }
 

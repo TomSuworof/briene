@@ -1,6 +1,7 @@
 package com.salat.briene.services;
 
 import com.salat.briene.config.MailConfig;
+import com.salat.briene.entities.Article;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
@@ -12,26 +13,9 @@ import org.springframework.stereotype.Service;
 public class MailService {
     private final MailConfig mailConfig;
 
-    public void send(String to, String theme, String message) throws EmailException {
-        HtmlEmail email = new HtmlEmail();
-        email.setHostName(mailConfig.getHost());
-        email.setSmtpPort(mailConfig.getPort());
-        email.setAuthenticator(new DefaultAuthenticator(
-                mailConfig.getUsername(),
-                mailConfig.getPassword())
-        );
-        email.setSSLOnConnect(true);
-        email.setFrom(mailConfig.getUsername());
-        email.setCharset("utf-8");
-        email.addTo(to);
-        switch (theme) {
-            case "password_change" -> sendPasswordReset(email, message);
-            case "role_change" -> sendRoleChanged(email, message);
-            case "registration_confirm" -> sendRegistrationConfirm(email, message);
-        }
-    }
+    public void sendPasswordChangeCode(String emailAddress, String code) throws EmailException {
+        HtmlEmail email = getEmailTemplate(emailAddress);
 
-    private void sendPasswordReset(HtmlEmail email, String code) throws EmailException {
         email.setSubject("Password reset");
         email.setHtmlMsg("<html>\n" +
                 "<body>\n" +
@@ -48,8 +32,10 @@ public class MailService {
         email.send();
     }
 
-    private void sendRoleChanged(HtmlEmail email, String role) throws EmailException {
+    public void sendRoleChanged(String emailAddress, String role) throws EmailException {
 //        role = role.equals("blocked") ? role : "an " + role;
+        HtmlEmail email = getEmailTemplate(emailAddress);
+
         email.setSubject("Your role was changed");
         email.setHtmlMsg("<html>\n" +
                 "<body>\n" +
@@ -62,7 +48,9 @@ public class MailService {
         email.send();
     }
 
-    private void sendRegistrationConfirm(HtmlEmail email, String name) throws EmailException {
+    public void sendRegistrationConfirm(String emailAddress, String name) throws EmailException {
+        HtmlEmail email = getEmailTemplate(emailAddress);
+
         email.setSubject("Welcome to briene!");
         email.setHtmlMsg("<html>\n" +
                 "<body>\n" +
@@ -74,5 +62,36 @@ public class MailService {
                 "</body>\n" +
                 "</html>");
         email.send();
+    }
+
+    public void sendNotificationAboutNewArticle(String emailAddress, Article article) throws EmailException {
+        HtmlEmail email = getEmailTemplate(emailAddress);
+
+        email.setSubject(String.format("%s published new article", article.getAuthor().getUsername()));
+        email.setHtmlMsg("<html>\n" +
+                "<body>\n" +
+                "\n" +
+                "<h1>" + article.getTitle() + "</h1\n" +
+                "<p style=\"white-space: pre-line;\">" + article.getSummary() + "</p>\n" +
+                "<a href=\"https://briene.herokuapp.com/articles/" + article.getUrl() + "\">Read now</a>\n" +
+                "<p>briene team <3</p>\n" +
+                "</body>\n" +
+                "</html>");
+        email.send();
+    }
+
+    private HtmlEmail getEmailTemplate(String to) throws EmailException {
+        HtmlEmail email = new HtmlEmail();
+        email.setHostName(mailConfig.getHost());
+        email.setSmtpPort(mailConfig.getPort());
+        email.setAuthenticator(new DefaultAuthenticator(
+                mailConfig.getUsername(),
+                mailConfig.getPassword())
+        );
+        email.setSSLOnConnect(true);
+        email.setFrom(mailConfig.getUsername(), "Briene Team");
+        email.setCharset("utf-8");
+        email.addTo(to);
+        return email;
     }
 }

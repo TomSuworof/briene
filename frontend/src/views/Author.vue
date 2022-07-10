@@ -1,8 +1,18 @@
 <template>
   <div class="author-page-content" v-if="author">
     <div class="header">
-      <div class="author-username">
-        <h1><b>{{ author.username }}</b></h1>
+      <div>
+        <div class="author-username">
+          <h1><b>{{ author.username }}</b></h1>
+        </div>
+        <div class="follow-button">
+          <button class="button button-primary" v-if="!isFollowing" @click="subscribe">
+            <span>Follow</span>
+          </button>
+          <button class="button button-outline" v-if="isFollowing" @click="unsubscribe">
+            <span>Unfollow</span>
+          </button>
+        </div>
       </div>
       <div class="author-bio">
         <p>{{ author.bio }}</p>
@@ -58,6 +68,8 @@ export default {
       offset: 0,
 
       totalCount: 0,
+
+      isFollowing: false,
     }
   },
   methods: {
@@ -69,6 +81,7 @@ export default {
       AuthorsService.getAuthorData(authorName, limit, offset)
           .then(response => {
             this.author = response.data;
+            this.loadFollowStatus();
             document.title = this.author.username;
             let articles = this.author.articles.entities.sort((article1, article2) => {
               if (article1.publicationDate < article2.publicationDate) {
@@ -86,6 +99,34 @@ export default {
             console.log(err);
             this.$router.replace('/error'); // redirecting to '/error'
           });
+    },
+    loadFollowStatus: function () {
+      AuthorsService.isFollowing(this.author.username)
+          .then(response => {
+            this.isFollowing = response.data;
+          })
+          .catch(err => {
+            console.log(err);
+            this.isFollowing = false;
+          });
+    },
+    subscribe: function () {
+      AuthorsService.subscribe(this.author.username)
+          .then(response => {
+            this.loadFollowStatus();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    },
+    unsubscribe: function () {
+      AuthorsService.unsubscribe(this.author.username)
+          .then(response => {
+            this.loadFollowStatus();
+          })
+          .catch(err => {
+            console.log(err);
+          });
     }
   },
   created() {
@@ -100,9 +141,21 @@ export default {
 </script>
 
 <style scoped>
+.author-page-content {
+  max-width: 700pt;
+}
+
 .header {
   justify-content: space-between;
   padding-bottom: 15pt;
+}
+
+.author-username, .follow-button {
+  display: inline-block;
+}
+
+.follow-button {
+  float: right;
 }
 
 .author-bio {

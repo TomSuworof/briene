@@ -151,9 +151,9 @@ export default {
           .then(response => {
             this.inBookmarks = response.data;
           }).catch(err => {
-        console.log(err);
-        this.inBookmarks = false;
-      });
+            console.log(err);
+            this.inBookmarks = false;
+          });
     },
     loadArticleContent: function (articleUrl) {
       this.loadingArticle = true;

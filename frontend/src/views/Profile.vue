@@ -45,7 +45,7 @@
             <div>
               <label><strong>Bio:</strong></label>
               <div>
-                <textarea id="bio" v-model="bio"></textarea>
+                <textarea id="bio" v-model="bio" maxlength="255"></textarea>
               </div>
             </div>
             <div class="form-group">
@@ -435,6 +435,7 @@ textarea {
 .bio {
   white-space: pre-line;
   padding: 0 0 5pt;
+  max-width: 700pt;
 }
 
 .bookmarks-title {
