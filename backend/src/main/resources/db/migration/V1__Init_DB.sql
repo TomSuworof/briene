@@ -48,8 +48,8 @@ create table if not exists t_comments
 
 create table if not exists t_articles_comments
 (
-    article_id uuid not null constraint references_not_null_article                                  references t_articles not null,
-    comment_id uuid not null constraint references_not_null_comment unique constraint unique_comment references t_comments not null,
+    article_id uuid not null constraint references_not_null_article                                  references t_articles,
+    comment_id uuid not null constraint references_not_null_comment unique constraint unique_comment references t_comments,
     primary key (article_id, comment_id)
 );
 
