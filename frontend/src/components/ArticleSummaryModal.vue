@@ -121,14 +121,21 @@ export default {
             this.showWarningArticleExists();
           });
     },
+    getSummaryFromContent: function (content) {
+      let maxAvailContent = content.substring(0, this.maxLength);
+      let reversedContent = maxAvailContent.split('').reverse().join('');
+      let indexOfLastDot = maxAvailContent.length - reversedContent.indexOf('.', 1)
+
+      return maxAvailContent.substring(0, indexOfLastDot);
+    },
     closeThisModal: function () {
       this.cancel();
-    }
+    },
   },
   created() {
     this.summaryGot = this.summary;
     if (this.summaryGot === undefined || this.summaryGot === '') {
-      this.summaryGot = this.content.substring(0, this.maxLength);
+      this.summaryGot = this.getSummaryFromContent(this.content);
     }
 
     this.urlGot = this.url;

@@ -18,7 +18,10 @@
         <p>{{ author.bio }}</p>
       </div>
       <div class="author-article-count">
-        <p>Author has {{ author.articles.totalCount }} articles</p>
+        <p>{{ getArticlesMessage(author.articles.totalCount) }}</p>
+      </div>
+      <div class="author-follower-count">
+        <p>{{ getFollowersMessage(author.followersCounter) }}</p>
       </div>
       <hr align="left">
     </div>
@@ -73,6 +76,20 @@ export default {
     }
   },
   methods: {
+    getArticlesMessage: function (count) {
+      if (count % 10 === 1) {
+        return `${count} article`
+      } else {
+        return `${count} articles`
+      }
+    },
+    getFollowersMessage: function (count) {
+      if (count % 10 === 1) {
+        return `${count} follower`
+      } else {
+        return `${count} followers`
+      }
+    },
     loadMoreArticles: function () {
       this.offset += this.limit;
       this.loadAuthorData(this.author.username, this.limit, this.offset);
@@ -160,5 +177,11 @@ export default {
 
 .author-bio {
   white-space: pre-line;
+}
+
+.author-article-count, .author-follower-count {
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 10pt;
 }
 </style>
