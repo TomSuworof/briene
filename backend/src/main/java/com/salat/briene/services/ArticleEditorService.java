@@ -24,7 +24,6 @@ public class ArticleEditorService {
         article.setSummary(articleUploadRequest.getSummary());
         article.setState(ArticleState.getFromAction(action.toLowerCase()));
         article.setTags(tagService.mapToTags(articleUploadRequest.getTags()));
-        article.setPublicationDate(OffsetDateTime.now());
         article.setUrl(articleUploadRequest.getUrl());
 
         if (article.getUrl() == null) {

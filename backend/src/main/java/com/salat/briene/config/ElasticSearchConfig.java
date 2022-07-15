@@ -31,10 +31,11 @@ import java.net.URI;
         basePackages = "com.salat.briene.repositories",
         includeFilters = @ComponentScan.Filter(classes = {
                 ArticleRepository.class,
+                CommentRepository.class,
                 PasswordResetRepository.class,
                 RoleRepository.class,
                 TagRepository.class,
-                UserRepository.class
+                UserRepository.class,
         }, type = FilterType.ASSIGNABLE_TYPE))
 @Configuration
 public class ElasticSearchConfig extends ElasticsearchConfigurationSupport {

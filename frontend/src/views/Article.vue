@@ -53,15 +53,13 @@
           <p class="suggestion-name">Ctrl ←</p>
           <article-component
               v-bind:key="nextArticle.id"
-              v-bind:article="nextArticle"
-          ></article-component>
+              v-bind:article="nextArticle"/>
         </div>
         <div class="prev-article" v-if="prevArticle">
           <p class="suggestion-name">Ctrl →</p>
           <article-component
               v-bind:key="prevArticle.id"
-              v-bind:article="prevArticle"
-          ></article-component>
+              v-bind:article="prevArticle"/>
         </div>
       </div>
     </div>
@@ -71,8 +69,27 @@
         <article-component
             v-for="article in suggestedArticles"
             v-bind:key="article.id"
-            v-bind:article="article"
-        ></article-component>
+            v-bind:article="article"/>
+      </div>
+    </div>
+    <div class="comments-wrapper" v-if="!loadingArticle">
+      <p><b>Comments</b></p>
+      <div class="comments">
+        <comment-component
+             v-for="comment in comments"
+             v-bind:key="comment.id"
+             v-bind:comment="comment"/>
+      </div>
+    </div>
+    <div class="comment-editor-wrapper" v-if="!loadingArticle">
+      <div class="comment-editor">
+        <textarea v-model="commentMessage"></textarea>
+      </div>
+      <div class="btn-container">
+        <button class="button button-primary" @click="uploadComment" type="button">
+<!--          <span v-show="loading" class="spinner-border spinner-border-sm"></span>-->
+          <span>Comment</span>
+        </button>
       </div>
     </div>
   </div>
@@ -85,10 +102,13 @@ import BookmarksService from "@/api/BookmarksService";
 import VMdEditor from '@kangc/v-md-editor';
 import ShimmerBlock from "@/components/ShimmerBlock";
 import ArticleComponent from "@/components/ArticleComponent";
+import CommentService from "@/api/CommentService";
+import CommentComponent from "@/components/CommentComponent";
 
 export default {
   name: "Article",
   components: {
+    CommentComponent,
     ShimmerBlock,
     VMdEditor,
     ArticleComponent
@@ -98,6 +118,9 @@ export default {
       inBookmarks: false,
       loadingArticle: false,
       article: '',
+
+      comments: [],
+      commentMessage: '',
 
       nextArticle: undefined,
       prevArticle: undefined,
@@ -160,6 +183,16 @@ export default {
       ArticlesService.getArticleForRender(articleUrl)
           .then(response => {
             this.article = response.data;
+            let comments = response.data.comments.sort((comment1, comment2) => {
+              if (comment1.publicationDate < comment2.publicationDate) {
+                return -1;
+              }
+              if (comment1.publicationDate > comment2.publicationDate) {
+                return 1;
+              }
+              return 0;
+            }); // newer last
+            this.comments = this.comments.concat(comments);
             this.loadingArticle = false;
             // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
             this.loadMeta();
@@ -272,6 +305,17 @@ export default {
       document.querySelector("[name='keywords']").remove();
       document.querySelector("[name='author']").remove();
       document.querySelector("[name='robots']").remove();
+    },
+    uploadComment: function () {
+      CommentService.uploadComment(this.article.id, this.commentMessage)
+          .then(response => {
+            this.comments.push(response.data);
+            this.commentMessage = '';
+          })
+          .catch(err => {
+            console.log(err);
+            this.$router.replace('/login');
+          });
     }
   },
   created() {
@@ -339,13 +383,6 @@ hr {
   }
 }
 
-button {
-  background: white;
-  display: block;
-  border: none;
-  outline: none;
-}
-
 .bookmarking, .article-title {
   display: inline-block;
 }
@@ -407,7 +444,7 @@ button {
 }
 
 .article-content-wrapper {
-  padding-bottom: 60pt;
+  margin-bottom: 60pt;
 }
 
 .suggestions {
@@ -421,5 +458,27 @@ button {
 
 .suggestion-name {
   font-size: 12px;
+}
+
+.comments-wrapper {
+  margin-top: 40pt;
+}
+
+.comment-editor-wrapper {
+  max-width: 300pt;
+  margin: 0 0 10pt;
+}
+
+textarea {
+  padding: 5pt;
+  border-radius: 9px;
+  width: 100%;
+  height: 100pt;
+  resize: none;
+}
+
+.comment-editor {
+  padding-top: 15pt;
+  padding-bottom: 0;
 }
 </style>

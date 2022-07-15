@@ -38,6 +38,21 @@ create table if not exists t_articles
     url              text                     not null
 );
 
+create table if not exists t_comments
+(
+    id               uuid                     not null primary key,
+    message          text                     not null,
+    publication_date timestamp with time zone not null,
+    user_id          uuid                     not null constraint reference_to_not_null_user references t_users not null
+);
+
+create table if not exists t_articles_comments
+(
+    article_id uuid not null constraint references_not_null_article                                  references t_articles not null,
+    comment_id uuid not null constraint references_not_null_comment unique constraint unique_comment references t_comments not null,
+    primary key (article_id, comment_id)
+);
+
 create table if not exists t_users_roles
 (
     user_id  uuid   not null constraint references_to_not_null_user references t_users not null,
@@ -52,20 +67,20 @@ create table if not exists t_user_bookmarks
     constraint t_user_bookmarks_pkey primary key (bookmarked_article_id, bookmarked_by_user_id)
 );
 
-create table t_followers
+create table if not exists t_followers
 (
     author_id   uuid not null constraint reference_not_null_author_id   references t_users not null,
     follower_id uuid not null constraint reference_not_null_follower_id references t_users not null,
     constraint t_followers_pkey primary key (author_id, follower_id)
 );
 
-create table t_tags
+create table if not exists t_tags
 (
     id   uuid         not null primary key,
     name varchar(255) not null
 );
 
-create table t_articles_tags
+create table if not exists t_articles_tags
 (
     article_id uuid not null constraint references_to_not_null_article_id references t_articles,
     tags_id    uuid not null constraint references_to_not_null_tags_is references t_tags

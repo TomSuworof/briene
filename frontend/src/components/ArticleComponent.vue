@@ -15,10 +15,8 @@
       </div>
     </div>
     <div class="article-about">
-      <div>
-        <div class="article-author">
-          <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
-        </div>
+      <div class="article-author">
+        <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
       </div>
     </div>
     <div class="article-title-container">

@@ -59,6 +59,13 @@ public class Article {
     @Field(type = FieldType.Text)
     private String url;
 
+    @OneToMany
+    @JoinTable(name = "t_articles_comments",
+            joinColumns = { @JoinColumn(name = "article_id") },
+            inverseJoinColumns = { @JoinColumn(name = "comment_id") })
+    @org.springframework.data.annotation.Transient
+    private Set<Comment> comments;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(name = "t_articles_tags",
             joinColumns = { @JoinColumn(name = "article_id") },
@@ -68,6 +75,7 @@ public class Article {
 
     public Article() {
         this.id = UUID.randomUUID();
+        this.publicationDate = OffsetDateTime.now();
     }
 
     @Override
