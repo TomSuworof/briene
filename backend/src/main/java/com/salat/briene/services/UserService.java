@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -47,7 +48,7 @@ public class UserService implements UserDetailsService {
         return loadUserByUsername(authentication.getName());
     }
 
-    public void saveUser(SignupRequest signupRequest) throws EmailException {
+    public void saveUser(SignupRequest signupRequest) {
         if (existsByUsername(signupRequest.getUsername())) {
             throw new DuplicatedUserByUsernameException();
         }
@@ -63,7 +64,13 @@ public class UserService implements UserDetailsService {
         user.setRoles(Set.of(RoleEnum.USER.getAsObject()));
         userRepository.save(user);
 
-        mailService.sendRegistrationConfirm(user.getEmail(), user.getUsername());
+        Executors.newSingleThreadExecutor().submit(() -> {
+            try {
+                mailService.sendRegistrationConfirm(user.getEmail(), user.getUsername());
+            } catch (EmailException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private boolean existsByUsername(String username) {
@@ -109,11 +116,16 @@ public class UserService implements UserDetailsService {
     public void changeRole(UUID userId, Role role) throws EmailException {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        userFromDB.setRoles(new HashSet<>(){{
-            add(role);
-        }});
+        userFromDB.setRoles(new HashSet<>(Collections.singletonList(role)));
 
-        mailService.sendRoleChanged(userFromDB.getEmail(), role.getName());
+        Executors.newSingleThreadExecutor().submit(() -> {
+            try {
+                mailService.sendRoleChanged(userFromDB.getEmail(), role.getName());
+            } catch (EmailException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         userRepository.save(userFromDB);
     }
 

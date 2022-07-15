@@ -2,6 +2,7 @@ package com.salat.briene.services;
 
 import com.salat.briene.config.MailConfig;
 import com.salat.briene.entities.Article;
+import com.salat.briene.entities.Comment;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
@@ -73,6 +74,22 @@ public class MailService {
                 "\n" +
                 "<h1>" + article.getTitle() + "</h1\n" +
                 "<p style=\"white-space: pre-line;\">" + article.getSummary() + "</p>\n" +
+                "<a href=\"https://briene.herokuapp.com/articles/" + article.getUrl() + "\">Read now</a>\n" +
+                "<p>briene team <3</p>\n" +
+                "</body>\n" +
+                "</html>");
+        email.send();
+    }
+    
+    public void sendNotificationAboutComment(Article article, Comment comment) throws EmailException {
+        HtmlEmail email = getEmailTemplate(article.getAuthor().getEmail());
+
+        email.setSubject(String.format("%s left new comment", comment.getUser().getUsername()));
+        email.setHtmlMsg("<html>\n" +
+                "<body>\n" +
+                "\n" +
+                "<h1>" + article.getTitle() + "</h1\n" +
+                "<p style=\"white-space: pre-line;\">" + comment.getMessage() + "</p>\n" +
                 "<a href=\"https://briene.herokuapp.com/articles/" + article.getUrl() + "\">Read now</a>\n" +
                 "<p>briene team <3</p>\n" +
                 "</body>\n" +

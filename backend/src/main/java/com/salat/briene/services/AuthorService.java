@@ -8,6 +8,7 @@ import org.apache.commons.mail.EmailException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +41,17 @@ public class AuthorService {
         return follower.getFollowings().contains(author);
     }
 
-    public void notifyAboutNewArticle(Article newArticle) throws EmailException {
+    public void notifyAboutNewArticle(Article newArticle) {
         Set<User> followers = newArticle.getAuthor().getFollowers();
 
-        for (User follower : followers) {
-            mailService.sendNotificationAboutNewArticle(follower.getEmail(), newArticle);
-        }
+        Executors.newSingleThreadExecutor().submit(() -> {
+            for (User follower : followers) {
+                try {
+                    mailService.sendNotificationAboutNewArticle(follower.getEmail(), newArticle);
+                } catch (EmailException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }

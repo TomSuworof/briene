@@ -11,6 +11,7 @@ import org.apache.commons.mail.EmailException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class PasswordResetService {
         passwordResetRepository.save(new PasswordResetRequest(username));
     }
 
-    public String sendEmailWithCodeTo(String username) throws EmailException {
+    public String sendEmailWithCodeTo(String username) {
         User requiredUser = userService.loadUserByUsername(username);
 
         String code = passwordResetRepository
@@ -32,7 +33,14 @@ public class PasswordResetService {
                 .getId().toString();
 
         String email = requiredUser.getEmail();
-        mailService.sendPasswordChangeCode(email, code);
+
+        Executors.newSingleThreadExecutor().submit(() -> {
+            try {
+                mailService.sendPasswordChangeCode(email, code);
+            } catch (EmailException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         return hideEmail(email);
     }
