@@ -133,11 +133,11 @@ export default {
       });
     },
     handleUploadImage: async function (event, insertImage, files) {
-
       let result = await this.toBase64(files[0]);
-
       let template = `<br><img loading="lazy" id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
-      this.content += template;
+      let cursorPos = document.getElementsByTagName('textarea')[0].selectionStart;
+
+      this.content = this.content.substring(0, cursorPos) + template + this.content.substring(cursorPos);
     },
     openAddTagInput: function () {
       this.showTagInput = true;

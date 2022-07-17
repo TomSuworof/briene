@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 @Component
@@ -14,7 +15,7 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     private final static String jwtSecret = "brieneSecretKey"; // should be more complex
-    private final static int jwtExpirationMs = 86400000;
+    private final static Integer jwtExpirationMs = 999999999;
 
     public String generateJwtToken(Authentication authentication) {
 
