@@ -1,7 +1,7 @@
 import http from './http-common'
 import authHeader from "@/api/AuthHeader";
 
-class ArticlesService {
+class AuthorsService {
     getAll() {
         return http.get('/authors');
     }
@@ -49,4 +49,4 @@ class ArticlesService {
     }
 }
 
-export default new ArticlesService()
+export default new AuthorsService()

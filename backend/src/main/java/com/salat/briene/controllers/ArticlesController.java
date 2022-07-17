@@ -25,9 +25,6 @@ import java.util.UUID;
 @RequestMapping("/api/articles")
 @RequiredArgsConstructor
 public class ArticlesController {
-    private static final String ARTICLE_UPLOADED = "Article was published or saved";
-    private static final String ARTICLE_DELETED = "Article {%s} was deleted";
-
     private final ArticleService articleService;
     private final ArticleEditorService articleEditorService;
     private final UserService userService;
@@ -108,20 +105,19 @@ public class ArticlesController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> publishArticle(@RequestBody ArticleUploadRequest article, @RequestParam String action, Authentication authentication) throws EmailException {
+    public ResponseEntity<ArticleDTO> publishArticle(@RequestBody ArticleUploadRequest article, @RequestParam String action, Authentication authentication) throws EmailException {
         User userFromToken = userService.getUserFromAuthentication(authentication);
-        articleEditorService.uploadArticle(userFromToken, article, action);
-        return ResponseEntity.ok().body(ARTICLE_UPLOADED);
+        ArticleDTO articleDTO = articleEditorService.uploadArticle(userFromToken, article, action);
+        return ResponseEntity.ok().body(articleDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteArticle(@PathVariable UUID id, Authentication authentication) {
+    public @ResponseBody void deleteArticle(@PathVariable UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);
         if (articleService.canUserEditArticle(currentUser, article)) {
             articleService.deleteArticleById(id);
-            return ResponseEntity.ok().body(ARTICLE_DELETED.formatted(id));
         } else {
             throw new ArticleNotFoundException();
         }

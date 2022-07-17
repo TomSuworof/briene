@@ -24,9 +24,6 @@ public class AuthorController {
     private final UserService userService;
     private final AuthorService authorService;
 
-    private static final String SUBSCRIBED_MESSAGE = "Subscribed";
-    private static final String UNSUBSCRIBED_MESSAGE = "Unsubscribed";
-
     @GetMapping("/{authorName}")
     public ResponseEntity<AuthorDTO> getAuthorPage(@PathVariable String authorName, @RequestParam Integer limit, @RequestParam Integer offset) {
         User userAuthor = userService.loadUserByUsername(authorName);
@@ -37,23 +34,19 @@ public class AuthorController {
     }
 
     @PostMapping("/subscribe")
-    public ResponseEntity<String> subscribeToAuthor(@RequestParam String author, Authentication authentication) {
+    public @ResponseBody void subscribeToAuthor(@RequestParam String author, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         User authorUser = userService.loadUserByUsername(author);
 
         authorService.subscribe(currentUser, authorUser);
-
-        return ResponseEntity.ok().body(SUBSCRIBED_MESSAGE);
     }
 
     @PostMapping("/unsubscribe")
-    public ResponseEntity<String> unsubscribeFromAuthor(@RequestParam String author, Authentication authentication) {
+    public @ResponseBody void unsubscribeFromAuthor(@RequestParam String author, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         User authorUser = userService.loadUserByUsername(author);
 
         authorService.unsubscribe(currentUser, authorUser);
-
-        return ResponseEntity.ok().body(UNSUBSCRIBED_MESSAGE);
     }
 
     @PostMapping("/isFollowing")
@@ -62,7 +55,6 @@ public class AuthorController {
         User authorUser = userService.loadUserByUsername(author);
 
         Boolean isFollowing = authorService.isFollowing(currentUser, authorUser);
-
         return ResponseEntity.ok().body(isFollowing);
     }
 }

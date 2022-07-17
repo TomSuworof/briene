@@ -7,9 +7,11 @@
         </div>
         <div class="follow-button">
           <button class="button button-primary" v-if="!isFollowing" @click="subscribe">
+            <span v-show="loadingSubscriptionChange" class="spinner-border spinner-border-sm"></span>
             <span>Follow</span>
           </button>
           <button class="button button-outline" v-if="isFollowing" @click="unsubscribe">
+            <span v-show="loadingSubscriptionChange" class="spinner-border spinner-border-sm"></span>
             <span>Unfollow</span>
           </button>
         </div>
@@ -73,6 +75,7 @@ export default {
       totalCount: 0,
 
       isFollowing: false,
+      loadingSubscriptionChange: false,
     }
   },
   methods: {
@@ -128,20 +131,26 @@ export default {
           });
     },
     subscribe: function () {
+      this.loadingSubscriptionChange = true;
       AuthorsService.subscribe(this.author.username)
           .then(response => {
+            this.loadingSubscriptionChange = false;
             this.loadFollowStatus();
           })
           .catch(err => {
+            this.loadingSubscriptionChange = false;
             console.log(err);
           });
     },
     unsubscribe: function () {
+      this.loadingSubscriptionChange = true;
       AuthorsService.unsubscribe(this.author.username)
           .then(response => {
+            this.loadingSubscriptionChange = false;
             this.loadFollowStatus();
           })
           .catch(err => {
+            this.loadingSubscriptionChange = false;
             console.log(err);
           });
     }

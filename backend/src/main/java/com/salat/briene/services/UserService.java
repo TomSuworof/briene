@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
         return loadUserByUsername(authentication.getName());
     }
 
-    public void saveUser(SignupRequest signupRequest) {
+    public UserDTO saveUser(SignupRequest signupRequest) {
         if (existsByUsername(signupRequest.getUsername())) {
             throw new DuplicatedUserByUsernameException();
         }
@@ -71,6 +71,8 @@ public class UserService implements UserDetailsService {
                 throw new RuntimeException(e);
             }
         });
+
+        return new UserDTO(user);
     }
 
     private boolean existsByUsername(String username) {
@@ -81,7 +83,7 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
-    public void updateUser(UUID userId, UserDataRequest userData) {
+    public UserDTO updateUser(UUID userId, UserDataRequest userData) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         if (userData.getEmail().isPresent()) {
@@ -101,6 +103,7 @@ public class UserService implements UserDetailsService {
         }
 
         userRepository.save(userFromDB);
+        return new UserDTO(userFromDB);
     }
 
     @Deprecated
@@ -113,7 +116,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void changeRole(UUID userId, Role role) throws EmailException {
+    public UserDTO changeRole(UUID userId, Role role) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         userFromDB.setRoles(new HashSet<>(Collections.singletonList(role)));
@@ -127,6 +130,7 @@ public class UserService implements UserDetailsService {
         });
 
         userRepository.save(userFromDB);
+        return new UserDTO(userFromDB);
     }
 
     public boolean isCurrentPasswordSameAs(UUID requiredUserId, String passwordAnother) {

@@ -23,7 +23,6 @@ import java.util.UUID;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    private static final String ROLE_UPDATED = "Role of {%s} changed";
 
     private final ArticleService articleService;
     private final UserService userService;
@@ -40,9 +39,9 @@ public class AdminController {
     }
 
     @PostMapping("/edit_user")
-    public ResponseEntity<String> changeRole(@RequestParam String action, @RequestParam UUID id) throws EmailException {
-        userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
-        return ResponseEntity.ok().body(ROLE_UPDATED.formatted(id));
+    public ResponseEntity<UserDTO> changeRole(@RequestParam String action, @RequestParam UUID id) {
+        UserDTO user = userService.changeRole(id, RoleEnum.getFromAction(action).getAsObject());
+        return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/articles")

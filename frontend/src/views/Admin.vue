@@ -215,8 +215,7 @@ export default {
       AdminService.editUser(action, id)
           .then(response => {
             console.log(response);
-            // fetch all users after changing some data
-            this.getAllUsers();
+            this.getUsersPaginated(this.usersLimit, this.usersOffset);
           })
           .catch(err => {
             console.log(err);
@@ -228,7 +227,7 @@ export default {
     removeArticle: function (articleId) {
       ArticlesService.delete(articleId)
           .then(() => {
-            this.getAllArticles('all');
+            this.getArticlesPaginated('all', this.articlesLimit, this.articlesOffset);
           })
           .catch(err => {
             console.log(err);

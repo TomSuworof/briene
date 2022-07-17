@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.EmailException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api/password_reset")
@@ -29,9 +26,7 @@ public class PasswordResetController {
     }
 
     @PostMapping("/change_password")
-    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+    public @ResponseBody void changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
         passwordResetService.setNewPassword(passwordChangeRequest.getRequestId(), passwordChangeRequest.getNewPassword());
-
-        return ResponseEntity.ok().body("Done"); // todo replace message
     }
 }

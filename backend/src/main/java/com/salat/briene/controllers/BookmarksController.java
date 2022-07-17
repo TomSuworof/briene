@@ -26,8 +26,6 @@ public class BookmarksController {
     private static final String BOOKMARKS_ACTION_ADD = "add";
     private static final String BOOKMARKS_ACTION_REMOVE = "remove";
 
-    private static final String BOOKMARKS_UPDATED = "Bookmarks updated";
-
     private final ArticleService articleService;
     private final UserService userService;
 
@@ -50,7 +48,7 @@ public class BookmarksController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editBookmark(@RequestParam String url, @RequestParam String action, Authentication authentication) {
+    public @ResponseBody void editBookmark(@RequestParam String url, @RequestParam String action, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Set<Article> bookmarks = currentUser.getBookmarkedArticles();
 
@@ -66,7 +64,5 @@ public class BookmarksController {
         newUserData.setBookmarks(Optional.of(bookmarks));
 
         userService.updateUser(currentUser.getId(), newUserData);
-
-        return ResponseEntity.ok().body(BOOKMARKS_UPDATED);
     }
 }

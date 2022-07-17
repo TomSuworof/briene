@@ -4,6 +4,7 @@ import com.salat.briene.entities.RoleEnum;
 import com.salat.briene.entities.User;
 import com.salat.briene.payload.request.UserDataRequest;
 import com.salat.briene.exceptions.UserNotFoundException;
+import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,10 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UsersController {
-    private static final String USER_UPDATED = "User data of {%s} was changed";
-
     private final UserService userService;
 
     @PostMapping("/edit")
-    public ResponseEntity<String> editUser(
+    public ResponseEntity<UserDTO> editUser(
             @RequestParam UUID id,
             @RequestParam String password,
             @RequestParam(required = false) String email,
@@ -40,9 +39,8 @@ public class UsersController {
             newUserData.setBio(Optional.ofNullable(bio));
             newUserData.setPassword(Optional.ofNullable(passwordNew));
 
-            userService.updateUser(id, newUserData);
-
-            return ResponseEntity.ok().body(USER_UPDATED.formatted(id));
+            UserDTO user = userService.updateUser(id, newUserData);
+            return ResponseEntity.ok().body(user);
         } else {
             throw new UserNotFoundException();
         }

@@ -122,8 +122,7 @@ export default {
         this.loading = true;
 
         this.$store.dispatch("auth/register", user)
-            .then((data) => {
-              this.message = data.message;
+            .then(response => {
               this.successful = true;
               this.loading = false;
               this.$router.push("/profile");

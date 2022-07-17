@@ -4,11 +4,10 @@ import com.salat.briene.entities.Article;
 import com.salat.briene.entities.ArticleState;
 import com.salat.briene.entities.User;
 import com.salat.briene.payload.request.ArticleUploadRequest;
+import com.salat.briene.payload.response.ArticleDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.EmailException;
 import org.springframework.stereotype.Service;
-
-import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +15,7 @@ public class ArticleEditorService {
     private final ArticleService articleService;
     private final TagService tagService;
 
-    public void uploadArticle(User author, ArticleUploadRequest articleUploadRequest, String action) throws EmailException {
+    public ArticleDTO uploadArticle(User author, ArticleUploadRequest articleUploadRequest, String action) throws EmailException {
         Article article = new Article();
         article.setAuthor(author);
         article.setTitle(articleUploadRequest.getTitle());
@@ -31,5 +30,6 @@ public class ArticleEditorService {
         }
 
         articleService.saveArticle(article);
+        return new ArticleDTO(article);
     }
 }
