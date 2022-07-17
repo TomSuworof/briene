@@ -31,7 +31,7 @@
             <li class="tag-item" v-for="tag in tags">
               <div class="tag-item-name">{{ tag }}</div>
               <div class="tag-item-close-button">
-                <button @click="removeTag(tag)" class="fa fa-close" title="Remove tag"></button>
+                <button @click="removeTag(tag)" class="fa fa-close" title="Remove tag" type="button"/>
               </div>
             </li>
             <li class="tag-item" v-if="showTagInput">

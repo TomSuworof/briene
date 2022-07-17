@@ -87,8 +87,8 @@
       </div>
       <div class="btn-container">
         <button class="button button-primary" @click="uploadComment" type="button">
-<!--          <span v-show="loading" class="spinner-border spinner-border-sm"></span>-->
-          <span>Comment</span>
+          <span v-show="loadingComment" class="spinner-border spinner-border-sm"></span>
+          <span>Send</span>
         </button>
       </div>
     </div>
@@ -121,6 +121,7 @@ export default {
 
       comments: [],
       commentMessage: '',
+      loadingComment: false,
 
       nextArticle: undefined,
       prevArticle: undefined,
@@ -307,12 +308,15 @@ export default {
       document.querySelector("[name='robots']").remove();
     },
     uploadComment: function () {
+      this.loadingComment = true;
       CommentService.uploadComment(this.article.id, this.commentMessage)
           .then(response => {
             this.comments.push(response.data);
             this.commentMessage = '';
+            this.loadingComment = false;
           })
           .catch(err => {
+            this.loadingComment = false;
             console.log(err);
             this.$router.replace('/login');
           });
