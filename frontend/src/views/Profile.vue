@@ -1,6 +1,9 @@
 <template>
   <div class="profile-page-content" v-show="currentUser !== null">
-    <div class="avatar-wrapper">
+    <div class="avatar-wrapper" v-if="!avatarString">
+      <img src="<%= BASE_URL %>avatar-empty.webp" alt="Avatar"/>
+    </div>
+    <div class="avatar-wrapper" v-if="avatarString">
       <img :src="avatarString" alt="Avatar"/>
     </div>
     <div class="header row">
