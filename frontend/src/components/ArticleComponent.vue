@@ -14,10 +14,8 @@
         </div>
       </div>
     </div>
-    <div class="article-about">
-      <div class="article-author">
-        <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
-      </div>
+    <div class="article-author">
+      <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
     </div>
     <div class="article-title-container">
       <h3 class="article-title">
@@ -94,8 +92,8 @@ export default {
   border: solid 1px black;
 }
 
-.article-about {
-  justify-content: space-between;
+.article-author {
+  font-size: 12px;
 }
 
 .article-util-container {

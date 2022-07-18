@@ -195,13 +195,19 @@ button {
   border-radius: 22px;
 }
 
+button > span {
+  margin-left: 5pt;
+  margin-right: 5pt;
+}
+
 .button {
   height: 2.3rem;
-  padding: 2pt 15pt;
+  padding: 2pt 10pt;
   margin: 2pt;
   border-radius: 22px;
   border: 1px solid;
   background: #f8f9fa;
+  transition: background-color 0.17s;
 }
 
 .button:focus {
@@ -239,13 +245,13 @@ button {
 }
 
 .button-success {
-  background: #A6A228;
-  border-color: #A6A228;
+  background: #AFAF28;
+  border-color: #AFAF28;
   color: white;
 }
 
 .button-success:hover {
-  background: #85821F;
+  background: #99991F;
 }
 
 .button-icon, .button-message {
