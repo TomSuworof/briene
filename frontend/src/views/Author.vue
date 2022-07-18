@@ -193,11 +193,23 @@ export default {
   max-width: 700pt;
 }
 
-.avatar-wrapper > img {
-  object-fit: cover;
-  border-radius: 50%;
-  width: 120pt;
-  height: 120pt;
+@media screen and (max-width: 720px) {
+  .avatar-wrapper > img {
+    object-fit: cover;
+    border-radius: 50%;
+    width: 60pt;
+    height: 60pt;
+  }
+}
+
+
+@media screen and (min-width: 720px) {
+  .avatar-wrapper > img {
+    object-fit: cover;
+    border-radius: 50%;
+    width: 120pt;
+    height: 120pt;
+  }
 }
 
 .header {
