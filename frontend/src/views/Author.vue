@@ -2,7 +2,7 @@
   <div class="author-page-content" v-if="author">
     <div class="header">
       <div class="avatar-wrapper" v-if="!avatarString">
-        <img src="/avatar-empty.webp" alt="Avatar"/>
+        <img src="<%= BASE_URL %>avatar-empty.webp" alt="Avatar"/>
       </div>
       <div class="avatar-wrapper" v-if="avatarString">
         <img :src="avatarString" alt="Avatar"/>
