@@ -4,15 +4,12 @@ import authHeader from "@/api/AuthHeader";
 class UserService {
     editUser(id, password, newUserData) {
         return http.post('/users/edit',
-            {},
+            newUserData,
             {
                 headers: authHeader(),
                 params: {
                     id: id,
-                    password: password,
-                    email: newUserData.email,
-                    bio: newUserData.bio,
-                    passwordNew: newUserData.passwordNew,
+                    password: password
                 }
             });
     }

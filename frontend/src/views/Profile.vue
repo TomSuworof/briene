@@ -1,5 +1,8 @@
 <template>
   <div class="profile-page-content" v-show="currentUser !== null">
+    <div class="avatar-wrapper">
+      <img :src="avatarString" alt="Avatar"/>
+    </div>
     <div class="header row">
       <div>
         <h1 id="username">{{ currentUser.username }}</h1>
@@ -42,6 +45,13 @@
               <Field id="email" name="email" type="email" class="form-control" v-model="email"/>
               <ErrorMessage name="email" class="error-feedback"/>
             </div>
+            <div class="form-group">
+              <label><strong>Avatar:</strong></label>
+              <Field name="avatar" type="file" class="form-control">
+                <input id="avatar" type="file" accept="image/*" @change="setAvatarString" class="form-control"/>
+              </Field>
+              <ErrorMessage name="avatar" class="error-feedback"/>
+            </div>
             <div>
               <label><strong>Bio:</strong></label>
               <div>
@@ -67,7 +77,7 @@
           <Form @submit="submitChangesPassword" method="post">
             <div class="form-group">
               <label>Password</label>
-              <Field id="pswOld" type="password" name="passwordOld" class="form-control" placeholder="Password" v-model="password"/>
+              <Field id="pswOld" type="password" name="passwordOld" class="form-control" placeholder="Password" v-model="currentPassword"/>
             </div>
             <div class="setting-password">
               <div class="form-group">
@@ -95,7 +105,9 @@
               </div>
             </div>
             <div class="form-group">
-              <button class="button button-primary">Save</button>
+              <button class="button button-primary">
+                <span>Save</span>
+              </button>
             </div>
           </Form>
         </div>
@@ -175,6 +187,7 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import * as accordion from "@/assets/js/accordion";
 import ShimmerBlock from "@/components/ShimmerBlock";
+import AvatarsService from "@/api/AvatarsService";
 
 export default {
   name: 'Profile',
@@ -202,11 +215,7 @@ export default {
           .string()
           .required("Password is required!")
           .min(8, "Must be at least 8 characters!")
-          .max(40, "Must be maximum 40 characters!"),
-      agreement: yup
-          .bool()
-          .oneOf([true])
-          .required("You must agree to terms of use")
+          .max(40, "Must be maximum 40 characters!")
     });
 
     return {
@@ -221,9 +230,13 @@ export default {
       articlesLimit: 5,
       articlesOffset: 0,
 
-      password: undefined,
+      avatarString: undefined,
+      avatarFile: undefined,
       email: undefined,
       bio: undefined,
+      password: undefined,
+
+      currentPassword: undefined,
       passwordNew: undefined,
       passwordNewConfirm: undefined,
 
@@ -268,10 +281,21 @@ export default {
       this.showUserData = !this.showUserData;
       this.$nextTick(pswChecker.passwordChecking); // waits for rendering
     },
+    toBase64: function (file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    },
+    setAvatarString: async function ({ target: { files }}) {
+      this.avatarString = await this.toBase64(files[0]);
+    },
     submitChangesBaseInfo: function () {
       this.showUserData = !this.showUserData;
-      this.loading = true;
       UserService.editUser(this.currentUser.id, this.password, {
+        avatar: this.avatarString,
         email: this.email,
         bio: this.bio,
       })
@@ -285,10 +309,9 @@ export default {
     },
     submitChangesPassword: function () {
       this.showUserData = !this.showUserData;
-
       if (pswChecker.checkFields()) {
-        UserService.editUser(this.currentUser.id, this.password, {
-          passwordNew: this.passwordNew,
+        UserService.editUser(this.currentUser.id, this.currentPassword, {
+          passwordNew: this.passwordNew
         })
             .then(response => {
               console.log(response);
@@ -298,6 +321,15 @@ export default {
               console.log(err);
             });
       }
+    },
+    getMyAvatar: function () {
+      AvatarsService.getUserAvatar(this.currentUser.username)
+          .then(response => {
+            this.avatarString = response.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
     getMyBio: function() {
       AuthorsService.getAuthorData(this.currentUser.username, 1, 0)
@@ -394,6 +426,7 @@ export default {
   },
   mounted() {
     this.email = this.currentUser.email;
+    this.getMyAvatar();
     this.getMyBio();
     this.getMyBookmarks();
     this.getArticlesPaginated('all', this.articlesLimit, this.articlesOffset);
@@ -405,9 +438,16 @@ export default {
 @import "../assets/css/accordion_style.css";
 @import "../assets/css/password_checking_style.css";
 
+.avatar-wrapper > img {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 120pt;
+  height: 120pt;
+}
+
 .header {
   justify-content: space-between;
-  margin: 0 0 10pt;
+  margin: 10pt 0 10pt;
 }
 
 #username {
@@ -430,6 +470,10 @@ textarea {
   max-width: 300pt;
   height: 100pt;
   resize: none;
+}
+
+.form-control#avatar {
+  height: fit-content;
 }
 
 .bio {

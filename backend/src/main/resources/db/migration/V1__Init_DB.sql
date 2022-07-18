@@ -23,7 +23,8 @@ create table if not exists t_users
     email           varchar(255) not null,
     password        varchar(255) not null,
     username        varchar(255) not null,
-    bio             varchar(255)
+    bio             varchar(255),
+    avatar          text
 );
 
 create table if not exists t_articles

@@ -1,32 +1,40 @@
 <template>
   <div class="author-page-content" v-if="author">
     <div class="header">
-      <div>
-        <div class="author-username">
-          <h1><b>{{ author.username }}</b></h1>
+      <div class="avatar-wrapper" v-if="!avatarString">
+        <img src="/avatar-empty.webp" alt="Avatar"/>
+      </div>
+      <div class="avatar-wrapper" v-if="avatarString">
+        <img :src="avatarString" alt="Avatar"/>
+      </div>
+      <div class="author-data">
+        <div>
+          <div class="author-username">
+            <h1><b>{{ author.username }}</b></h1>
+          </div>
+          <div class="follow-button">
+            <button class="button button-primary" v-if="!isFollowing" @click="subscribe">
+              <span v-show="loadingSubscriptionChange" class="spinner-border spinner-border-sm"></span>
+              <span>Follow</span>
+            </button>
+            <button class="button button-outline" v-if="isFollowing" @click="unsubscribe">
+              <span v-show="loadingSubscriptionChange" class="spinner-border spinner-border-sm"></span>
+              <span>Unfollow</span>
+            </button>
+          </div>
         </div>
-        <div class="follow-button">
-          <button class="button button-primary" v-if="!isFollowing" @click="subscribe">
-            <span v-show="loadingSubscriptionChange" class="spinner-border spinner-border-sm"></span>
-            <span>Follow</span>
-          </button>
-          <button class="button button-outline" v-if="isFollowing" @click="unsubscribe">
-            <span v-show="loadingSubscriptionChange" class="spinner-border spinner-border-sm"></span>
-            <span>Unfollow</span>
-          </button>
+        <div class="author-bio">
+          <p>{{ author.bio }}</p>
+        </div>
+        <div class="author-article-count">
+          <p>{{ getArticlesMessage(author.articles.totalCount) }}</p>
+        </div>
+        <div class="author-follower-count">
+          <p>{{ getFollowersMessage(author.followersCounter) }}</p>
         </div>
       </div>
-      <div class="author-bio">
-        <p>{{ author.bio }}</p>
-      </div>
-      <div class="author-article-count">
-        <p>{{ getArticlesMessage(author.articles.totalCount) }}</p>
-      </div>
-      <div class="author-follower-count">
-        <p>{{ getFollowersMessage(author.followersCounter) }}</p>
-      </div>
-      <hr align="left">
     </div>
+    <hr align="left">
     <div v-if="loadingArticles">
       <ShimmerBlock/>
     </div>
@@ -55,6 +63,7 @@
 import AuthorsService from "@/api/AuthorsService";
 import ArticleComponent from "@/components/ArticleComponent";
 import ShimmerBlock from "@/components/ShimmerBlock";
+import AvatarsService from "@/api/AvatarsService";
 
 export default {
   name: "Author",
@@ -64,6 +73,8 @@ export default {
   },
   data() {
     return {
+      avatarString: undefined,
+
       author: undefined,
       loadingArticles: false,
       articles: [],
@@ -97,6 +108,15 @@ export default {
     loadMoreArticles: function () {
       this.offset += this.limit;
       this.loadAuthorData(this.author.username, this.limit, this.offset);
+    },
+    getAvatar: function (authorName) {
+      AvatarsService.getUserAvatar(authorName)
+          .then(response => {
+            this.avatarString = response.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
     },
     loadAuthorData: function (authorName, limit, offset) {
       AuthorsService.getAuthorData(authorName, limit, offset)
@@ -158,6 +178,7 @@ export default {
   },
   created() {
     this.loadingArticles = true;
+    this.getAvatar(this.$route.params.authorName);
     this.loadAuthorData(this.$route.params.authorName, this.limit, this.offset);
     this.loadingArticles = false;
   },
@@ -172,9 +193,20 @@ export default {
   max-width: 700pt;
 }
 
+.avatar-wrapper > img {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 120pt;
+  height: 120pt;
+}
+
 .header {
-  justify-content: space-between;
-  padding-bottom: 15pt;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+.avatar-wrapper {
+  margin-right: 5pt;
 }
 
 .author-username, .follow-button {

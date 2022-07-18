@@ -42,6 +42,9 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @org.springframework.data.annotation.Transient
+    private String avatar;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "t_user_bookmarks",
             joinColumns = @JoinColumn(name = "bookmarked_by_user_id", referencedColumnName = "id"),

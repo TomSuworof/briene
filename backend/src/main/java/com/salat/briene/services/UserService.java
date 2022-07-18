@@ -86,6 +86,10 @@ public class UserService implements UserDetailsService {
     public UserDTO updateUser(UUID userId, UserDataRequest userData) {
         User userFromDB = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
+        if (userData.getAvatar().isPresent()) {
+            userFromDB.setAvatar(userData.getAvatar().get());
+        }
+
         if (userData.getEmail().isPresent()) {
             userFromDB.setEmail(userData.getEmail().get());
         }

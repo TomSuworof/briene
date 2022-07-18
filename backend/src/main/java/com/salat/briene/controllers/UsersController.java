@@ -26,18 +26,11 @@ public class UsersController {
     public ResponseEntity<UserDTO> editUser(
             @RequestParam UUID id,
             @RequestParam String password,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String bio,
-            @RequestParam(required = false) String passwordNew,
+            @RequestBody UserDataRequest newUserData,
             Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
 
         if (currentUser.is(RoleEnum.ADMIN) || (currentUser.getId().equals(id) && userService.isCurrentPasswordSameAs(id, password))) {
-
-            UserDataRequest newUserData = new UserDataRequest();
-            newUserData.setEmail(Optional.ofNullable(email));
-            newUserData.setBio(Optional.ofNullable(bio));
-            newUserData.setPassword(Optional.ofNullable(passwordNew));
 
             UserDTO user = userService.updateUser(id, newUserData);
             return ResponseEntity.ok().body(user);

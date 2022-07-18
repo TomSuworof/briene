@@ -10,12 +10,14 @@ import java.util.Set;
 @Getter
 @Setter
 public class UserDataRequest {
+    private Optional<String> avatar;
     private Optional<String> email;
     private Optional<String> bio;
     private Optional<Set<Article>> bookmarks;
     private Optional<String> password;
 
     public UserDataRequest() {
+        this.avatar = Optional.empty();
         this.email = Optional.empty();
         this.bio = Optional.empty();
         this.bookmarks = Optional.empty();
