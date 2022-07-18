@@ -1,7 +1,7 @@
 <template>
   <div class="profile-page-content" v-show="currentUser !== null">
     <div class="avatar-wrapper" v-if="!avatarString">
-      <img src="<%= BASE_URL %>avatar-empty.webp" alt="Avatar"/>
+      <img src="@/assets/images/avatar-empty.webp" alt="Avatar"/>
     </div>
     <div class="avatar-wrapper" v-if="avatarString">
       <img :src="avatarString" alt="Avatar"/>
