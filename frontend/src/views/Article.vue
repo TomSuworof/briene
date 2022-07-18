@@ -408,6 +408,10 @@ hr {
   justify-content: space-between;
 }
 
+.article-author {
+  font-size: 12px;
+}
+
 .control {
   text-align: center;
   border-radius: 9px;
