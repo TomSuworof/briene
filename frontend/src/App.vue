@@ -93,17 +93,19 @@ hr {
 
 @media screen and (max-width: 720px) {
   .header-button-editor-img, .header-button-profile-img {
-    padding-top: 7pt;
     display: inline-block;
-    padding-left: 30pt;
+    padding-top: 7pt;
+    padding-left: 20pt;
+    padding-right: 10pt;
   }
 
   .header-buttons, .header-buttons-left, .search-bar {
-    padding: 3pt !important;
+    padding-top: 7pt !important;
   }
 
   .main-link {
-    margin: 0 0 10pt 10pt !important;
+    margin-top: 1pt !important;
+    margin-left: 10pt !important;
   }
 
   .search-bar {
@@ -134,7 +136,7 @@ hr {
 }
 
 .row {
-  width: 101%;
+  margin: auto;
 }
 
 .header-buttons {
