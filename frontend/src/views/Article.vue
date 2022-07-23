@@ -457,11 +457,11 @@ hr {
 
 .suggestions {
   display: flex;
+  flex-direction: row;
 }
 
 .next-article, .prev-article {
   float: left;
-  margin-right: 40pt;
 }
 
 .suggestion-name {

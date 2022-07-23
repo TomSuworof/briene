@@ -10,7 +10,7 @@
       <div>
         <h1 id="username">{{ currentUser.username }}</h1>
       </div>
-      <div class="header-buttons">
+      <div class="profile-header-buttons">
         <div v-show="isAdmin" class="header-admin-button">
           <router-link to="/admin">Admin</router-link>
         </div>

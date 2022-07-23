@@ -85,6 +85,7 @@ export default {
   position: relative;
   border-radius: 9px;
   margin-bottom: 30pt;
+  padding-left: 3pt;
   border: solid 1px transparent;
 }
 

@@ -7,16 +7,14 @@
         </div>
       </div>
       <div class="search-bar">
-        <div>
-          <form @submit="search">
-            <div class="input-box">
-              <input type="text" name="query" class="query form-control" v-model="query"><i class="fa fa-search"></i>
-            </div>
-            <input type="number" name="limit" v-model="limit" hidden/>
-            <input type="number" name="offset" v-model="offset" hidden/>
-            <button type="submit" hidden title="Submit search request"/>
-          </form>
-        </div>
+        <form class="search-bar-form" @submit="search">
+          <div class="input-box">
+            <input type="text" name="query" class="query form-control" v-model="query"><i class="fa fa-search"></i>
+          </div>
+          <input type="number" name="limit" v-model="limit" hidden/>
+          <input type="number" name="offset" v-model="offset" hidden/>
+          <button type="submit" hidden title="Submit search request"/>
+        </form>
       </div>
       <div class="header-buttons-right">
         <div class="header-button-editor-img">
@@ -136,12 +134,18 @@ hr {
 }
 
 .row {
-  width: 100%;
+  width: 101%;
 }
 
 .header-buttons {
-  padding: 10pt;
+  padding: 10pt 10pt 0 0;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px;
+  vertical-align: center;
 }
 
 .main-link {
@@ -150,20 +154,28 @@ hr {
   font-size: 1.2rem;
 }
 
-.main-link, .header-button-editor, .header-button-profile, .footer-link {
+.main-link, .header-button-editor, .header-button-profile {
+  display: inline-block;
+  margin: 0 10pt 0 20pt;
+}
+
+.footer-link {
   display: inline-block;
   margin: 0 10pt 10pt 20pt;
 }
 
+.query {
+  height: 1.9rem;
+}
+
 .input-box {
-  height: 100%;
   position: relative
 }
 
 .input-box i {
   position: absolute;
-  right: 13px;
-  top: 10px;
+  right: 10pt;
+  top: 5pt;
   color: #ced4da
 }
 
@@ -171,7 +183,6 @@ hr {
   background: white;
   border-radius: 9px;
   margin: 0 0 10pt;
-  padding: 10pt;
   transition: border-color, border-width 0.3s;
 }
 
