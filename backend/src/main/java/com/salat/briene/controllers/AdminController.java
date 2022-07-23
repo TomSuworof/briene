@@ -19,7 +19,7 @@ import java.util.UUID;
 
 //@CrossOrigin(origins = "*")
 @Controller
-@PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {

@@ -48,7 +48,8 @@ public class BookmarksController {
     }
 
     @PostMapping("/edit")
-    public @ResponseBody void editBookmark(@RequestParam String url, @RequestParam String action, Authentication authentication) {
+    @ResponseBody
+    public void editBookmark(@RequestParam String url, @RequestParam String action, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
         Set<Article> bookmarks = currentUser.getBookmarkedArticles();
 

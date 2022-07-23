@@ -77,7 +77,7 @@ public class ArticlesController {
             throw new ArticleNotFoundException();
         }
 
-        return ResponseEntity.ok().body(new ArticleWithContent(article));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ArticleWithContent(article));
     }
 
     @GetMapping("/share/{id}")
@@ -112,7 +112,9 @@ public class ArticlesController {
     }
 
     @DeleteMapping("/{id}")
-    public @ResponseBody void deleteArticle(@PathVariable UUID id, Authentication authentication) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void deleteArticle(@PathVariable UUID id, Authentication authentication) {
         Article article = articleService.getArticleById(id);
 
         User currentUser = userService.getUserFromAuthentication(authentication);

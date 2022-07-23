@@ -49,22 +49,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session will be created or used by spring security
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .httpBasic()
+                    .httpBasic()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/api/articles/**",
+                    .authorizeRequests()
+                    .antMatchers("/api/articles/**",
                         "/api/auth/**",
                         "/api/authors/**",
+                        "/api/avatars/**",
                         "/api/bookmarks/**",
+                        "/api/comments/**",
                         "/api/search/**",
                         "/api/tags/**").permitAll()
-                .antMatchers("/api/users/**").authenticated()
-                .antMatchers("/api/admin/**").hasRole("ADMIN") // if in use, somehow always disable access
+                    .antMatchers("/api/users/**").authenticated()
+                    .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .and()
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+                    .csrf().disable()
+                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 
         httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

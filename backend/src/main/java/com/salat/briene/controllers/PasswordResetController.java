@@ -4,7 +4,7 @@ import com.salat.briene.payload.request.PasswordChangeRequest;
 import com.salat.briene.payload.response.PasswordResetResponse;
 import com.salat.briene.services.PasswordResetService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.mail.EmailException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,8 @@ public class PasswordResetController {
     private final PasswordResetService passwordResetService;
 
     @PostMapping("/create_request")
-    public ResponseEntity<PasswordResetResponse> createPasswordResetRequest(@RequestParam String username) throws EmailException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<PasswordResetResponse> createPasswordResetRequest(@RequestParam String username) {
         passwordResetService.createPasswordResetRequestFor(username);
         String hiddenEmail = passwordResetService.sendEmailWithCodeTo(username);
 
@@ -26,7 +27,8 @@ public class PasswordResetController {
     }
 
     @PostMapping("/change_password")
-    public @ResponseBody void changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+    @ResponseBody
+    public void changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
         passwordResetService.setNewPassword(passwordChangeRequest.getRequestId(), passwordChangeRequest.getNewPassword());
     }
 }
