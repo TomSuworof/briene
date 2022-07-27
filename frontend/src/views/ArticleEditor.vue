@@ -206,7 +206,6 @@ export default {
 
 .btn-container {
   display: inline-block;
-  /*margin: 0 5pt 5pt 0;*/
 }
 
 .title {
@@ -258,6 +257,7 @@ export default {
 }
 
 .v-md-editor {
+  padding: 1.5pt;
   margin: 10pt 0;
   border-radius: 9px !important;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px !important;

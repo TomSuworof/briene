@@ -80,7 +80,6 @@ export default {
 }
 
 .article-container {
-  min-width: 300pt;
   max-width: 700pt;
   position: relative;
   border-radius: 9px;

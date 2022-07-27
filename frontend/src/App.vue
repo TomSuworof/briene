@@ -5,6 +5,9 @@
         <div class="main-link">
           <router-link to="/"><pre>{{ logo }}</pre></router-link>
         </div>
+        <div class="main-link-short">
+          <router-link to="/"><pre>{{ logoShort }}</pre></router-link>
+        </div>
       </div>
       <div class="search-bar">
         <form class="search-bar-form" @submit="search">
@@ -36,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="content">
+    <div class="content col-md-10 offset-md-1">
       <router-view/>
     </div>
   </div>
@@ -48,6 +51,7 @@ export default {
   data() {
     return {
       logo: '<briene>',
+      logoShort: '<br>',
 
       query: '',
       limit: 10,
@@ -92,6 +96,18 @@ hr {
 }
 
 @media screen and (max-width: 720px) {
+  .main-link {
+    display: none !important;
+  }
+
+  .main-link-short {
+    margin-left: 3pt;
+  }
+
+  .search-bar {
+    width: 140pt;
+  }
+
   .header-button-editor-img, .header-button-profile-img {
     display: inline-block;
     padding-top: 7pt;
@@ -103,31 +119,18 @@ hr {
     padding-top: 7pt !important;
   }
 
-  .main-link {
-    margin-top: 1pt !important;
-    margin-left: 10pt !important;
-  }
-
-  .search-bar {
-    width: 140pt;
-  }
-
   .header-button-editor, .header-button-profile {
     display: none !important;
-  }
-
-  .content {
-    padding: 3% 5% 80pt 5%;
   }
 }
 
 @media screen and (min-width: 721px) {
-  .header-button-editor-img, .header-button-profile-img {
+  .main-link-short {
     display: none;
   }
 
-  .content {
-    padding: 3% 10% 80pt 10%;
+  .header-button-editor-img, .header-button-profile-img {
+    display: none;
   }
 
   .input-box {
@@ -135,11 +138,13 @@ hr {
   }
 }
 
-.row {
-  margin: auto;
+.content {
+  padding-top: 20pt;
 }
 
 .header-buttons {
+  width: 100%;
+  margin: auto;
   padding: 10pt 10pt 0 0;
   justify-content: space-between;
   position: sticky;
@@ -150,7 +155,7 @@ hr {
   vertical-align: center;
 }
 
-.main-link {
+.main-link, .main-link-short {
   font-weight: bold;
   font-style: italic;
   font-size: 1.2rem;
