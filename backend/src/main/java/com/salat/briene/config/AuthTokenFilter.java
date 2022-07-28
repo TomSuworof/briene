@@ -4,7 +4,7 @@ import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.BlockedUserException;
 import com.salat.briene.services.UserService;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -19,16 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final String CANNOT_AUTH_USER = "Cannot set user authentication: {}";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
 
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private UserService userService;
+    private final JwtUtils jwtUtils;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

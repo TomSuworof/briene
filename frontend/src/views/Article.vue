@@ -456,12 +456,14 @@ hr {
 }
 
 .suggestions {
+  margin-right: 20pt;
   display: flex;
   flex-direction: row;
 }
 
 .next-article, .prev-article {
   float: left;
+  width: 50%;
 }
 
 .suggestion-name {

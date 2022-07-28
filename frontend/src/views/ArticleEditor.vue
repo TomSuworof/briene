@@ -4,23 +4,8 @@
       <div class="editor-wrapper">
         <div>
           <div class="title-wrapper">
-            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title" autofocus/>
-          </div>
-          <div class="action-buttons">
-            <div class="btn-container">
-              <button class="button button-outline" id="save" @click="handleButton('save')" type="button"
-                      name="action"
-                      value="save">
-                <span>Save as draft</span>
-              </button>
-            </div>
-            <div class="btn-container">
-              <button class="button button-primary" id="publish" @click="handleButton('publish')" type="button"
-                      name="action"
-                      value="publish">
-                <span>Publish</span>
-              </button>
-            </div>
+            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title"
+                   autofocus/>
           </div>
         </div>
         <div class="tag-wrapper">
@@ -56,24 +41,54 @@
           />
         </div>
       </div>
+      <div class="article-summary-text">
+        <b>Summary</b>
+        <p>Max {{ maxLength }} characters. This summary will be seen under title in article card</p>
+        <button class="button button-outline" id="magic-summary" @click="makeMagicSummary()" type="button"
+                name="magic-summary"
+                value="magic-summary">
+          <span>Make magic summary</span>
+        </button>
+      </div>
+      <div class="article-summary-wrapper">
+        <textarea v-model="summary" :maxlength="maxLength"></textarea>
+      </div>
+      <div class="article-url-text">
+        <b>Custom URL</b>
+        <p>Max {{ 140 }} characters</p>
+      </div>
+      <div class="article-url-wrapper">
+        <input class="article-url" type="text" maxlength="140" placeholder="Custom URL" required v-model="url"/>
+      </div>
+      <div class="action-buttons">
+        <div class="btn-container">
+          <button class="button button-outline" id="save" @click="handleButton('save')" type="button"
+                  name="action"
+                  value="save">
+            <span>Save as draft</span>
+          </button>
+        </div>
+        <div class="btn-container">
+          <button class="button button-primary" id="publish" @click="handleButton('publish')" type="button"
+                  name="action"
+                  value="publish">
+            <span>Publish</span>
+          </button>
+        </div>
+      </div>
     </form>
-    <article-summary-modal/>
   </div>
 </template>
 
 <script>
 import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
-import { openModal, container } from "jenesius-vue-modal";
-import ArticleSummaryModal from "@/components/ArticleSummaryModal"
 import TagService from "@/api/TagService";
-import articleSummaryModal from "../components/ArticleSummaryModal";
 
 export default {
   name: "ArticleEditor",
   components: {
     VMdEditor,
-    ArticleSummaryModal: container
   },
   data() {
     return {
@@ -82,9 +97,13 @@ export default {
       summary: '',
       url: '',
       tags: [],
+      action: '',
 
       showTagInput: false,
-      suggestedTags: []
+      suggestedTags: [],
+
+      maxLength: 500,
+      loading: false,
     }
   },
   computed: {
@@ -93,15 +112,51 @@ export default {
     }
   },
   methods: {
+    contentNotEmpty: function () {
+      return this.content !== '';
+    },
+    titleNotEmpty: function () {
+      return this.title !== '';
+    },
+    urlNotEmpty: function () {
+      return this.url !== '';
+    },
+    formIsValid: function () {
+      return this.contentNotEmpty() && this.titleNotEmpty() && this.urlNotEmpty();
+    },
+    showWarningEmpty: function () {
+      alert('Fields can not be empty');
+    },
+    showWarningArticleExists: function () {
+      alert('Such article already exists. Try to make different title or URL or remove old one');
+    },
     handleButton: function (action) {
-      openModal(ArticleSummaryModal, {
-        title: this.title,
-        content: this.content,
-        summary: this.summary,
-        tags: this.tags,
-        url: this.url,
-        action: action,
-      })
+      if (this.formIsValid()) {
+        if (this.summary !== null && this.summary.length > this.maxLength) {
+          alert(`Summary should be less than ${this.maxLength} characters`);
+        } else {
+          this.uploadArticle(action);
+        }
+      } else {
+        this.showWarningEmpty();
+      }
+    },
+    uploadArticle: function (action) {
+      this.loading = true;
+      ArticlesService.uploadArticle(this.title, this.content, this.summary, action, this.tags, this.url)
+          .then(() => {
+            this.loading = false;
+            if (action === 'publish') {
+              this.$router.push('/');
+            } else if (action === 'save') {
+              alert('Article was saved');
+            }
+          })
+          .catch(err => {
+            this.loading = false;
+            console.log(err);
+            this.showWarningArticleExists();
+          });
     },
     saveArticleToLocalStorage: function () {
       localStorage.setItem('recentArticle', JSON.stringify({
@@ -139,6 +194,11 @@ export default {
 
       this.content = this.content.substring(0, cursorPos) + template + this.content.substring(cursorPos);
     },
+    loadTags: function () {
+      TagService.getTagsWithExclusion(this.tags)
+          .then(response => this.suggestedTags = response.data)
+          .catch(err => console.log(err));
+    },
     openAddTagInput: function () {
       this.showTagInput = true;
     },
@@ -151,6 +211,16 @@ export default {
     removeTag: function (tagName) {
       this.tags.splice(this.tags.indexOf(tagName), 1);
     },
+    getSummaryFromContent: function (content) {
+      let maxAvailContent = content.substring(0, this.maxLength);
+      let reversedContent = maxAvailContent.split('').reverse().join('');
+      let indexOfLastDot = maxAvailContent.length - reversedContent.indexOf('.', 1)
+
+      return maxAvailContent.substring(0, indexOfLastDot);
+    },
+    makeMagicSummary: function () {
+      this.summary = this.getSummaryFromContent(this.content);
+    }
   },
   created() {
     if (this.currentUser === undefined) {
@@ -166,23 +236,26 @@ export default {
       let requestedArticleId = this.$route.query.articleId;
 
       ArticlesService.getArticleRaw(requestedArticleId)
-          .then((response) => {
+          .then(response => {
             this.title = response.data.title;
             this.content = response.data.content;
             this.summary = response.data.summary;
             this.tags = response.data.tags;
             this.url = response.data.url;
-          }).catch(err => {
-        console.log(err);
-        this.$router.replace('/error'); // redirecting to '/error'
-      });
+          })
+          .catch(err => {
+            console.log(err);
+            this.$router.replace('/error'); // redirecting to '/error'
+          });
     } else {
       this.loadArticleFromLocalStorage();
     }
 
-    TagService.getTagsWithExclusion(this.tags)
-        .then(response => this.suggestedTags = response.data)
-        .catch(err => console.log(err));
+    this.loadTags();
+
+    if (this.url === undefined || this.url === '') {
+      this.url = this.title;
+    }
   },
   beforeUnmount() {
     this.saveArticleToLocalStorage();
@@ -191,10 +264,6 @@ export default {
 </script>
 
 <style scoped>
-
-.action-buttons {
-  float: right;
-}
 
 .title-wrapper, .action-buttons {
   display: inline-block;
@@ -246,11 +315,8 @@ export default {
 }
 
 .fa-close, .fa-plus {
-  padding: 2pt;
   text-align: center;
-  height: 1.7em;
-  width: 1.7em;
-  border-radius: 20px !important;
+  height: 1.9em;
   background: none;
   border: 1px solid #AAA;
   color: #AAA;
@@ -262,4 +328,40 @@ export default {
   border-radius: 9px !important;
   box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px !important;
 }
+
+.article-summary-text {
+  margin-top: 20pt;
+  margin-bottom: 10pt;
+}
+
+.article-summary-wrapper > textarea {
+  padding: 5pt;
+  border-radius: 9px;
+  width: 100%;
+  height: 200pt;
+  resize: none;
+}
+
+.article-url-text {
+  margin-top: 20pt;
+}
+
+.article-url-wrapper {
+  position: relative;
+  border: 1px solid #777;
+  border-radius: 9px;
+  padding: 5pt;
+}
+
+.article-url {
+  width: 100%;
+  background: transparent;
+  outline: 0;
+  border: none;
+}
+
+.action-buttons {
+  margin-top: 20pt;
+}
+
 </style>

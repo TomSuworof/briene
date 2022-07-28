@@ -3,10 +3,14 @@
     <div class="header-buttons row">
       <div class="header-buttons-left">
         <div class="main-link">
-          <router-link to="/"><pre>{{ logo }}</pre></router-link>
+          <router-link to="/">
+            <pre>{{ logo }}</pre>
+          </router-link>
         </div>
         <div class="main-link-short">
-          <router-link to="/"><pre>{{ logoShort }}</pre></router-link>
+          <router-link to="/">
+            <pre>{{ logoShort }}</pre>
+          </router-link>
         </div>
       </div>
       <div class="search-bar">
@@ -46,6 +50,7 @@
 </template>
 
 <script>
+
 export default {
   name: "App",
   data() {
@@ -67,7 +72,7 @@ export default {
     search: function () {
       this.$router.push({
         path: '/search',
-        query: { query: this.query, limit: this.limit, offset: this.offset }
+        query: {query: this.query, limit: this.limit, offset: this.offset}
       });
     }
   },
@@ -140,6 +145,7 @@ hr {
 
 .content {
   padding-top: 20pt;
+  padding-bottom: 60pt;
 }
 
 .header-buttons {
@@ -201,7 +207,7 @@ hr {
 }
 
 button:disabled,
-button[disabled]{
+button[disabled] {
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;

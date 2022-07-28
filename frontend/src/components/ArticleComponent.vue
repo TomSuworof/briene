@@ -89,7 +89,7 @@ export default {
 }
 
 .article-container:active {
-  border: solid 1px black;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px;
 }
 
 .article-author {
