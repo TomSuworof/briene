@@ -4,7 +4,8 @@
       <div class="editor-wrapper">
         <div>
           <div class="title-wrapper">
-            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title" autofocus/>
+            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title"
+                   autofocus/>
           </div>
           <div class="action-buttons">
             <div class="btn-container">
@@ -64,10 +65,9 @@
 <script>
 import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
-import { openModal, container } from "jenesius-vue-modal";
-import ArticleSummaryModal from "@/components/ArticleSummaryModal"
+import {openModal, container} from "jenesius-vue-modal";
+import ArticleSummaryModal from "@/components/ArticleSummaryModal";
 import TagService from "@/api/TagService";
-import articleSummaryModal from "../components/ArticleSummaryModal";
 
 export default {
   name: "ArticleEditor",

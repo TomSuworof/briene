@@ -52,12 +52,12 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.3.2</version>
+            <version>42.3.6</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.12</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>7.0.1.Final</version>
+            <version>7.0.4.Final</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -117,7 +117,7 @@
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>
-                                    <directory>${project.parent.basedir}/frontend/target/dist</directory>
+                                    <directory>${main.basedir}/frontend/target/dist</directory>
                                     <includes>
                                         <include>static/</include>
                                         <include>index.html</include>

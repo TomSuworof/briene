@@ -1,5 +1,6 @@
 package com.salat.briene.services;
 
+import com.salat.briene.config.PasswordEncoder;
 import com.salat.briene.entities.*;
 import com.salat.briene.exceptions.*;
 import com.salat.briene.payload.request.SignupRequest;
@@ -9,28 +10,21 @@ import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.EmailException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.Executors;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final MailService mailService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User loadUserByUsername(String username) {
