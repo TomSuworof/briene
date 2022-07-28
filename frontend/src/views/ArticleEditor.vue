@@ -58,14 +58,13 @@
         </div>
       </div>
     </form>
-    <article-summary-modal/>
   </div>
 </template>
 
 <script>
 import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
-import {openModal, container} from "jenesius-vue-modal";
+import {openModal} from "jenesius-vue-modal";
 import ArticleSummaryModal from "@/components/ArticleSummaryModal";
 import TagService from "@/api/TagService";
 
@@ -73,7 +72,6 @@ export default {
   name: "ArticleEditor",
   components: {
     VMdEditor,
-    ArticleSummaryModal: container
   },
   data() {
     return {
