@@ -46,10 +46,12 @@
     <div class="content col-md-10 offset-md-1">
       <router-view/>
     </div>
+	<modals-container/>
   </div>
 </template>
 
 <script>
+import {container} from "jenesius-vue-modal"
 export default {
   name: "App",
   data() {
@@ -77,6 +79,9 @@ export default {
   },
   mounted() {
     this.query = new URLSearchParams(window.location.search).get('query');
+  },
+  components: {
+	  ModalsContainer: container
   }
 }
 
