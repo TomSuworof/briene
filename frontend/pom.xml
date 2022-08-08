@@ -29,7 +29,7 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v15.8.0</nodeVersion>
+                            <nodeVersion>v18.7.0</nodeVersion>
                             <npmVersion>8.16.0</npmVersion>
                         </configuration>
                     </execution>
@@ -44,13 +44,13 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm audit fix --force</id>
+                        <id>npm audit fix --legacy-peer-deps</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>audit fix --force</arguments>
+                            <arguments>audit fix --legacy-peer-deps</arguments>
                         </configuration>
                     </execution>
                     <execution>
