@@ -34,7 +34,7 @@
                     </execution>
                     <!-- Install all project dependencies from scratch -->
                     <execution>
-                        <id>npm ci</id>
+                        <id>npm ci --legacy-peer-deps</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
