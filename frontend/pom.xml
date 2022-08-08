@@ -34,6 +34,16 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>npm install --global node-sass</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>install --global node-sass</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>npm install --legacy-peer-deps</id>
                         <goals>
                             <goal>npm</goal>
@@ -44,13 +54,13 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm audit fix --legacy-peer-deps</id>
+                        <id>npm audit fix --force</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>audit fix --legacy-peer-deps</arguments>
+                            <arguments>audit fix --force</arguments>
                         </configuration>
                     </execution>
                     <execution>
