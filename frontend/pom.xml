@@ -33,7 +33,6 @@
                             <npmVersion>8.16.0</npmVersion>
                         </configuration>
                     </execution>
-                    <!-- Install all project dependencies from scratch -->
                     <execution>
                         <id>npm install --legacy-peer-deps</id>
                         <goals>
@@ -42,6 +41,16 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <arguments>install --legacy-peer-deps</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm audit fix --force</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>audit fix --force</arguments>
                         </configuration>
                     </execution>
                     <execution>
