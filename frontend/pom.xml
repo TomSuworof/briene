@@ -20,7 +20,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.12.1</version>
+                <version>1.12.0</version>
                 <executions>
                     <!-- Install our node and npm version to run npm/node scripts-->
                     <execution>
@@ -29,40 +29,23 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v18.7.0</nodeVersion>
-                            <npmVersion>8.16.0</npmVersion>
+                            <nodeVersion>v15.8.0</nodeVersion>
                         </configuration>
                     </execution>
+                    <!-- Install all project dependencies -->
                     <execution>
-                        <id>npm install --global node-sass</id>
+                        <id>npm install</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
+                        <!-- optional: default phase is "generate-resources" -->
                         <phase>generate-resources</phase>
+                        <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
-                            <arguments>install --global node-sass</arguments>
+                            <arguments>install</arguments>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>npm install --legacy-peer-deps</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <arguments>install --legacy-peer-deps</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm audit fix --force</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <arguments>audit fix --force</arguments>
-                        </configuration>
-                    </execution>
+                    <!-- Build and minify static files -->
                     <execution>
                         <id>npm run build</id>
                         <goals>
