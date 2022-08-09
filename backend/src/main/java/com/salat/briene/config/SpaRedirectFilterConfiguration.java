@@ -1,5 +1,6 @@
 package com.salat.briene.config;
 
+import lombok.NonNull;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +35,9 @@ public class SpaRedirectFilterConfiguration {
             private final Pattern pattern = Pattern.compile(REGEX);
 
             @Override
-            protected void doFilterInternal(HttpServletRequest req,
-                                            HttpServletResponse res,
-                                            FilterChain chain) throws ServletException, IOException {
+            protected void doFilterInternal(@NonNull HttpServletRequest req,
+                                            @NonNull HttpServletResponse res,
+                                            @NonNull FilterChain chain) throws ServletException, IOException {
                 if (pattern.matcher(req.getRequestURI()).matches() && !req.getRequestURI().equals("/")) {
                     // Delegate/Forward to `/` if `pattern` matches, and it is not `/`
                     // Required because of 'mode: history's usage in frontend routing
