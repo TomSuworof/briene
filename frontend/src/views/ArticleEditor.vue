@@ -65,6 +65,7 @@
           <button class="button button-outline" id="save" @click="handleButton('save')" type="button"
                   name="action"
                   value="save">
+            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
             <span>Save as draft</span>
           </button>
         </div>
@@ -72,6 +73,7 @@
           <button class="button button-primary" id="publish" @click="handleButton('publish')" type="button"
                   name="action"
                   value="publish">
+            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
             <span>Publish</span>
           </button>
         </div>
