@@ -65,7 +65,7 @@
           <button class="button button-outline" id="save" @click="handleButton('save')" type="button"
                   name="action"
                   value="save">
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+            <span v-show="loadingSave" class="spinner-border spinner-border-sm"></span>
             <span>Save as draft</span>
           </button>
         </div>
@@ -73,7 +73,7 @@
           <button class="button button-primary" id="publish" @click="handleButton('publish')" type="button"
                   name="action"
                   value="publish">
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+            <span v-show="loadingPublish" class="spinner-border spinner-border-sm"></span>
             <span>Publish</span>
           </button>
         </div>
@@ -105,7 +105,9 @@ export default {
       suggestedTags: [],
 
       maxLength: 500,
-      loading: false,
+
+      loadingSave: false,
+      loadingPublish: false
     }
   },
   computed: {
@@ -144,18 +146,24 @@ export default {
       }
     },
     uploadArticle: function (action) {
-      this.loading = true;
+      if (action === 'publish') {
+        this.loadingPublish = true;
+      } else if (action === 'save') {
+        this.loadingSave = true;
+      }
       ArticlesService.uploadArticle(this.title, this.content, this.summary, action, this.tags, this.url)
           .then(() => {
-            this.loading = false;
             if (action === 'publish') {
+              this.loadingPublish = false;
               this.$router.push('/');
             } else if (action === 'save') {
+              this.loadingSave = false;
               alert('Article was saved');
             }
           })
           .catch(err => {
-            this.loading = false;
+            this.loadingPublish = false;
+            this.loadingSave = false;
             console.log(err);
             this.showWarningArticleExists();
           });
