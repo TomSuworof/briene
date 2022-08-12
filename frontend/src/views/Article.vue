@@ -42,7 +42,7 @@
       <div v-show="!loadingArticle" id="article-content">
         <v-md-editor :model-value="article.content" mode="preview"></v-md-editor>
       </div>
-      <div class="control" id="control">
+      <div class="control button button-primary" id="control">
         <p id="quote">💬 Quote</p>
       </div>
     </div>
@@ -346,8 +346,8 @@ export default {
 
       let rect = selectedText.getRangeAt(0).getBoundingClientRect();
 
-      control.style.top = `calc(${rect.top}px - 40px)`;
-      control.style.left = `calc(${rect.left}px + ${rect.width}px / 2 - 45px)`;
+      control.style.top = `calc(${rect.top}px - 80pt)`;
+      control.style.left = `calc(${rect.left}px + ${rect.width}px / 2 - 130pt)`;
       control.style.display = 'block';
 
       selectedString = selectedText.toString();
@@ -413,13 +413,8 @@ hr {
 }
 
 .control {
-  text-align: center;
-  border-radius: 9px;
   display: none;
   position: absolute;
-  height: 35px;
-  width: 100px;
-  background: #DDD;
 }
 
 .control:hover {

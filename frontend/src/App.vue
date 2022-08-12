@@ -156,8 +156,9 @@ hr {
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px;
+  background-color: #FAFAF7;
+  /*background-color: white;*/
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0.5pt 1pt;
   vertical-align: center;
 }
 
@@ -193,7 +194,7 @@ hr {
 }
 
 .form-control {
-  background: white;
+  background-color: #FFFFF9;
   border-radius: 9px;
   margin: 0 0 10pt;
   transition: border-color, border-width 0.3s;

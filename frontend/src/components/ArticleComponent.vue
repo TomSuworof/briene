@@ -89,7 +89,8 @@ export default {
 }
 
 .article-container:active {
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0.5pt 1pt;
+  background-color: #FAFAF7;
 }
 
 .article-author {
