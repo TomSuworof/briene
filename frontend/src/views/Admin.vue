@@ -2,7 +2,7 @@
   <div class="admin-dashboard">
     <div class="admin-dashboard-users accordion">
       <div class="admin-dashboard-title accordion__intro">
-        <h2>Users</h2>
+        <h2 class="admin-users-title">Users</h2>
         <hr align="left">
       </div>
       <div class="accordion__content">
@@ -56,7 +56,7 @@
     </div>
     <div class="admin-dashboard-articles accordion">
       <div class="accordion__intro">
-        <h2>Articles</h2>
+        <h2 class="admin-articles-title">Articles</h2>
         <hr align="left">
       </div>
       <div class="accordion__content">
@@ -127,21 +127,31 @@ export default {
       articlesLimit: 5,
       articlesOffset: 0,
 
-      actions: [
+      userTheme: 'light-theme',
+    };
+  },
+  computed: {
+    themeIconColorModifier() {
+      if (this.userTheme === 'light-theme') {
+        return '000000';
+      } else if (this.userTheme === 'dark-theme') {
+        return 'ffffff';
+      }
+    },
+    actions() {
+      return [
         {
           function: this.editArticle,
-          icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>',
+          icon: `<img loading="eager" src="https://img.icons8.com/material-outlined/24/${this.themeIconColorModifier}/edit--v1.png" alt="Edit"/>`,
           message: 'Edit'
         },
         {
           function: this.removeArticle,
-          icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/trash--v1.png" alt="Delete"/>',
+          icon: `<img loading="eager" src="https://img.icons8.com/material/24/${this.themeIconColorModifier}/trash--v1.png" alt="Delete"/>`,
           message: 'Remove'
         },
       ]
-    };
-  },
-  computed: {
+    },
     currentUser() {
       return this.$store.state.auth.user;
     },
@@ -244,6 +254,7 @@ export default {
   },
   created() {
     if (this.isAdmin) {
+      this.userTheme = localStorage.getItem('userTheme');
       this.getUsersPaginated(this.usersLimit, this.usersOffset);
       this.getArticlesPaginated(this.articlesState, this.articlesLimit, this.articlesOffset);
       this.$nextTick(accordion.setupAccordion);
@@ -265,6 +276,15 @@ export default {
     overflow-x: auto;
     white-space: nowrap;
   }
+}
+
+.admin-users-title, .admin-articles-title {
+  color: var(--text-color);
+}
+
+table {
+  border-color: var(--background-color-contrast);
+  color: var(--text-color);
 }
 
 .user-action {

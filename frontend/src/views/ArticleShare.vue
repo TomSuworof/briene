@@ -10,20 +10,6 @@
         <div class="article-title">
           <h1 id="article-title">{{ article.title }}</h1>
         </div>
-<!--        <div class="bookmarking" v-if="article.title !== undefined">-->
-<!--          <div v-if="!inBookmarks" title="Add to bookmarks">-->
-<!--            <button @click="editBookmarks('add')">-->
-<!--              <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon&#45;&#45;v1.png"-->
-<!--                   alt="Add to bookmarks"/>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--          <div v-if="inBookmarks" title="Remove from bookmarks">-->
-<!--            <button @click="editBookmarks('remove')">-->
-<!--              <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png"-->
-<!--                   alt="Remove from bookmarks"/>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
       <div class="article-publication-date" v-if="article.publicationDate !== undefined">
         <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
@@ -120,13 +106,6 @@ hr {
   }
 }
 
-button {
-  background: white;
-  display: block;
-  border: none;
-  outline: none;
-}
-
 .bookmarking, .article-title {
   display: inline-block;
 }
@@ -137,6 +116,7 @@ button {
 }
 
 .article-title {
+  color: var(--text-color);
   overflow-wrap: break-word;
 }
 

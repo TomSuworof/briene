@@ -14,5 +14,7 @@ export default {
 .error-page-content {
   display: flex;
   justify-content: center;
+  background-color: var(--background-color-primary);
+  color: var(--text-color);
 }
 </style>

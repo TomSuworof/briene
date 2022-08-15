@@ -47,6 +47,7 @@ export default {
   vertical-align: middle;
   text-align: center;
   border-radius: 9px;
-  background: #FAFAF7;
+  background: var(--background-color-secondary);
+  color: var(--text-color);
 }
 </style>

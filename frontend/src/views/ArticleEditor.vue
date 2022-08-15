@@ -288,13 +288,14 @@ export default {
 }
 
 .title {
+  color: var(--text-color);
   width: 100%;
   font-size: 20pt;
   font-weight: bold;
   background: transparent;
   outline: 0;
   border-width: 0 0 1px;
-  border-color: #CCC;
+  border-color: var(--background-color-contrast);
 }
 
 .tags-list {
@@ -333,18 +334,23 @@ export default {
 }
 
 .v-md-editor {
+  background-color: var(--background-color-primary);
+  color: var(--text-color);
   padding: 1.5pt;
   margin: 10pt 0;
   border-radius: 9px !important;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px !important;
+  box-shadow: var(--shadow);
 }
 
 .article-summary-text {
+  color: var(--text-color);
   margin-top: 20pt;
   margin-bottom: 10pt;
 }
 
 .article-summary-wrapper > textarea {
+  background-color: var(--background-color-primary);
+  color: var(--text-color);
   padding: 5pt;
   border-radius: 9px;
   width: 100%;
@@ -353,6 +359,7 @@ export default {
 }
 
 .article-url-text {
+  color: var(--text-color);
   margin-top: 20pt;
 }
 
@@ -364,6 +371,7 @@ export default {
 }
 
 .article-url {
+  color: var(--text-color);
   width: 100%;
   background: transparent;
   outline: 0;

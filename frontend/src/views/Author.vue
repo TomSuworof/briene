@@ -2,7 +2,7 @@
   <div class="author-page-content" v-if="author">
     <div class="header">
       <div class="avatar-wrapper" v-if="!avatarString">
-        <img src="@/assets/images/avatar-empty.webp" alt="Avatar"/>
+        <img src="@/assets/images/avatar-empty-transparent.png" alt="Avatar"/>
       </div>
       <div class="avatar-wrapper" v-if="avatarString">
         <img :src="avatarString" alt="Avatar"/>
@@ -92,14 +92,14 @@ export default {
   },
   methods: {
     getArticlesMessage: function (count) {
-      if (count % 10 === 1) {
+      if (count === 1) {
         return `${count} article`
       } else {
         return `${count} articles`
       }
     },
     getFollowersMessage: function (count) {
-      if (count % 10 === 1) {
+      if (count === 1) {
         return `${count} follower`
       } else {
         return `${count} followers`
@@ -225,11 +225,16 @@ export default {
   display: inline-block;
 }
 
+.author-username {
+  color: var(--text-color);
+}
+
 .follow-button {
   float: right;
 }
 
 .author-bio {
+  color: var(--text-color);
   white-space: pre-line;
 }
 
@@ -237,5 +242,6 @@ export default {
   display: inline-block;
   font-size: 12px;
   margin-right: 10pt;
+  color: #666;
 }
 </style>

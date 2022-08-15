@@ -1,6 +1,6 @@
 <template>
   <div class="search-page-content">
-    <div>
+    <div class="title">
       <h2>Found articles</h2>
     </div>
     <hr align="left">
@@ -87,5 +87,9 @@ export default {
 
 .articles-empty {
   padding: 120pt 0 0 0;
+}
+
+.title, .articles-empty {
+  color: var(--text-color);
 }
 </style>

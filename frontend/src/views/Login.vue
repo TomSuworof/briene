@@ -7,12 +7,12 @@
       <div class="login-form">
         <Form @submit="handleLogin" :validation-schema="schema">
           <div class="form-group">
-            <label>Username:</label>
+            <label class="form-input-title">Username:</label>
             <Field id="username" name="username" type="text" placeholder="Username" class="form-control"/>
             <ErrorMessage name="username" class="error-feedback alert alert-danger"/>
           </div>
           <div class="form-group">
-            <label>Password:</label>
+            <label class="form-input-title">Password:</label>
             <Field id="password" name="password" type="password" placeholder="Password" class="form-control"/>
             <ErrorMessage name="password" class="error-feedback alert alert-danger"/>
           </div>
@@ -107,6 +107,10 @@ export default {
     margin: auto;
     width: 300pt;
   }
+}
+
+.welcome, .form-input-title {
+  color: var(--text-color);
 }
 
 .log-in-button, .sign-up-button {

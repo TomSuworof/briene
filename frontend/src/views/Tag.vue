@@ -93,6 +93,10 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  color: var(--text-color);
+}
+
 #tag-name {
   font-weight: bold;
 }

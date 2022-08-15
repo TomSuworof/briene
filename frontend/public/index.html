@@ -36,7 +36,6 @@
             bottom: 0;
             left: 0;
             padding: 4pt 0 0 0;
-            background-color: #FAFAF7;
             overflow: hidden;
         }
 
@@ -48,14 +47,49 @@
         /* force 1pt padding */
         .github-markdown-body {
             padding: 1pt !important;
+            background-color: var(--background-color-primary) !important;
+            color: var(--text-color) !important;
+        }
+
+        .v-md-editor__left-area {
+            border-right-color: var(--background-color-contrast) !important;
+        }
+
+        .v-md-editor__left-area-title {
+            color: var(--background-color-contrast) !important;
+        }
+
+        .v-md-editor__left-area-title:after {
+            border-bottom-color: var(--background-color-contrast) !important;
+        }
+
+        .v-md-editor--editable .v-md-editor__editor-wrapper {
+            border-right-color: var(--background-color-contrast) !important;
         }
 
         .v-md-textarea-editor pre, .v-md-textarea-editor textarea {
             padding: 1pt !important;
+            background-color: var(--background-color-primary) !important;
+            color: var(--text-color) !important;
         }
 
         .github-markdown-body div[class*=v-md-pre-wrapper-] pre, .github-markdown-body div[class*=v-md-pre-wrapper-] pre[class*=v-md-prism-] {
             z-index: unset !important;
+            background-color: var(--background-color-secondary) !important;
+            color: var(--background-color-contrast) !important;
+        }
+
+        .github-markdown-body table {
+            color: var(--text-color) !important;
+        }
+
+        .github-markdown-body table td, .github-markdown-body table th {
+            background-color: var(--background-color-secondary) !important;
+            border-color: var(--background-color-contrast);
+        }
+
+        .v-md-editor__toolbar {
+            border-bottom-color: var(--background-color-contrast) !important;
         }
 
         .scrollbar__bar {
@@ -68,29 +102,37 @@
             font-family: system-ui !important;
         }
 
+        .v-md-editor__toolbar-item--active, .v-md-editor__toolbar-item--active:hover {
+            background-color: transparent !important;
+        }
+
         .v-md-editor__toolbar-item {
             font-weight: 600 !important;
         }
 
         .v-md-editor__toolbar-item:hover {
-            background-color: #f2f6ea !important;
+            background-color: var(--background-color-secondary) !important;
+        }
+
+        .v-md-editor__toolbar-divider:before {
+            border-left-color: var(--background-color-contrast) !important;
         }
 
         .v-md-editor__toolbar-item-save {
             display: none !important;
         }
 
-        .dropdown-menu {
-            border-radius: 9px;
-            max-width: unset;
+        .v-md-editor__menu {
+            background-color: var(--background-color-secondary) !important;
+            font-family: system-ui !important;
         }
 
-        .btn-link {
-            color: #7C640C;
+        .v-md-editor__menu-item {
+            color: var(--text-color) !important;
         }
 
-        .dropdown-item:hover {
-            background: #f2f6ea;
+        .v-md-editor__menu-item:hover {
+            background-color: var(--background-color-contrast) !important;
         }
     </style>
 </head>

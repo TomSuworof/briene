@@ -13,14 +13,14 @@
         <div class="bookmarking" v-if="article.title !== undefined">
           <div v-if="!inBookmarks" title="Add to bookmarks">
             <button @click="editBookmarks('add')">
-              <img loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png"
-                   alt="Add to bookmarks"/>
+              <img v-if="userTheme === 'light-theme'" loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
+              <img v-if="userTheme === 'dark-theme'" loading="eager" src="https://img.icons8.com/ios/35/ffffff/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
             </button>
           </div>
           <div v-if="inBookmarks" title="Remove from bookmarks">
             <button @click="editBookmarks('remove')">
-              <img loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png"
-                   alt="Remove from bookmarks"/>
+              <img v-if="userTheme === 'light-theme'" loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks"/>
+              <img v-if="userTheme === 'dark-theme'" loading="eager" src="https://img.icons8.com/ios-filled/35/ffffff/bookmark-ribbon.png" alt="Remove from bookmarks"/>
             </button>
           </div>
         </div>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="read-next-wrapper" v-if="nextArticle || prevArticle">
-      <p><b>Read next</b></p>
+      <p class="section-title"><strong>Read next</strong></p>
       <div class="suggestions">
         <div class="next-article" v-if="nextArticle">
           <p class="suggestion-name">Ctrl ←</p>
@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="suggestions-wrapper" v-if="suggestedArticles.length > 0">
-      <p><b>Read more</b></p>
+      <p class="section-title"><strong>Read more</strong></p>
       <div class="suggestions">
         <article-component
             v-for="article in suggestedArticles"
@@ -73,7 +73,7 @@
       </div>
     </div>
     <div class="comments-wrapper" v-if="!loadingArticle">
-      <p><b>Comments</b></p>
+      <p class="section-title"><b>Comments</b></p>
       <div class="comments">
         <comment-component
              v-for="comment in comments"
@@ -126,7 +126,9 @@ export default {
       nextArticle: undefined,
       prevArticle: undefined,
 
-      suggestedArticles: []
+      suggestedArticles: [],
+
+      userTheme: 'light-theme',
     }
   },
   computed: {
@@ -323,6 +325,7 @@ export default {
     }
   },
   created() {
+    this.userTheme = localStorage.getItem('userTheme');
     let articleUrl = this.$route.params.articleUrl;
     this.loadIsInBookmarks(articleUrl);
     this.loadArticleContent(articleUrl);
@@ -397,6 +400,7 @@ hr {
 }
 
 .article-title {
+  color: var(--text-color);
   overflow-wrap: break-word;
 }
 
@@ -408,8 +412,17 @@ hr {
   justify-content: space-between;
 }
 
+.v-md-editor__preview-wrapper {
+  background-color: var(--background-color-primary);
+  color: var(--text-color);
+}
+
 .article-author {
   font-size: 12px;
+}
+
+#article-content {
+  color: var(--text-color);
 }
 
 .control {
@@ -450,6 +463,10 @@ hr {
   margin-bottom: 60pt;
 }
 
+.section-title {
+  color: var(--text-color);
+}
+
 .suggestions {
   margin-right: 20pt;
   display: flex;
@@ -462,6 +479,7 @@ hr {
 }
 
 .suggestion-name {
+  color: var(--text-color);
   font-size: 12px;
 }
 
@@ -480,6 +498,8 @@ textarea {
   width: 100%;
   height: 100pt;
   resize: none;
+  background-color: var(--background-color-primary);
+  color: var(--text-color);
 }
 
 .comment-editor {

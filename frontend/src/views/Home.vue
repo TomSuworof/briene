@@ -1,6 +1,6 @@
 <template>
   <div class="home-page-content">
-    <div>
+    <div class="home-page-title">
       <h2>Fresh articles</h2>
     </div>
     <hr align="left">
@@ -80,4 +80,7 @@ export default {
 </script>
 
 <style scoped>
+.home-page-title {
+  color: var(--text-color);
+}
 </style>

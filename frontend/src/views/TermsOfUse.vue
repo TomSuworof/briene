@@ -16,5 +16,7 @@ export default {
 </script>
 
 <style scoped>
-
+.terms-of-use-content {
+  color: var(--text-color);
+}
 </style>

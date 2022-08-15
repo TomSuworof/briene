@@ -2,23 +2,23 @@
   <div class="registration-page-content">
     <div class="registration-form-box">
       <div class="registration-header">
-        <h1>Registration</h1>
+        <h1 class="welcome">Registration</h1>
       </div>
       <div class="registration-form">
         <Form @submit="handleRegister" :validation-schema="schema">
           <div class="form-group">
-            <label>Username:</label>
+            <label class="form-input-title">Username:</label>
             <Field id="username" name="username" type="text" class="form-control"/>
             <ErrorMessage name="username" class="error-feedback"/>
           </div>
           <div class="form-group">
-            <label>Email:</label>
+            <label class="form-input-title">Email:</label>
             <Field id="email" name="email" type="email" class="form-control"/>
             <ErrorMessage name="email" class="error-feedback"/>
           </div>
           <div class="setting-password">
             <div class="form-group">
-              <label>Password:</label>
+              <label class="form-input-title">Password:</label>
               <Field id="psw" type="password" name="password" class="form-control" placeholder="Password" required
                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                      title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"/>
@@ -45,7 +45,7 @@
               <Field type="checkbox" id="agreement" name="agreement" value="true"/>
             </div>
             <div class="agreement-checkbox-text">
-              <label for="agreement">
+              <label for="agreement" class="form-input-title">
                 I agree with <a href="/terms_of_use">terms of use</a>
               </label>
             </div>
@@ -169,6 +169,10 @@ export default {
     margin: auto;
     width: 300pt;
   }
+}
+
+.welcome, .form-input-title {
+  color: var(--text-color);
 }
 
 .agreement-checkbox, .agreement-checkbox-text {

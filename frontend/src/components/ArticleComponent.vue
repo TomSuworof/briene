@@ -2,7 +2,7 @@
   <div class="article-container" @click.self="$router.push('/articles/' + article.url)">
     <div v-if="actions !== undefined">
       <div class="article-util-container">
-        <div class="article-state" v-show="state !== undefined">
+        <div class="article-state" v-if="state !== undefined">
           <p>#{{ state }}</p>
         </div>
         <div class="article-action-item"
@@ -66,6 +66,14 @@ export default {
 </script>
 
 <style scoped>
+a {
+  color: var(--text-color);
+}
+
+a:hover {
+  color: #F7C71B;
+}
+
 .article-title {
   font-weight: bold;
 }
@@ -77,6 +85,7 @@ export default {
 .article-summary > p {
   max-width: 700pt;
   margin-bottom: 0.6rem;
+  color: var(--text-color);
 }
 
 .article-container {
@@ -90,7 +99,7 @@ export default {
 
 .article-container:active {
   box-shadow: rgba(0, 0, 0, 0.1) 0 0.5pt 1pt;
-  background-color: #FAFAF7;
+  background-color: var(--background-color-secondary);
 }
 
 .article-author {
@@ -106,6 +115,7 @@ export default {
 .article-state, .article-action-item {
   display: inline-block;
   padding-left: 5pt;
+  color: var(--text-color);
 }
 
 .article-publication-date {

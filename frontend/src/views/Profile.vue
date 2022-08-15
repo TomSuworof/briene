@@ -1,7 +1,7 @@
 <template>
   <div class="profile-page-content" v-show="currentUser !== null">
     <div class="avatar-wrapper" v-if="!avatarString">
-      <img src="@/assets/images/avatar-empty.webp" alt="Avatar"/>
+      <img src="@/assets/images/avatar-empty-transparent.png" alt="Avatar"/>
     </div>
     <div class="avatar-wrapper" v-if="avatarString">
       <img :src="avatarString" alt="Avatar"/>
@@ -11,6 +11,14 @@
         <h1 id="username">{{ currentUser.username }}</h1>
       </div>
       <div class="profile-header-buttons">
+        <div class="theme-toggle">
+          <div v-if="userTheme === 'dark-theme'">
+            <a href="#" @click="setTheme('light-theme')">Light theme</a>
+          </div>
+          <div v-if="userTheme === 'light-theme'">
+            <a href="#" @click="setTheme('dark-theme')">Dark theme</a>
+          </div>
+        </div>
         <div v-show="isAdmin" class="header-admin-button">
           <router-link to="/admin">Admin</router-link>
         </div>
@@ -22,16 +30,17 @@
     <div v-show="showUserData" class="show-user-basic-data">
       <div class="user-data-action-edit">
         <button class="button button-outline" @click="editUserData">
-          <span class="button-icon"><img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit profile info"/></span>
+          <span v-if="userTheme === 'light-theme'" class="button-icon"><img loading="eager" src="https://img.icons8.com/material/24/000000/edit--v1.png" alt="Edit profile info"/></span>
+          <span v-if="userTheme === 'dark-theme'" class="button-icon"><img loading="eager" src="https://img.icons8.com/material/24/ffffff/edit--v1.png" alt="Edit profile info"/></span>
           <span class="button-message">Edit my info</span>
         </button>
       </div>
       <div class="user-data">
-        <p>
+        <p class="form-input-title">
           <strong>Email: </strong>{{ currentUser.email }}
         </p>
         <p>
-          <strong>Bio: </strong>
+          <strong class="form-input-title">Bio: </strong>
         </p>
         <div class="bio">
           <p>{{ bio }}</p>
@@ -40,29 +49,29 @@
     </div>
     <div v-show="showEditUserData" class="edit-user-data">
       <div class="edit-user-basic-data">
-        <h2>Basic information</h2>
+        <h2 class="edit-user-data-title">Basic information</h2>
         <div class="user-data">
           <Form @submit="submitChangesBaseInfo" method="post">
             <div class="form-group">
-              <label><strong>Email:</strong></label>
+              <label><strong class="form-input-title">Email:</strong></label>
               <Field id="email" name="email" type="email" class="form-control" v-model="email"/>
               <ErrorMessage name="email" class="error-feedback"/>
             </div>
             <div class="form-group">
-              <label><strong>Avatar:</strong></label>
+              <label><strong class="form-input-title">Avatar:</strong></label>
               <Field name="avatar" type="file" class="form-control">
                 <input id="avatar" type="file" accept="image/*" @change="setAvatarString" class="form-control"/>
               </Field>
               <ErrorMessage name="avatar" class="error-feedback"/>
             </div>
             <div>
-              <label><strong>Bio:</strong></label>
+              <label><strong class="form-input-title">Bio:</strong></label>
               <div>
                 <textarea id="bio" v-model="bio" maxlength="255"></textarea>
               </div>
             </div>
             <div class="form-group">
-              <label>Enter current password to submit changes: </label>
+              <label class="form-input-title">Enter current password to submit changes: </label>
               <Field id="pswCurrent" type="password" name="password" class="form-control" placeholder="Password" v-model="password"/>
             </div>
             <div class="form-group">
@@ -75,16 +84,16 @@
         </div>
       </div>
       <div class="edit-user-password">
-        <h2>Updating password</h2>
+        <h2 class="edit-user-data-title">Updating password</h2>
         <div class="user-data">
           <Form @submit="submitChangesPassword" method="post">
             <div class="form-group">
-              <label>Password</label>
+              <label class="form-input-title">Password</label>
               <Field id="pswOld" type="password" name="passwordOld" class="form-control" placeholder="Password" v-model="currentPassword"/>
             </div>
             <div class="setting-password">
               <div class="form-group">
-                <label>New password</label>
+                <label class="form-input-title">New password</label>
                 <Field id="psw" type="password" name="password" class="form-control" placeholder="New password" required
                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
@@ -92,7 +101,7 @@
               </div>
               <div class="container-for-message">
                 <div id="message" class="message">
-                  <p class="must-contain">Password must contain the following:</p>
+                  <p class="must-contain form-input-title">Password must contain the following:</p>
                   <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
                   <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
                   <p id="number" class="invalid">A <b>number</b></p>
@@ -139,7 +148,7 @@
       </div>
     </div>
     <div class="articles-block accordion">
-      <div class="accordion__intro">
+      <div class="accordion__intro my-articles-title">
         <h2>My articles</h2>
         <hr align="left">
       </div>
@@ -247,20 +256,47 @@ export default {
 
       showUserData: true,
 
-      actionsForBookmarks: [
-        { function: this.removeFromBookmarks, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/trash--v1.png" alt="Delete"/>', message: 'Remove from bookmarks' }
-      ],
-
-      actionsForMyArticles: [
-        { function: this.shareArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/link--v1.png"/>', message: 'Share' },
-        { function: this.editArticle, icon: '<img loading="eager" src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" alt="Edit"/>', message: 'Edit' },
-        { function: this.removeArticle, icon: '<img loading="eager" src="https://img.icons8.com/material/24/000000/trash--v1.png" alt="Delete"/>', message: 'Remove' },
-      ],
+      userTheme: 'light-theme',
 
       schema,
     }
   },
   computed: {
+    themeIconColorModifier() {
+      if (this.userTheme === 'light-theme') {
+        return '000000';
+      } else if (this.userTheme === 'dark-theme') {
+        return 'ffffff';
+      }
+    },
+    actionsForBookmarks() {
+      return [
+        {
+          function: this.removeFromBookmarks,
+          icon: `<img loading="eager" src="https://img.icons8.com/material/24/${this.themeIconColorModifier}/trash--v1.png" alt="Delete"/>`,
+          message: 'Remove from bookmarks'
+        }
+      ];
+    },
+    actionsForMyArticles() {
+      return [
+        {
+          function: this.shareArticle,
+          icon: `<img loading="eager" src="https://img.icons8.com/material/24/${this.themeIconColorModifier}/link--v1.png"/>`,
+          message: 'Share'
+        },
+        {
+          function: this.editArticle,
+          icon: `<img loading="eager" src="https://img.icons8.com/material-outlined/24/${this.themeIconColorModifier}/edit--v1.png" alt="Edit"/>`,
+          message: 'Edit'
+        },
+        {
+          function: this.removeArticle,
+          icon: `<img loading="eager" src="https://img.icons8.com/material/24/${this.themeIconColorModifier}/trash--v1.png" alt="Delete"/>`,
+          message: 'Remove'
+        },
+      ]
+    },
     showEditUserData() {
       return !this.showUserData;
     },
@@ -275,6 +311,11 @@ export default {
     },
   },
   methods: {
+    setTheme: function (theme) {
+      this.userTheme = theme;
+      localStorage.setItem('userTheme', theme);
+      document.documentElement.className = theme;
+    },
     logout: function () {
       this.$store.dispatch("auth/logout");
       this.$router.push('/login');
@@ -426,6 +467,8 @@ export default {
   created() {
     this.$nextTick(pswChecker.passwordChecking);
     this.$nextTick(accordion.setupAccordion);
+
+    this.userTheme = localStorage.getItem('userTheme');
   },
   mounted() {
     this.email = this.currentUser.email;
@@ -450,7 +493,6 @@ export default {
   }
 }
 
-
 @media screen and (min-width: 720px) {
   .avatar-wrapper > img {
     object-fit: cover;
@@ -466,16 +508,21 @@ export default {
 }
 
 #username {
+  color: var(--text-color);
   font-weight: bold;
 }
 
-.header-admin-button, .header-logout-button {
+.header-admin-button, .theme-toggle, .header-logout-button {
   margin: 0 10pt 0;
   display: inline-block;
 }
 
 .form-group {
   max-width: 300pt;
+}
+
+.form-input-title {
+  color: var(--text-color);
 }
 
 textarea {
@@ -485,6 +532,8 @@ textarea {
   max-width: 300pt;
   height: 100pt;
   resize: none;
+  background-color: var(--background-color-primary);
+  color: var(--text-color);
 }
 
 .form-control#avatar {
@@ -492,6 +541,7 @@ textarea {
 }
 
 .bio {
+  color: var(--text-color);
   white-space: pre-line;
   padding: 0 0 5pt;
   max-width: 700pt;
@@ -499,6 +549,10 @@ textarea {
 
 .bookmarks-title {
   padding: 0 0 10pt 0;
+}
+
+.edit-user-data-title, .bookmarks-title, .my-articles-title {
+  color: var(--text-color);
 }
 
 .articles-types {

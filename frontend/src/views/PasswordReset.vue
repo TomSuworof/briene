@@ -87,9 +87,7 @@ export default {
         .then(response => {
           this.loading = false;
           console.log(response.data);
-          if (response.data === 'Done') {
-            this.$router.push('/login');
-          }
+          this.$router.push('/login');
         });
     }
   },
@@ -110,7 +108,12 @@ export default {
   }
 }
 
+h1 {
+  color: var(--text-color);
+}
+
 .new-password-text-block {
+  color: var(--text-color);
   padding: 10pt;
 }
 
