@@ -102,7 +102,7 @@ export default {
   --background-color-contrast: #CCC;
   --background-color-secondary: #FAFAF7;
   --text-color: #212529;
-  --text-color-inverted: #EAE6E2;
+  --text-color-inverted: #FFF;
   --shadow: rgba(0, 0, 0, 0.05) 0 1px 10px 0, rgba(0, 0, 0, 0.05) 0 0 0 1px !important;
 }
 

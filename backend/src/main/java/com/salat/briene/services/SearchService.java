@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +40,10 @@ public class SearchService {
 
     @PostConstruct
     private void init() {
-        articleSearchRepository.saveAll(articleRepository.findAll());
-        logger.info("Index was rebuilt");
+        Executors.newSingleThreadExecutor().submit(() -> {
+            articleSearchRepository.saveAll(articleRepository.findAll());
+            logger.info("Index was rebuilt");
+        });
     }
 
     public SearchResponseDTO search(String query, Integer limit, Integer offset) {
