@@ -94,6 +94,7 @@ export default {
   },
   data() {
     return {
+      id: '',
       title: '',
       content: '',
       summary: '',
@@ -151,7 +152,7 @@ export default {
       } else if (action === 'save') {
         this.loadingSave = true;
       }
-      ArticlesService.uploadArticle(this.title, this.content, this.summary, action, this.tags, this.url)
+      ArticlesService.uploadArticle(this.id, this.title, this.content, this.summary, action, this.tags, this.url)
           .then(() => {
             if (action === 'publish') {
               this.loadingPublish = false;
@@ -243,9 +244,9 @@ export default {
 
     if (this.$route.query.articleId !== undefined) {
       // if there is a parameter with id - it is a request for editing existing article
-      let requestedArticleId = this.$route.query.articleId;
+      this.id = this.$route.query.articleId;
 
-      ArticlesService.getArticleRaw(requestedArticleId)
+      ArticlesService.getArticleRaw(this.id)
           .then(response => {
             this.title = response.data.title;
             this.content = response.data.content;

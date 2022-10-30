@@ -35,9 +35,10 @@ class ArticlesService {
         return http.get('/articles/suggested', { params: { url } });
     }
 
-    uploadArticle(title, content, summary, action, tags, url) {
+    uploadArticle(id, title, content, summary, action, tags, url) {
         return http.post('/articles/upload',
             {
+                id,
                 title,
                 content,
                 summary,

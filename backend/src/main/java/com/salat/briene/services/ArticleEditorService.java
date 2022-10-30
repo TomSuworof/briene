@@ -6,7 +6,6 @@ import com.salat.briene.entities.User;
 import com.salat.briene.payload.request.ArticleUploadRequest;
 import com.salat.briene.payload.response.ArticleDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.mail.EmailException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +14,9 @@ public class ArticleEditorService {
     private final ArticleService articleService;
     private final TagService tagService;
 
-    public ArticleDTO uploadArticle(User author, ArticleUploadRequest articleUploadRequest, String action) throws EmailException {
+    public ArticleDTO uploadArticle(User author, ArticleUploadRequest articleUploadRequest, String action) {
         Article article = new Article();
+        article.setId(articleUploadRequest.getId() == null ? article.getId() : articleUploadRequest.getId());
         article.setAuthor(author);
         article.setTitle(articleUploadRequest.getTitle());
         article.setContent(articleUploadRequest.getContent());

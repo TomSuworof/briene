@@ -36,18 +36,23 @@ public class ArticleService {
     }
 
     private void saveDraft(Article newArticle) {
-        if (articleRepository.findByUrl(newArticle.getUrl()).isPresent()) {
-            throw new DuplicatedArticleException();
-        }
+        Optional<Article> oldArticleOpt = articleRepository.findById(newArticle.getId());
 
-        Optional<Article> oldArticleOpt = articleRepository.findArticleByTitleAndStateAndAuthor_Username(
-                newArticle.getTitle(),
-                newArticle.getState(),
-                newArticle.getAuthor().getUsername());
+        if (oldArticleOpt.isEmpty()) {
+            // completely new draft
+            // and article with URL exists
+            if (articleRepository.findByUrl(newArticle.getUrl()).isPresent()) {
+                throw new DuplicatedArticleException();
+            }
+        }
 
         if (oldArticleOpt.isPresent()) {
             Article oldArticle = oldArticleOpt.get();
-            newArticle.setId(oldArticle.getId());
+
+            // prevent from changing someone's article
+            if (!newArticle.getAuthor().equals(oldArticle.getAuthor())) {
+                throw new ArticleNotFoundException();
+            }
 
             articleRepository.delete(oldArticle);
             articleSearchRepository.delete(oldArticle);
