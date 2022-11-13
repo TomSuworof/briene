@@ -80,6 +80,11 @@
              v-bind:key="comment.id"
              v-bind:comment="comment"/>
       </div>
+      <div class="load-more-button" v-if="hasCommentsAfter">
+        <button class="button button-primary" @click="loadMoreComments(article.url)" :disabled="!hasCommentsAfter" title="Load more comments">
+          <span>More</span>
+        </button>
+      </div>
     </div>
     <div class="comment-editor-wrapper" v-if="!loadingArticle">
       <div class="comment-editor">
@@ -120,6 +125,10 @@ export default {
       article: '',
 
       comments: [],
+      hasCommentsAfter: true,
+      commentLimit: 5,
+      commentOffset: 0,
+
       commentMessage: '',
       loadingComment: false,
 
@@ -186,7 +195,23 @@ export default {
       ArticlesService.getArticleForRender(articleUrl)
           .then(response => {
             this.article = response.data;
-            let comments = response.data.comments.sort((comment1, comment2) => {
+            this.loadingArticle = false;
+            // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
+            this.loadMeta();
+          })
+          .catch(err => {
+            console.log(err);
+            this.$router.replace('/error'); // redirecting to '/error'
+          });
+    },
+    loadMoreComments: function (articleUrl) {
+      this.commentOffset += this.commentLimit;
+      this.loadArticleComments(articleUrl, this.commentLimit, this.commentOffset);
+    },
+    loadArticleComments: function (articleUrl, limit, offset) {
+      CommentService.get(articleUrl, limit, offset)
+          .then(response => {
+            let comments = response.data.entities.sort((comment1, comment2) => {
               if (comment1.publicationDate < comment2.publicationDate) {
                 return -1;
               }
@@ -194,11 +219,9 @@ export default {
                 return 1;
               }
               return 0;
-            }); // newer last
+            }); // newer first
             this.comments = this.comments.concat(comments);
-            this.loadingArticle = false;
-            // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
-            this.loadMeta();
+            this.hasCommentsAfter = response.data.hasAfter;
           })
           .catch(err => {
             console.log(err);
@@ -329,6 +352,7 @@ export default {
     let articleUrl = this.$route.params.articleUrl;
     this.loadIsInBookmarks(articleUrl);
     this.loadArticleContent(articleUrl);
+    this.loadMoreComments(articleUrl);
     this.getNextArticle(articleUrl);
     this.getPrevArticle(articleUrl);
     this.getSuggestedArticles(articleUrl);

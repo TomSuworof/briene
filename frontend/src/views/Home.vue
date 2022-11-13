@@ -17,7 +17,7 @@
       </div>
       <div class="load-more-button" v-if="hasAfter">
         <button class="button button-primary" @click="loadMoreArticles" :disabled="!hasAfter" title="Load more articles">
-          <span>Load more</span>
+          <span>More</span>
         </button>
       </div>
     </div>

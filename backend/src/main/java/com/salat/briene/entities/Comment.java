@@ -32,10 +32,18 @@ public class Comment {
     @PastOrPresent
     private OffsetDateTime publicationDate;
 
-    public Comment(String message, User user) {
+    @ManyToOne
+    @JoinTable(name = "t_articles_comments",
+            joinColumns = { @JoinColumn(name = "comment_id") },
+            inverseJoinColumns = { @JoinColumn(name = "article_id") })
+    @org.springframework.data.annotation.Transient
+    private Article article;
+
+    public Comment(String message, User user, Article article) {
         this.id = UUID.randomUUID();
         this.message = message;
         this.user = user;
+        this.article = article;
         this.publicationDate = OffsetDateTime.now();
     }
 }

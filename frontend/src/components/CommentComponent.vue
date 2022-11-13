@@ -29,6 +29,7 @@ export default {
 <style scoped>
 
 .comment-container {
+  color: var(--text-color);
   margin-bottom: 20pt;
   max-width: 100%;
   overflow-wrap: break-word;

@@ -5,10 +5,14 @@ import com.salat.briene.entities.Comment;
 import com.salat.briene.entities.User;
 import com.salat.briene.payload.request.CommentUploadRequest;
 import com.salat.briene.payload.response.CommentDTO;
-import com.salat.briene.repositories.ArticleRepository;
+import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.EmailException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executors;
@@ -16,20 +20,27 @@ import java.util.concurrent.Executors;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
     private final ArticleService articleService;
     private final MailService mailService;
 
-    public CommentDTO uploadComment(User user, CommentUploadRequest commentUploadRequest) throws EmailException {
+    public PageResponseDTO<CommentDTO> getPageWithCommentsByArticleUrl(String articleUrl, Integer limit, Integer offset) {
+        Page<Comment> comments = commentRepository.getCommentsByArticle_Url(articleUrl, getDefaultPageable(limit, offset));
+
+        // return response after filtering
+        return new PageResponseDTO<>(
+                offset > 0 && comments.getTotalElements() > 0,
+                (offset + limit) < comments.getTotalElements(),
+                comments.getContent().stream().map(CommentDTO::new).toList(),
+                comments.getTotalElements());
+    }
+
+    public CommentDTO uploadComment(User user, CommentUploadRequest commentUploadRequest) {
         Article article = articleService.getArticleById(commentUploadRequest.getArticleId());
 
-        Comment comment = new Comment(commentUploadRequest.getMessage(), user);
+        Comment comment = new Comment(commentUploadRequest.getMessage(), user, article);
         commentRepository.save(comment);
-
-        article.getComments().add(comment);
-        articleRepository.save(article);
 
         Executors.newSingleThreadExecutor().submit(() -> {
             try {
@@ -40,5 +51,9 @@ public class CommentService {
         });
 
         return new CommentDTO(comment);
+    }
+
+    private Pageable getDefaultPageable(Integer limit, Integer offset) {
+        return PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.ASC, "publicationDate"));
     }
 }
