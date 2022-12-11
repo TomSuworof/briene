@@ -383,13 +383,8 @@ hr {
 }
 
 @media screen and (min-width: 721px) {
-  .bookmarking {
-    padding: 12pt 7pt 0 0;
-  }
-
   .article-page-content {
-    max-width: 66rem;
-    padding: 0 60pt 10pt 60pt;
+    max-width: 60rem;
   }
 }
 

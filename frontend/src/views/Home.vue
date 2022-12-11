@@ -54,20 +54,9 @@ export default {
     getNextArticles: function (limit, offset) {
       ArticlesService.getPublishedArticlesPaginated(limit, offset)
           .then(response => {
-            let articles = response.data.entities.sort((article1, article2) => {
-              if (article1.publicationDate < article2.publicationDate) {
-                return -1;
-              }
-              if (article1.publicationDate > article2.publicationDate) {
-                return 1;
-              }
-              return 0;
-            }).reverse(); // newer first
+            let articles = response.data.entities;
             this.articles = this.articles.concat(articles);
             this.hasAfter = response.data.hasAfter;
-          })
-          .catch(e => {
-            console.log(e);
           });
     },
   },
