@@ -72,8 +72,7 @@ export default {
             this.loadingArticle = false;
             // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
             this.$router.replace('/error'); // redirecting to '/error'
           });
     },
@@ -97,22 +96,10 @@ hr {
 }
 
 @media screen and (min-width: 721px) {
-  .bookmarking {
-    padding: 12pt 7pt 0 0;
-  }
-
   .article-page-content {
+    max-width: 66rem;
     padding: 0 60pt 10pt 60pt;
   }
-}
-
-.bookmarking, .article-title {
-  display: inline-block;
-}
-
-.bookmarking {
-  position: relative;
-  float: right;
 }
 
 .article-title {
@@ -126,20 +113,6 @@ hr {
 
 .article-about {
   justify-content: space-between;
-}
-
-.control {
-  text-align: center;
-  border-radius: 9px;
-  display: none;
-  position: absolute;
-  height: 35px;
-  width: 100px;
-  background: #DDD;
-}
-
-.control:hover {
-  cursor: pointer;
 }
 
 .article-publication-date {
@@ -171,16 +144,4 @@ hr {
   padding-bottom: 60pt;
 }
 
-.suggestions {
-  display: flex;
-}
-
-.next-article, .prev-article {
-  float: left;
-  margin-right: 40pt;
-}
-
-.suggestion-name {
-  font-size: 12px;
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="author-page-content" v-if="author">
-    <div class="header">
+    <div class="author-header">
       <div class="avatar-wrapper" v-if="!avatarString">
         <img src="@/assets/images/avatar-empty-transparent.png" alt="Avatar"/>
       </div>
@@ -34,7 +34,6 @@
         </div>
       </div>
     </div>
-    <hr align="left">
     <div v-if="loadingArticles">
       <ShimmerBlock/>
     </div>
@@ -212,9 +211,10 @@ export default {
   }
 }
 
-.header {
+.author-header {
   display: grid;
   grid-template-columns: 1fr 4fr;
+  margin-bottom: 25pt;
 }
 
 .avatar-wrapper {

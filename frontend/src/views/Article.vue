@@ -13,14 +13,18 @@
         <div class="bookmarking" v-if="article.title !== undefined">
           <div v-if="!inBookmarks" title="Add to bookmarks">
             <button @click="editBookmarks('add')">
-              <img v-if="userTheme === 'light-theme'" loading="eager" src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
-              <img v-if="userTheme === 'dark-theme'" loading="eager" src="https://img.icons8.com/ios/35/ffffff/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
+              <img v-if="userTheme === 'light-theme'" loading="eager"
+                   src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
+              <img v-if="userTheme === 'dark-theme'" loading="eager"
+                   src="https://img.icons8.com/ios/35/ffffff/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
             </button>
           </div>
           <div v-if="inBookmarks" title="Remove from bookmarks">
             <button @click="editBookmarks('remove')">
-              <img v-if="userTheme === 'light-theme'" loading="eager" src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks"/>
-              <img v-if="userTheme === 'dark-theme'" loading="eager" src="https://img.icons8.com/ios-filled/35/ffffff/bookmark-ribbon.png" alt="Remove from bookmarks"/>
+              <img v-if="userTheme === 'light-theme'" loading="eager"
+                   src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks"/>
+              <img v-if="userTheme === 'dark-theme'" loading="eager"
+                   src="https://img.icons8.com/ios-filled/35/ffffff/bookmark-ribbon.png" alt="Remove from bookmarks"/>
             </button>
           </div>
         </div>
@@ -35,7 +39,6 @@
           </li>
         </ul>
       </div>
-      <hr>
       <div v-if="loadingArticle">
         <ShimmerBlock/>
       </div>
@@ -76,12 +79,13 @@
       <p class="section-title"><b>Comments</b></p>
       <div class="comments">
         <comment-component
-             v-for="comment in comments"
-             v-bind:key="comment.id"
-             v-bind:comment="comment"/>
+            v-for="comment in comments"
+            v-bind:key="comment.id"
+            v-bind:comment="comment"/>
       </div>
       <div class="load-more-button" v-if="hasCommentsAfter">
-        <button class="button button-primary" @click="loadMoreComments(article.url)" :disabled="!hasCommentsAfter" title="Load more comments">
+        <button class="button button-primary" @click="loadMoreComments(article.url)" :disabled="!hasCommentsAfter"
+                title="Load more comments">
           <span>More</span>
         </button>
       </div>
@@ -174,19 +178,16 @@ export default {
       }
 
       BookmarksService.editBookmark(this.$route.params.articleUrl, action)
-          .then(response => {
-            console.log(response);
+          .then(() => {
             this.inBookmarks = !this.inBookmarks;
-          }).catch(err => {
-        console.log(err);
-      });
+          });
     },
     loadIsInBookmarks: function (articleUrl) {
       BookmarksService.isArticleInBookmarksOfUser(articleUrl)
           .then(response => {
             this.inBookmarks = response.data;
-          }).catch(err => {
-            console.log(err);
+          })
+          .catch(() => {
             this.inBookmarks = false;
           });
     },
@@ -199,8 +200,7 @@ export default {
             // this.article.content = xss.process(VMdEditor.vMdParser.themeConfig.markdownParser.render(this.article.content));
             this.loadMeta();
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
             this.$router.replace('/error'); // redirecting to '/error'
           });
     },
@@ -211,20 +211,11 @@ export default {
     loadArticleComments: function (articleUrl, limit, offset) {
       CommentService.get(articleUrl, limit, offset)
           .then(response => {
-            let comments = response.data.entities.sort((comment1, comment2) => {
-              if (comment1.publicationDate < comment2.publicationDate) {
-                return -1;
-              }
-              if (comment1.publicationDate > comment2.publicationDate) {
-                return 1;
-              }
-              return 0;
-            }); // newer first
+            let comments = response.data.entities;
             this.comments = this.comments.concat(comments);
             this.hasCommentsAfter = response.data.hasAfter;
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
             this.$router.replace('/error'); // redirecting to '/error'
           });
     },
@@ -233,20 +224,14 @@ export default {
           .then(response => {
             this.nextArticle = response.data;
             this.addShortcutsForNextArticle(response.data.url);
-          })
-          .catch(err => {
-            console.log(err);
-          })
+          });
     },
     getPrevArticle: function (articleUrl) {
       ArticlesService.getPrevArticle(articleUrl)
           .then(response => {
             this.prevArticle = response.data;
             this.addShortcutsForPrevArticle(response.data.url);
-          })
-          .catch(err => {
-            console.log(err);
-          })
+          });
     },
     addShortcutsForNextArticle: function (articleUrl) {
       this.addShortcutsForSuggestion('ArrowLeft', articleUrl);
@@ -265,55 +250,52 @@ export default {
       ArticlesService.getSuggestedArticles(articleUrl)
           .then(response => {
             this.suggestedArticles = response.data;
-          })
-          .catch(err => {
-            console.log(err);
-          })
+          });
     },
     loadMeta: function () {
       document.title = this.article.title;
 
-      const head = document.head;
-
-      let metaOgUrl = document.createElement('meta');
-      metaOgUrl.setAttribute('property', 'og:url');
-      metaOgUrl.content = window.location.origin + window.location.pathname;
-      head.appendChild(metaOgUrl);
-
-      let metaOgTitle = document.createElement('meta');
-      metaOgTitle.setAttribute('property', 'og:title');
-      metaOgTitle.content = this.article.title;
-      head.appendChild(metaOgTitle);
-
-      let metaOgDescription = document.createElement('meta');
-      metaOgDescription.setAttribute('property', 'og:description');
-      metaOgDescription.content = this.article.summary;
-      head.appendChild(metaOgDescription);
-
-      let metaOgSiteName = document.createElement('meta');
-      metaOgSiteName.setAttribute('property', 'og:site_name');
-      metaOgSiteName.content = 'Briene';
-      head.appendChild(metaOgSiteName);
-
-      let metaDescription = document.createElement('meta');
-      metaDescription.name = 'description'
-      metaDescription.content = this.article.summary;
-      head.appendChild(metaDescription);
-
-      let metaKeywords = document.createElement('meta')
-      metaKeywords.name = 'keywords';
-      metaKeywords.content = this.article.tags.join(', ');
-      head.appendChild(metaKeywords);
-
-      let metaAuthor = document.createElement('meta')
-      metaAuthor.name = 'author';
-      metaAuthor.content = this.article.author;
-      head.appendChild(metaAuthor);
-
-      let metaRobots = document.createElement('meta')
-      metaRobots.name = 'robots';
-      metaRobots.content = 'index,follow'
-      head.appendChild(metaRobots);
+      // const head = document.head;
+      //
+      // let metaOgUrl = document.createElement('meta');
+      // metaOgUrl.setAttribute('property', 'og:url');
+      // metaOgUrl.content = window.location.origin + window.location.pathname;
+      // head.appendChild(metaOgUrl);
+      //
+      // let metaOgTitle = document.createElement('meta');
+      // metaOgTitle.setAttribute('property', 'og:title');
+      // metaOgTitle.content = this.article.title;
+      // head.appendChild(metaOgTitle);
+      //
+      // let metaOgDescription = document.createElement('meta');
+      // metaOgDescription.setAttribute('property', 'og:description');
+      // metaOgDescription.content = this.article.summary;
+      // head.appendChild(metaOgDescription);
+      //
+      // let metaOgSiteName = document.createElement('meta');
+      // metaOgSiteName.setAttribute('property', 'og:site_name');
+      // metaOgSiteName.content = 'Briene';
+      // head.appendChild(metaOgSiteName);
+      //
+      // let metaDescription = document.createElement('meta');
+      // metaDescription.name = 'description'
+      // metaDescription.content = this.article.summary;
+      // head.appendChild(metaDescription);
+      //
+      // let metaKeywords = document.createElement('meta')
+      // metaKeywords.name = 'keywords';
+      // metaKeywords.content = this.article.tags.join(', ');
+      // head.appendChild(metaKeywords);
+      //
+      // let metaAuthor = document.createElement('meta')
+      // metaAuthor.name = 'author';
+      // metaAuthor.content = this.article.author;
+      // head.appendChild(metaAuthor);
+      //
+      // let metaRobots = document.createElement('meta')
+      // metaRobots.name = 'robots';
+      // metaRobots.content = 'index,follow'
+      // head.appendChild(metaRobots);
 
       // useMeta({
       //     'og:url': document.URL
@@ -340,9 +322,8 @@ export default {
             this.commentMessage = '';
             this.loadingComment = false;
           })
-          .catch(err => {
+          .catch(() => {
             this.loadingComment = false;
-            console.log(err);
             this.$router.replace('/login');
           });
     }
@@ -386,9 +367,6 @@ export default {
       makeQuoteFunction(selectedString);
       control.style.display = 'none';
     });
-  },
-  beforeUnmount() {
-    this.clearMeta();
   }
 }
 </script>
@@ -410,17 +388,14 @@ hr {
   }
 
   .article-page-content {
+    max-width: 66rem;
     padding: 0 60pt 10pt 60pt;
   }
 }
 
-.bookmarking, .article-title {
-  display: inline-block;
-}
-
-.bookmarking {
-  position: relative;
-  float: right;
+.title {
+  display: grid;
+  grid-template-columns: auto 20px;
 }
 
 .article-title {
@@ -469,6 +444,8 @@ hr {
 
 .tags-list {
   padding-left: 0;
+  padding-bottom: 5pt;
+  margin: 0;
 }
 
 .tag-item {

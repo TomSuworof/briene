@@ -1,29 +1,26 @@
 <template>
   <div class="article-container" @click.self="$router.push('/articles/' + article.url)">
-    <div v-if="actions !== undefined">
-      <div class="article-util-container">
-        <div class="article-state" v-if="state !== undefined">
-          <p>#{{ state }}</p>
-        </div>
-        <div class="article-action-item"
-            href="#"
-            v-for="action in actions"
-            v-bind:key="action.id"
-            @click="action.function(article.id)">
-          <span class="button-icon" v-html="action.icon"/>
-        </div>
-      </div>
-    </div>
     <div class="article-author">
       <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
     </div>
     <div class="article-title-container">
-      <h3 class="article-title">
-        <a :href="'/articles/' + article.url">{{ article.title }}</a>
-      </h3>
-    </div>
-    <div class="article-summary">
-      <p>{{ article.summary }}</p>
+      <div>
+        <h3 class="article-title">
+          <a :href="'/articles/' + article.url">{{ article.title }}</a>
+        </h3>
+      </div>
+      <div class="article-util-container" v-if="actions !== undefined">
+        <div class="article-state" v-if="state !== undefined">
+          <p>#{{ state }}</p>
+        </div>
+        <div class="article-action-item"
+             href="#"
+             v-for="action in actions"
+             v-bind:key="action.id"
+             @click="action.function(article.id)">
+          <span class="button-icon" v-html="action.icon"/>
+        </div>
+      </div>
     </div>
     <div class="article-publication-date">
       <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
@@ -34,6 +31,9 @@
           <a :href="'/tags/' + tag">{{ tag }}</a>
         </li>
       </ul>
+    </div>
+    <div class="article-summary">
+      <p>{{ article.summary }}</p>
     </div>
   </div>
 </template>
@@ -106,10 +106,10 @@ a:hover {
   font-size: 12px;
 }
 
-.article-util-container {
-  position: absolute;
-  right: 5pt;
-  top: 5pt;
+.article-title-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
 }
 
 .article-state, .article-action-item {
@@ -120,7 +120,7 @@ a:hover {
 
 .article-publication-date {
   font-size: 12px;
-  padding-right: 7pt;
+  padding-right: 12pt;
 }
 
 .article-publication-date, .tags-container {
@@ -129,6 +129,8 @@ a:hover {
 
 .tags-list {
   padding-left: 0;
+  padding-bottom: 5pt;
+  margin: 0;
 }
 
 .tag-item {
@@ -136,7 +138,7 @@ a:hover {
   text-decoration: underline;
   display: inline-block;
   position: relative;
-  margin: 0 10pt 0 0;
+  margin: 0 5pt 0 0;
 }
 
 .tag-highlight {

@@ -8,41 +8,41 @@
       <div class="accordion__content">
         <div class="users">
           <table class="admin-dashboard-table table">
-          <tr>
-            <th class="user-column">ID</th>
-            <th class="user-column">Username</th>
-            <th class="user-column">Email</th>
-            <th class="user-column">Roles</th>
-            <th class="user-column-actions">Actions</th>
-          </tr>
-          <tr class="user-row" v-if="loadingUsers">
-            <ShimmerBlock/>
-          </tr>
-          <tr class="user-row" v-if="!loadingUsers" v-for="user in users" v-bind:key="user.id">
-            <td class="user-column">{{ user.id }}</td>
-            <td class="user-column">{{ user.username }}</td>
-            <td class="user-column">{{ user.email }}</td>
-            <td class="user-column">
-              <ul v-for="role in user.roles" v-bind:key="role.id">
-                <li>{{ role.name }}</li>
-              </ul>
-            </td>
-            <td class="user-column-actions">
-              <div class="user-actions">
-                <div class="user-action">
-                  <button @click="editUser('make_admin', user.id)" class="button button-primary">Make admin</button>
-                </div>
-                <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_USER') ||
+            <tr>
+              <th class="user-column">ID</th>
+              <th class="user-column">Username</th>
+              <th class="user-column">Email</th>
+              <th class="user-column">Roles</th>
+              <th class="user-column-actions">Actions</th>
+            </tr>
+            <tr class="user-row" v-if="loadingUsers">
+              <ShimmerBlock/>
+            </tr>
+            <tr class="user-row" v-if="!loadingUsers" v-for="user in users" v-bind:key="user.id">
+              <td class="user-column">{{ user.id }}</td>
+              <td class="user-column">{{ user.username }}</td>
+              <td class="user-column">{{ user.email }}</td>
+              <td class="user-column">
+                <ul v-for="role in user.roles" v-bind:key="role.id">
+                  <li>{{ role.name }}</li>
+                </ul>
+              </td>
+              <td class="user-column-actions">
+                <div class="user-actions">
+                  <div class="user-action">
+                    <button @click="editUser('make_admin', user.id)" class="button button-primary">Make admin</button>
+                  </div>
+                  <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_USER') ||
                     user.roles.map(role => role.name).includes('ROLE_ADMIN')">
-                  <button @click="editUser('delete', user.id)" class="button button-danger">Delete (block)</button>
+                    <button @click="editUser('delete', user.id)" class="button button-danger">Delete (block)</button>
+                  </div>
+                  <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_BLOCKED')">
+                    <button @click="editUser('make_user', user.id)" class="button button-success">Make user</button>
+                  </div>
                 </div>
-                <div class="user-action" v-show="user.roles.map(role => role.name).includes('ROLE_BLOCKED')">
-                  <button @click="editUser('make_user', user.id)" class="button button-success">Make user</button>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </table>
+              </td>
+            </tr>
+          </table>
         </div>
         <div class="user-navigation-buttons">
           <div class="navigation-button-prev" title="Previous">
@@ -203,32 +203,17 @@ export default {
       this.loadingArticles = true;
       AdminService.getArticlesPaginated(state, limit, offset)
           .then(response => {
-            this.articles = response.data.entities.sort((article1, article2) => {
-              if (article1.publicationDate < article2.publicationDate) {
-                return -1;
-              }
-              if (article1.publicationDate > article2.publicationDate) {
-                return 1;
-              }
-              return 0;
-            }).reverse(); // newer first
+            this.articles = response.data.entities;
             this.loadingArticles = false;
             this.hasArticlesBefore = response.data.hasBefore;
             this.hasArticlesAfter = response.data.hasAfter;
-          })
-          .catch(e => {
-            console.log(e);
           });
     },
 
     editUser: function (action, id) {
       AdminService.editUser(action, id)
-          .then(response => {
-            console.log(response);
+          .then(() => {
             this.getUsersPaginated(this.usersLimit, this.usersOffset);
-          })
-          .catch(err => {
-            console.log(err);
           });
     },
     editArticle: function (articleId) {
@@ -238,9 +223,6 @@ export default {
       ArticlesService.delete(articleId)
           .then(() => {
             this.getArticlesPaginated('all', this.articlesLimit, this.articlesOffset);
-          })
-          .catch(err => {
-            console.log(err);
           });
     },
 

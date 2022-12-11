@@ -162,10 +162,9 @@ export default {
               alert('Article was saved');
             }
           })
-          .catch(err => {
+          .catch(() => {
             this.loadingPublish = false;
             this.loadingSave = false;
-            console.log(err);
             this.showWarningArticleExists();
           });
     },
@@ -254,8 +253,7 @@ export default {
             this.tags = response.data.tags;
             this.url = response.data.url;
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
             this.$router.replace('/error'); // redirecting to '/error'
           });
     } else {

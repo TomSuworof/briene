@@ -6,7 +6,7 @@
     <div class="avatar-wrapper" v-if="avatarString">
       <img :src="avatarString" alt="Avatar"/>
     </div>
-    <div class="header row">
+    <div class="author-header row">
       <div>
         <h1 id="username">{{ currentUser.username }}</h1>
       </div>
@@ -502,7 +502,7 @@ export default {
   }
 }
 
-.header {
+.author-header {
   justify-content: space-between;
   margin: 10pt 0 10pt;
 }
