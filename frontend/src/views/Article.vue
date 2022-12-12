@@ -305,14 +305,14 @@ export default {
     },
     clearMeta: function () {
       document.title = 'Briene';
-      document.querySelector("[property='og:url']").remove();
-      document.querySelector("[property='og:title']").remove();
-      document.querySelector("[property='og:description']").remove();
-      document.querySelector("[property='og:site_name']").remove();
-      document.querySelector("[name='description']").remove();
-      document.querySelector("[name='keywords']").remove();
-      document.querySelector("[name='author']").remove();
-      document.querySelector("[name='robots']").remove();
+      // document.querySelector("[property='og:url']").remove();
+      // document.querySelector("[property='og:title']").remove();
+      // document.querySelector("[property='og:description']").remove();
+      // document.querySelector("[property='og:site_name']").remove();
+      // document.querySelector("[name='description']").remove();
+      // document.querySelector("[name='keywords']").remove();
+      // document.querySelector("[name='author']").remove();
+      // document.querySelector("[name='robots']").remove();
     },
     uploadComment: function () {
       this.loadingComment = true;
@@ -367,6 +367,9 @@ export default {
       makeQuoteFunction(selectedString);
       control.style.display = 'none';
     });
+  },
+  beforeUnmount() {
+    this.clearMeta();
   }
 }
 </script>
