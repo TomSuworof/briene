@@ -1,6 +1,6 @@
 <template>
   <div class="tag-page-content" v-if="tag">
-    <div class="profile-header">
+    <div class="author-container">
       <h1 id="tag-name">#{{ tag }}</h1>
       <p>{{ totalCount }} {{ getFormOfArticles(totalCount) }} this tag</p>
     </div>
@@ -93,7 +93,7 @@ export default {
 </script>
 
 <style scoped>
-.profile-header {
+.author-container {
   color: var(--text-color);
 }
 

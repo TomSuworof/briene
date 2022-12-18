@@ -16,7 +16,7 @@
             <Field id="password" name="password" type="password" placeholder="Password" class="form-control"/>
             <ErrorMessage name="password" class="error-feedback alert alert-danger"/>
           </div>
-          <div class="form-group center">
+          <div class="form-group button-row-center">
             <div class="log-in-button">
               <button class="button button-primary" :disabled="loading">
                 <span v-show="loading" class="spinner-border spinner-border-sm"></span>
@@ -113,9 +113,10 @@ export default {
   color: var(--text-color);
 }
 
-.log-in-button, .sign-up-button {
-  display: inline-block;
-  margin: 1pt;
+.button-row-center {
+  display: flex;
+  gap: 10pt;
+  justify-content: center;
 }
 
 .center {

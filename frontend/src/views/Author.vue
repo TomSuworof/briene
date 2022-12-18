@@ -1,6 +1,6 @@
 <template>
-  <div class="author-page-content" v-if="author">
-    <div class="profile-header">
+  <div class="author-root" v-if="author">
+    <div class="author-container">
       <div class="avatar-wrapper" v-if="!avatarString">
         <img src="@/assets/images/avatar-empty-transparent.png" alt="Avatar"/>
       </div>
@@ -8,7 +8,7 @@
         <img :src="avatarString" alt="Avatar"/>
       </div>
       <div class="author-data">
-        <div>
+        <div class="author-header">
           <div class="author-username">
             <h1><b>{{ author.username }}</b></h1>
           </div>
@@ -23,14 +23,16 @@
             </button>
           </div>
         </div>
+        <div class="author-subheader">
+          <div class="author-article-count">
+            <p>{{ getArticlesMessage(author.articles.totalCount) }}</p>
+          </div>
+          <div class="author-follower-count">
+            <p>{{ getFollowersMessage(author.followersCounter) }}</p>
+          </div>
+        </div>
         <div class="author-bio">
           <p>{{ author.bio }}</p>
-        </div>
-        <div class="author-article-count">
-          <p>{{ getArticlesMessage(author.articles.totalCount) }}</p>
-        </div>
-        <div class="author-follower-count">
-          <p>{{ getFollowersMessage(author.followersCounter) }}</p>
         </div>
       </div>
     </div>
@@ -188,7 +190,7 @@ export default {
 </script>
 
 <style scoped>
-.author-page-content {
+.author-root {
   max-width: 700pt;
 }
 
@@ -211,7 +213,7 @@ export default {
   }
 }
 
-.profile-header {
+.author-container {
   display: grid;
   grid-template-columns: 1fr 4fr;
   margin-bottom: 25pt;
@@ -221,8 +223,10 @@ export default {
   margin-right: 5pt;
 }
 
-.author-username, .follow-button {
-  display: inline-block;
+.author-header {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
 }
 
 .author-username {
@@ -233,15 +237,18 @@ export default {
   float: right;
 }
 
-.author-bio {
-  color: var(--text-color);
-  white-space: pre-line;
+.author-subheader {
+  display: flex;
+  gap: 10pt;
 }
 
 .author-article-count, .author-follower-count {
-  display: inline-block;
   font-size: 12px;
-  margin-right: 10pt;
   color: #666;
+}
+
+.author-bio {
+  color: var(--text-color);
+  white-space: pre-line;
 }
 </style>

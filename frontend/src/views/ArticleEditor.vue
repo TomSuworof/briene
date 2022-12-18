@@ -302,7 +302,6 @@ export default {
   padding-bottom: 5pt;
   margin: 0;
   display: flex;
-  float: left;
   gap: 7pt;
   list-style-type: none;
 }

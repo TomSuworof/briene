@@ -6,7 +6,7 @@
     <div class="avatar-wrapper" v-if="avatarString">
       <img :src="avatarString" alt="Avatar"/>
     </div>
-    <div class="profile-header">
+    <div class="author-container">
       <div>
         <h1 id="username">{{ currentUser.username }}</h1>
       </div>
@@ -502,7 +502,7 @@ export default {
   }
 }
 
-.profile-header {
+.author-container {
   display: grid;
   grid-template-columns: auto auto;
   justify-content: space-between;

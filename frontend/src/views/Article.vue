@@ -396,12 +396,6 @@ hr {
   grid-template-columns: auto 20px;
 }
 
-.article-subheader {
-  display: flex;
-  float: left;
-  gap: 10pt;
-}
-
 .article-title {
   color: var(--text-color);
   overflow-wrap: break-word;
@@ -409,10 +403,6 @@ hr {
 
 #article-title {
   font-weight: bold;
-}
-
-.article-about {
-  justify-content: space-between;
 }
 
 .v-md-editor__preview-wrapper {
@@ -435,6 +425,11 @@ hr {
 
 .control:hover {
   cursor: pointer;
+}
+
+.article-subheader {
+  display: flex;
+  gap: 10pt;
 }
 
 .article-publication-date {

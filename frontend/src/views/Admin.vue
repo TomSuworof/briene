@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-dashboard">
+  <div class="admin-root">
     <div class="admin-dashboard-users accordion">
       <div class="admin-dashboard-title accordion__intro">
         <h2 class="admin-users-title">Users</h2>

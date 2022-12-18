@@ -3,7 +3,7 @@
     <div class="article-author">
       <router-link v-bind:to="'/authors/' + article.author">{{ article.author }}</router-link>
     </div>
-    <div class="article-title-container">
+    <div class="article-header">
       <div>
         <h3 class="article-title">
           <a :href="'/articles/' + article.url">{{ article.title }}</a>
@@ -22,15 +22,17 @@
         </div>
       </div>
     </div>
-    <div class="article-publication-date">
-      <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
-    </div>
-    <div class="article-tags tags-container">
-      <ul class="tags-list">
-        <li :class="getClassForTag(tag)" v-for="tag in article.tags">
-          <a :href="'/tags/' + tag">{{ tag }}</a>
-        </li>
-      </ul>
+    <div class="article-subheader">
+      <div class="article-publication-date">
+        <time :datetime="article.publicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
+      </div>
+      <div class="tags-container">
+        <ul class="tags-list">
+          <li :class="getClassForTag(tag)" v-for="tag in article.tags">
+            <a :href="'/tags/' + tag">{{ tag }}</a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="article-summary">
       <p>{{ article.summary }}</p>
@@ -66,12 +68,28 @@ export default {
 </script>
 
 <style scoped>
+.article-container {
+  max-width: 700pt;
+  border-radius: 9px;
+  margin-bottom: 30pt;
+  border: solid 1px transparent;
+}
+
+.article-container:active {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0.5pt 1pt;
+  background-color: var(--background-color-secondary);
+}
+
 a {
   color: var(--text-color);
 }
 
 a:hover {
   color: #F7C71B;
+}
+
+.article-author {
+  font-size: 12px;
 }
 
 .article-title {
@@ -82,31 +100,7 @@ a:hover {
   overflow-wrap: break-word;
 }
 
-.article-summary > p {
-  max-width: 700pt;
-  margin-bottom: 0.6rem;
-  color: var(--text-color);
-}
-
-.article-container {
-  max-width: 700pt;
-  position: relative;
-  border-radius: 9px;
-  margin-bottom: 30pt;
-  padding-left: 3pt;
-  border: solid 1px transparent;
-}
-
-.article-container:active {
-  box-shadow: rgba(0, 0, 0, 0.1) 0 0.5pt 1pt;
-  background-color: var(--background-color-secondary);
-}
-
-.article-author {
-  font-size: 12px;
-}
-
-.article-title-container {
+.article-header {
   display: grid;
   grid-template-columns: auto auto;
   justify-content: space-between;
@@ -118,27 +112,30 @@ a:hover {
   color: var(--text-color);
 }
 
-.article-publication-date {
-  font-size: 12px;
-  padding-right: 12pt;
+.article-subheader {
+  display: flex;
+  gap: 10pt;
 }
 
-.article-publication-date, .tags-container {
-  display: inline-block;
+.article-publication-date {
+  font-size: 12px;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .tags-list {
   padding-left: 0;
   padding-bottom: 5pt;
   margin: 0;
+  display: flex;
+  float: left;
+  gap: 7pt;
+  list-style-type: none;
 }
 
 .tag-item {
   font-size: 12px;
   text-decoration: underline;
-  display: inline-block;
-  position: relative;
-  margin: 0 5pt 0 0;
 }
 
 .tag-highlight {
@@ -147,5 +144,9 @@ a:hover {
 
 .tag-item > a, .article-publication-date {
   color: #666;
+}
+
+.article-summary > p {
+  color: var(--text-color);
 }
 </style>

@@ -4,20 +4,23 @@
       <div class="article-author">
         <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
       </div>
-      <div class="article-title">
-        <h1 id="article-title">{{ article.title }}</h1>
+      <div class="article-header">
+        <div class="article-title">
+          <h1 id="article-title">{{ article.title }}</h1>
+        </div>
       </div>
-      <div class="article-publication-date" v-if="article.publicationDate !== undefined">
-        <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
+      <div class="article-subheader">
+        <div class="article-publication-date" v-if="article.publicationDate !== undefined">
+          <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
+        </div>
+        <div class="tags-container">
+          <ul class="tags-list">
+            <li class="tag-item" v-for="tag in article.tags">
+              <a :href="'/tags/' + tag">{{ tag }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="article-tags tags-container">
-        <ul class="tags-list">
-          <li class="tag-item" v-for="tag in article.tags">
-            <a :href="'/tags/' + tag">{{ tag }}</a>
-          </li>
-        </ul>
-      </div>
-      <hr>
       <div v-if="loadingArticle">
         <ShimmerBlock/>
       </div>
@@ -107,33 +110,34 @@ hr {
   font-weight: bold;
 }
 
-.article-publication-date {
-  font-size: 12px;
-  padding-right: 7pt;
+.article-subheader {
+  display: flex;
+  gap: 10pt;
 }
 
-.article-publication-date, .tags-container {
-  display: inline-block;
+.article-publication-date {
+  font-size: 12px;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .tags-list {
   padding-left: 0;
+  padding-bottom: 5pt;
+  margin: 0;
+  display: flex;
+  float: left;
+  gap: 7pt;
+  list-style-type: none;
 }
 
 .tag-item {
   font-size: 12px;
   text-decoration: underline;
-  display: inline-block;
-  position: relative;
-  margin: 0 10pt 0 0;
 }
 
 .tag-item > a, .article-publication-date {
   color: #666;
-}
-
-.article-content-wrapper {
-  padding-bottom: 60pt;
 }
 
 </style>
