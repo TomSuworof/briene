@@ -1,15 +1,11 @@
 <template>
-  <div class="article-page-content">
+  <div class="article-root">
     <div class="article-content-wrapper">
-      <div class="article-about">
-        <div class="article-author">
-          <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
-        </div>
+      <div class="article-author">
+        <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
       </div>
-      <div class="title">
-        <div class="article-title">
-          <h1 id="article-title">{{ article.title }}</h1>
-        </div>
+      <div class="article-title">
+        <h1 id="article-title">{{ article.title }}</h1>
       </div>
       <div class="article-publication-date" v-if="article.publicationDate !== undefined">
         <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
@@ -91,12 +87,12 @@ hr {
 }
 
 @media screen and (max-width: 720px) {
-  .article-page-content {
+  .article-root {
   }
 }
 
 @media screen and (min-width: 721px) {
-  .article-page-content {
+  .article-root {
     max-width: 66rem;
     padding: 0 60pt 10pt 60pt;
   }
@@ -109,10 +105,6 @@ hr {
 
 #article-title {
   font-weight: bold;
-}
-
-.article-about {
-  justify-content: space-between;
 }
 
 .article-publication-date {

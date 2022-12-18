@@ -1,16 +1,12 @@
 <template>
-  <div class="whole-page">
-    <div class="header-buttons row">
-      <div class="header-buttons-left">
-        <div class="main-link">
-          <router-link to="/">
-            <pre>{{ logo }}</pre>
-          </router-link>
+  <div class="app-root">
+    <div class="header-buttons">
+      <div class="main-link">
+        <div class="main-link-full">
+          <router-link to="/">{{ logo }}</router-link>
         </div>
         <div class="main-link-short">
-          <router-link to="/">
-            <pre>{{ logoShort }}</pre>
-          </router-link>
+          <router-link to="/">{{ logoShort }}</router-link>
         </div>
       </div>
       <div class="search-bar">
@@ -24,21 +20,25 @@
         </form>
       </div>
       <div class="header-buttons-right">
-        <div class="header-button-editor-img">
-          <router-link to="/article_editor" class="fa fa-pencil"></router-link>
-        </div>
-        <div class="header-button-profile-img">
-          <router-link to="/profile" class="fa fa-user"></router-link>
-        </div>
         <div class="header-button-editor">
-          <router-link to="/article_editor">New article</router-link>
+          <div class="header-button-editor-img">
+            <router-link to="/article_editor" class="fa fa-pencil"></router-link>
+          </div>
+          <div class="header-button-editor-link-full">
+            <router-link to="/article_editor">New article</router-link>
+          </div>
         </div>
         <div class="header-button-profile">
-          <div v-if="currentUser">
-            <router-link to="/profile">Profile</router-link>
+          <div class="header-button-profile-img">
+            <router-link to="/profile" class="fa fa-user"></router-link>
           </div>
-          <div v-if="!currentUser">
-            <router-link to="/login">Login</router-link>
+          <div class="header-button-profile-link-full">
+            <div v-if="currentUser">
+              <router-link to="/profile">Profile</router-link>
+            </div>
+            <div v-if="!currentUser">
+              <router-link to="/login">Login</router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -138,30 +138,15 @@ hr {
 }
 
 @media screen and (max-width: 720px) {
-  .main-link {
+  .main-link-full {
     display: none !important;
-  }
-
-  .main-link-short {
-    margin-left: 3pt;
   }
 
   .search-bar {
     width: 140pt;
   }
 
-  .header-button-editor-img, .header-button-profile-img {
-    display: inline-block;
-    padding-top: 7pt;
-    padding-left: 20pt;
-    padding-right: 10pt;
-  }
-
-  .header-buttons, .header-buttons-left, .search-bar {
-    padding-top: 7pt !important;
-  }
-
-  .header-button-editor, .header-button-profile {
+  .header-button-editor-link-full, .header-button-profile-link-full {
     display: none !important;
   }
 }
@@ -187,36 +172,29 @@ hr {
 }
 
 .header-buttons {
-  width: 100%;
-  margin: auto;
-  padding: 10pt 10pt 0 0;
+  display: grid;
+  grid-template-columns: auto auto auto;
   justify-content: space-between;
+  align-items: center;
+  padding: 5pt 10pt 8pt 10pt;
   position: sticky;
   top: 0;
   z-index: 1;
   background-color: var(--background-color-secondary);
   box-shadow: rgba(0, 0, 0, 0.1) 0 0.5pt 1pt;
-  vertical-align: center;
 }
 
-.main-link, .main-link-short {
+.main-link-full, .main-link-short {
+  color: var(--text-color);
+  font-family: JetBrains Mono, monospace;
   font-weight: bold;
   font-style: italic;
-  font-size: 1.2rem;
 }
 
-.main-link, .header-button-editor, .header-button-profile {
-  display: inline-block;
-  margin: 0 10pt 0 20pt;
-}
-
-.footer-link {
-  display: inline-block;
-  margin: 0 10pt 10pt 20pt;
-}
-
-.query {
-  height: 1.9rem;
+.header-buttons-right {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 20pt;
 }
 
 .input-box {
@@ -226,7 +204,7 @@ hr {
 .input-box i {
   position: absolute;
   right: 10pt;
-  top: 5pt;
+  top: 7pt;
   color: var(--text-color)
 }
 
@@ -235,7 +213,6 @@ hr {
   background-color: transparent;
   border-color: var(--background-color-contrast);
   border-radius: 9px;
-  margin: 0 0 10pt;
   transition: border-color, border-width 0.3s;
 }
 
@@ -324,6 +301,10 @@ button > span {
   margin: 2pt;
 }
 
+.btn-container {
+  display: inline-block;
+}
+
 .navigation-button-prev, .navigation-button-next {
   display: inline-block;
   margin: 0 10pt 0;
@@ -338,9 +319,5 @@ button > span {
   background: none;
   border: none;
   filter: grayscale(100%)
-}
-
-.footer {
-  background-color: var(--background-color-secondary) !important;
 }
 </style>

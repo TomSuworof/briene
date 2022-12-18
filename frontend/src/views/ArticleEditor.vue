@@ -4,7 +4,7 @@
       <div class="editor-wrapper">
         <div>
           <div class="title-wrapper">
-            <input id="title" class="title" type="text" placeholder="Title" name="title" required v-model="title"
+            <input id="title" class="article-header" type="text" placeholder="Title" name="title" required v-model="title"
                    autofocus/>
           </div>
         </div>
@@ -282,11 +282,7 @@ export default {
   width: 75%;
 }
 
-.btn-container {
-  display: inline-block;
-}
-
-.title {
+.article-header {
   color: var(--text-color);
   width: 100%;
   font-size: 20pt;
@@ -297,18 +293,23 @@ export default {
   border-color: var(--background-color-contrast);
 }
 
-.tags-list {
+.tag-wrapper {
   padding-top: 10pt;
+}
+
+.tags-list {
   padding-left: 0;
+  padding-bottom: 5pt;
+  margin: 0;
+  display: flex;
+  float: left;
+  gap: 7pt;
+  list-style-type: none;
 }
 
 .tag-item {
   font-size: 12px;
   text-decoration: underline;
-  display: inline-block;
-  position: relative;
-  margin: 0 10pt 0 0;
-  color: #666;
 }
 
 .tag-item-name, .tag-item-close-button {

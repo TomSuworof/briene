@@ -1,12 +1,10 @@
 <template>
-  <div class="article-page-content">
+  <div class="article-root">
     <div class="article-content-wrapper">
-      <div class="article-about">
-        <div class="article-author">
-          <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
-        </div>
+      <div class="article-author">
+        <router-link :to="'/authors/' + article.author">{{ article.author }}</router-link>
       </div>
-      <div class="title">
+      <div class="article-header">
         <div class="article-title">
           <h1 id="article-title">{{ article.title }}</h1>
         </div>
@@ -29,15 +27,17 @@
           </div>
         </div>
       </div>
-      <div class="article-publication-date" v-if="article.publicationDate !== undefined">
-        <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
-      </div>
-      <div class="article-tags tags-container">
-        <ul class="tags-list">
-          <li class="tag-item" v-for="tag in article.tags">
-            <a :href="'/tags/' + tag">{{ tag }}</a>
-          </li>
-        </ul>
+      <div class="article-subheader">
+        <div class="article-publication-date" v-if="article.publicationDate !== undefined">
+          <time :datetime="htmlPublicationDate">{{ getFinePublicationDate(article.publicationDate) }}</time>
+        </div>
+        <div class="tags-container">
+          <ul class="tags-list">
+            <li class="tag-item" v-for="tag in article.tags">
+              <a :href="'/tags/' + tag">{{ tag }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
       <div v-if="loadingArticle">
         <ShimmerBlock/>
@@ -50,16 +50,16 @@
       </div>
     </div>
     <div class="read-next-wrapper" v-if="nextArticle || prevArticle">
-      <p class="section-title"><strong>Read next</strong></p>
+      <p class="wrapper-title"><strong>Read next</strong></p>
       <div class="suggestions">
         <div class="next-article" v-if="nextArticle">
-          <p class="suggestion-name">Ctrl ←</p>
+          <p class="suggestion-shortcut">Ctrl ←</p>
           <article-component
               v-bind:key="nextArticle.id"
               v-bind:article="nextArticle"/>
         </div>
         <div class="prev-article" v-if="prevArticle">
-          <p class="suggestion-name">Ctrl →</p>
+          <p class="suggestion-shortcut">Ctrl →</p>
           <article-component
               v-bind:key="prevArticle.id"
               v-bind:article="prevArticle"/>
@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="suggestions-wrapper" v-if="suggestedArticles.length > 0">
-      <p class="section-title"><strong>Read more</strong></p>
+      <p class="wrapper-title"><strong>Read more</strong></p>
       <div class="suggestions">
         <article-component
             v-for="article in suggestedArticles"
@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="comments-wrapper" v-if="!loadingArticle">
-      <p class="section-title"><b>Comments</b></p>
+      <p class="wrapper-title"><b>Comments</b></p>
       <div class="comments">
         <comment-component
             v-for="comment in comments"
@@ -381,19 +381,25 @@ hr {
 }
 
 @media screen and (max-width: 720px) {
-  .article-page-content {
+  .article-root {
   }
 }
 
 @media screen and (min-width: 721px) {
-  .article-page-content {
+  .article-root {
     max-width: 60rem;
   }
 }
 
-.title {
+.article-header {
   display: grid;
   grid-template-columns: auto 20px;
+}
+
+.article-subheader {
+  display: flex;
+  float: left;
+  gap: 10pt;
 }
 
 .article-title {
@@ -433,25 +439,23 @@ hr {
 
 .article-publication-date {
   font-size: 12px;
-  padding-right: 7pt;
-}
-
-.article-publication-date, .tags-container {
-  display: inline-block;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .tags-list {
   padding-left: 0;
   padding-bottom: 5pt;
   margin: 0;
+  display: flex;
+  float: left;
+  gap: 7pt;
+  list-style-type: none;
 }
 
 .tag-item {
   font-size: 12px;
   text-decoration: underline;
-  display: inline-block;
-  position: relative;
-  margin: 0 10pt 0 0;
 }
 
 .tag-item > a, .article-publication-date {
@@ -462,7 +466,7 @@ hr {
   margin-bottom: 60pt;
 }
 
-.section-title {
+.wrapper-title {
   color: var(--text-color);
 }
 
@@ -477,7 +481,7 @@ hr {
   width: 50%;
 }
 
-.suggestion-name {
+.suggestion-shortcut {
   color: var(--text-color);
   font-size: 12px;
 }

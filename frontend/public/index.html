@@ -18,15 +18,8 @@
             box-sizing: border-box;
         }
 
-        *,
-        *:before,
-        *:after {
-            box-sizing: inherit;
-        }
-
         body {
             position: relative;
-            margin: 0;
             min-height: 100%;
         }
 
@@ -35,8 +28,12 @@
             right: 0;
             bottom: 0;
             left: 0;
-            padding: 4pt 0 0 0;
+            padding: 10pt;
             overflow: hidden;
+            display: flex;
+            float: left;
+            gap: 20pt;
+            background-color: var(--background-color-secondary);
         }
 
         img {

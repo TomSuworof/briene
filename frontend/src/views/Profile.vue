@@ -1,12 +1,12 @@
 <template>
-  <div class="profile-page-content" v-show="currentUser !== null">
+  <div class="profile-root" v-show="currentUser !== null">
     <div class="avatar-wrapper" v-if="!avatarString">
       <img src="@/assets/images/avatar-empty-transparent.png" alt="Avatar"/>
     </div>
     <div class="avatar-wrapper" v-if="avatarString">
       <img :src="avatarString" alt="Avatar"/>
     </div>
-    <div class="author-header row">
+    <div class="profile-header">
       <div>
         <h1 id="username">{{ currentUser.username }}</h1>
       </div>
@@ -502,9 +502,10 @@ export default {
   }
 }
 
-.author-header {
+.profile-header {
+  display: grid;
+  grid-template-columns: auto auto;
   justify-content: space-between;
-  margin: 10pt 0 10pt;
 }
 
 #username {

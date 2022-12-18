@@ -1,6 +1,6 @@
 <template>
   <div class="author-page-content" v-if="author">
-    <div class="author-header">
+    <div class="profile-header">
       <div class="avatar-wrapper" v-if="!avatarString">
         <img src="@/assets/images/avatar-empty-transparent.png" alt="Avatar"/>
       </div>
@@ -211,7 +211,7 @@ export default {
   }
 }
 
-.author-header {
+.profile-header {
   display: grid;
   grid-template-columns: 1fr 4fr;
   margin-bottom: 25pt;
