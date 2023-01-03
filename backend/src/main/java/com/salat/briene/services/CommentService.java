@@ -21,7 +21,6 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-
     private final ArticleService articleService;
     private final MailService mailService;
 

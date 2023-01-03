@@ -14,7 +14,6 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 public class AuthorService {
     private final UserRepository userRepository;
-
     private final MailService mailService;
 
     public void subscribe(User follower, User author) {
@@ -35,10 +34,6 @@ public class AuthorService {
 
         userRepository.save(author);
         userRepository.save(follower);
-    }
-
-    public boolean isFollowing(User follower, User author) {
-        return follower.getFollowings().contains(author);
     }
 
     public void notifyAboutNewArticle(Article newArticle) {

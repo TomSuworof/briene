@@ -5,8 +5,7 @@ import com.salat.briene.exceptions.DuplicatedUserException;
 import com.salat.briene.exceptions.RoleNotFoundException;
 import com.salat.briene.exceptions.UserNotFoundException;
 import com.salat.briene.payload.response.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,13 +14,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+@Log4j2
 @ControllerAdvice
 public class UserAdvice {
-    private static final Logger logger = LoggerFactory.getLogger(UserAdvice.class);
-
     @ExceptionHandler(AnonymousUserException.class)
     public ResponseEntity<ErrorResponse> handleAnonymousUser(AnonymousUserException e, HttpServletRequest request) {
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
 
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -31,7 +29,7 @@ public class UserAdvice {
 
     @ExceptionHandler(DuplicatedUserException.class)
     public ResponseEntity<ErrorResponse> handleDuplicatedUser(DuplicatedUserException e, HttpServletRequest request) {
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
 
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -44,7 +42,7 @@ public class UserAdvice {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e, HttpServletRequest request) {
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());
@@ -54,7 +52,7 @@ public class UserAdvice {
 
     @ExceptionHandler(RoleNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRoleNotFound(RoleNotFoundException e, HttpServletRequest request) {
-        logger.error(e.getMessage());
+        log.error(e.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse response = new ErrorResponse(new Date(), status.value(), e.getMessage(), request.getRequestURI());

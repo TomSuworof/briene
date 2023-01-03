@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User loadUserByUsername(String username) {
+    public User loadUserByUsername(String username) throws UserNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public User getUserFromAuthentication(Authentication authentication) {
+    public User getUserFromAuthentication(Authentication authentication) throws AnonymousUserException, UserNotFoundException {
         if (authentication == null) {
             throw new AnonymousUserException();
         }
@@ -102,16 +102,6 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(userFromDB);
         return new UserDTO(userFromDB);
-    }
-
-    @Deprecated
-    // should be cascaded
-    private void deleteUser(UUID userId) {
-        if (userRepository.findById(userId).isPresent()) {
-            userRepository.deleteById(userId);
-        } else {
-            throw new UserNotFoundException();
-        }
     }
 
     public UserDTO changeRole(UUID userId, Role role) {

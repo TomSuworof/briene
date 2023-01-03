@@ -21,24 +21,24 @@ import ArticleShare from "@/views/ArticleShare";
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes: [
-        { path: '/', component: Home },
-        { path: '/terms_of_use', component: TermsOfUse },
-        { path: '/error', component: Error },
+        { path: '/', component: Home, meta: { requiresAuth: false } },
+        { path: '/terms_of_use', component: TermsOfUse, meta: { requiresAuth: false } },
+        { path: '/error', component: Error, meta: { requiresAuth: false } },
 
-        { path: '/login', component: Login},
-        { path: '/register', component: Register},
-        { path: '/password_reset', component: PasswordReset },
+        { path: '/login', component: Login, meta: { requiresAuth: false } },
+        { path: '/register', component: Register, meta: { requiresAuth: false } },
+        { path: '/password_reset', component: PasswordReset, meta: { requiresAuth: false } },
         { path: '/profile', component: Profile, meta: { requiresAuth: true } },
 
-        { path: '/search', component: Search },
-        { path: '/articles/share/:articleId', component: ArticleShare },
-        { path: '/articles/:articleUrl', component: Article },
+        { path: '/search', component: Search , meta: { requiresAuth: false }},
+        { path: '/articles/share/:articleId', component: ArticleShare, meta: { requiresAuth: false } },
+        { path: '/articles/:articleUrl', component: Article, meta: { requiresAuth: false } },
         { path: '/article_editor', component: ArticleEditor, meta: { requiresAuth: true } },
 
         { path: '/admin', component: Admin, meta: { requiresAuth: true } },
 
-        { path: '/authors/:authorName', component: Author },
-        { path: '/tags/:tag', component: Tag },
+        { path: '/authors/:authorName', component: Author, meta: { requiresAuth: false } },
+        { path: '/tags/:tag', component: Tag, meta: { requiresAuth: false } },
 
         // otherwise, redirect to home
         { path: '/:pathMatch(.*)*', redirect: '/' }
@@ -47,8 +47,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-    const loggedIn = localStorage.getItem('user');
+    const loggedIn = localStorage.getItem('user') != null;
 
     // trying to access a restricted page + not logged in
     // redirect to login page

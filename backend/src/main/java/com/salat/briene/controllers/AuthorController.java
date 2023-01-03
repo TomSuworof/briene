@@ -1,9 +1,9 @@
 package com.salat.briene.controllers;
 
 import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.User;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.AuthorDTO;
-import com.salat.briene.entities.User;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.services.ArticleService;
 import com.salat.briene.services.AuthorService;
@@ -56,12 +56,10 @@ public class AuthorController {
         authorService.unsubscribe(currentUser, authorUser);
     }
 
-    @PostMapping("/isFollowing")
-    public ResponseEntity<Boolean> isFollowing(@RequestParam String author, Authentication authentication) {
+    @GetMapping("/isFollowing")
+    public ResponseEntity<Boolean> isFollowing(@RequestParam String authorName, Authentication authentication) {
         User currentUser = userService.getUserFromAuthentication(authentication);
-        User authorUser = userService.loadUserByUsername(author);
-
-        Boolean isFollowing = authorService.isFollowing(currentUser, authorUser);
-        return ResponseEntity.ok().body(isFollowing);
+        User authorUser = userService.loadUserByUsername(authorName);
+        return ResponseEntity.ok().body(currentUser.getFollowings().contains(authorUser));
     }
 }

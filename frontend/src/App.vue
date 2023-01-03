@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="content col-md-10 offset-md-1">
+    <div class="content col-md-8 offset-md-2">
       <router-view/>
     </div>
   </div>

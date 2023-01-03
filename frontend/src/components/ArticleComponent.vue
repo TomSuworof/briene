@@ -6,7 +6,7 @@
     <div class="article-header">
       <div>
         <h3 class="article-title">
-          <a :href="'/articles/' + article.url">{{ article.title }}</a>
+          <router-link v-bind:to="'/articles/' + article.url">{{ article.title }}</router-link>
         </h3>
       </div>
       <div class="article-util-container" v-if="actions !== undefined">
@@ -29,7 +29,7 @@
       <div class="tags-container">
         <ul class="tags-list">
           <li :class="getClassForTag(tag)" v-for="tag in article.tags">
-            <a :href="'/tags/' + tag">{{ tag }}</a>
+            <router-link v-bind:to="'/tags/' + tag">{{ tag }}</router-link>
           </li>
         </ul>
       </div>

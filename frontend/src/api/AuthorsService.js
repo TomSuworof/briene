@@ -2,17 +2,14 @@ import http from './http-common'
 import authHeader from "@/api/AuthHeader";
 
 class AuthorsService {
-    getAll() {
-        return http.get('/authors');
-    }
-
     getAuthorData(authorName, limit, offset) {
-        return http.get(`/authors/${authorName}`, {
-            params: {
-                limit: limit,
-                offset: offset
-            }
-        });
+        return http.get(`/authors/${authorName}`,
+            {
+                params: {
+                    limit: limit,
+                    offset: offset
+                }
+            });
     }
 
     subscribe(authorName) {
@@ -37,13 +34,12 @@ class AuthorsService {
             });
     }
 
-    isFollowing(authorName) {
-        return http.post('/authors/isFollowing',
-            {},
+    getFollowingStatus(authorName) {
+        return http.get('/authors/isFollowing',
             {
                 headers: authHeader(),
                 params: {
-                    author: authorName
+                    authorName: authorName
                 }
             });
     }

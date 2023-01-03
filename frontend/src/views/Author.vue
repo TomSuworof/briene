@@ -114,41 +114,27 @@ export default {
       AvatarsService.getUserAvatar(authorName)
           .then(response => {
             this.avatarString = response.data;
-          })
-          .catch(err => {
-            console.log(err);
           });
     },
     loadAuthorData: function (authorName, limit, offset) {
       AuthorsService.getAuthorData(authorName, limit, offset)
           .then(response => {
             this.author = response.data;
-            this.loadFollowStatus();
             document.title = this.author.username;
-            let articles = this.author.articles.entities.sort((article1, article2) => {
-              if (article1.publicationDate < article2.publicationDate) {
-                return -1;
-              }
-              if (article1.publicationDate > article2.publicationDate) {
-                return 1;
-              }
-              return 0;
-            }).reverse(); // newer first;
+            let articles = this.author.articles.entities;
             this.articles = this.articles.concat(articles);
             this.hasAfter = this.author.articles.hasAfter;
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
             this.$router.replace('/error'); // redirecting to '/error'
           });
     },
-    loadFollowStatus: function () {
-      AuthorsService.isFollowing(this.author.username)
+    loadFollowStatus: function (authorName) {
+      AuthorsService.getFollowingStatus(authorName)
           .then(response => {
             this.isFollowing = response.data;
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
             this.isFollowing = false;
           });
     },
@@ -157,11 +143,10 @@ export default {
       AuthorsService.subscribe(this.author.username)
           .then(response => {
             this.loadingSubscriptionChange = false;
-            this.loadFollowStatus();
+            this.loadFollowStatus(this.author.username);
           })
-          .catch(err => {
+          .catch(() => {
             this.loadingSubscriptionChange = false;
-            console.log(err);
           });
     },
     unsubscribe: function () {
@@ -169,18 +154,19 @@ export default {
       AuthorsService.unsubscribe(this.author.username)
           .then(response => {
             this.loadingSubscriptionChange = false;
-            this.loadFollowStatus();
+            this.loadFollowStatus(this.author.username);
           })
-          .catch(err => {
+          .catch(() => {
             this.loadingSubscriptionChange = false;
-            console.log(err);
           });
     }
   },
   created() {
+    let authorName = this.$route.params.authorName;
     this.loadingArticles = true;
-    this.getAvatar(this.$route.params.authorName);
-    this.loadAuthorData(this.$route.params.authorName, this.limit, this.offset);
+    this.loadFollowStatus(authorName);
+    this.getAvatar(authorName);
+    this.loadAuthorData(authorName, this.limit, this.offset);
     this.loadingArticles = false;
   },
   beforeUnmount() {

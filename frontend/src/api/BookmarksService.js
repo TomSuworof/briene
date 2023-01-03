@@ -13,7 +13,7 @@ class BookmarksService {
                 params: {
                     url: url
                 }
-            })
+            });
     }
 
     editBookmark(url, action) {

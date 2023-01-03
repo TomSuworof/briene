@@ -8,12 +8,11 @@ import com.salat.briene.payload.response.SearchResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
 import com.salat.briene.repositories.ArticleSearchRepository;
 import lombok.RequiredArgsConstructor;
-import org.elasticsearch.index.query.QueryBuilder;
+import lombok.extern.log4j.Log4j2;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -27,11 +26,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class SearchService {
-    private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
-
     private static final String ARTICLES_INDEX = "articles";
 
     private final ArticleRepository articleRepository;
@@ -42,7 +40,7 @@ public class SearchService {
     private void init() {
         Executors.newSingleThreadExecutor().submit(() -> {
             articleSearchRepository.saveAll(articleRepository.findAll());
-            logger.info("Index was rebuilt");
+            log.info("Index was rebuilt");
         });
     }
 
