@@ -9,22 +9,18 @@
           <h1 id="article-title">{{ article.title }}</h1>
         </div>
         <div class="bookmarking" v-if="article.title !== undefined">
-          <div v-if="!inBookmarks" title="Add to bookmarks">
-            <button @click="editBookmarks('add')">
-              <img v-if="userTheme === 'light-theme'" loading="eager"
-                   src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
-              <img v-if="userTheme === 'dark-theme'" loading="eager"
-                   src="https://img.icons8.com/ios/35/ffffff/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
-            </button>
-          </div>
-          <div v-if="inBookmarks" title="Remove from bookmarks">
-            <button @click="editBookmarks('remove')">
-              <img v-if="userTheme === 'light-theme'" loading="eager"
-                   src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks"/>
-              <img v-if="userTheme === 'dark-theme'" loading="eager"
-                   src="https://img.icons8.com/ios-filled/35/ffffff/bookmark-ribbon.png" alt="Remove from bookmarks"/>
-            </button>
-          </div>
+          <button class="bookmark" @click="editBookmarks('add')" v-if="!inBookmarks">
+            <img v-if="userTheme === 'light-theme'" loading="eager"
+                 src="https://img.icons8.com/ios/35/000000/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
+            <img v-if="userTheme === 'dark-theme'" loading="eager"
+                 src="https://img.icons8.com/ios/35/ffffff/bookmark-ribbon--v1.png" alt="Add to bookmarks"/>
+          </button>
+          <button class="bookmark" @click="editBookmarks('remove')" v-if="inBookmarks">
+            <img v-if="userTheme === 'light-theme'" loading="eager"
+                 src="https://img.icons8.com/ios-filled/35/000000/bookmark-ribbon.png" alt="Remove from bookmarks"/>
+            <img v-if="userTheme === 'dark-theme'" loading="eager"
+                 src="https://img.icons8.com/ios-filled/35/ffffff/bookmark-ribbon.png" alt="Remove from bookmarks"/>
+          </button>
         </div>
       </div>
       <div class="article-subheader">
@@ -393,7 +389,7 @@ hr {
 
 .article-header {
   display: grid;
-  grid-template-columns: auto 20px;
+  grid-template-columns: calc(100% - 35px) 35px;
 }
 
 .article-title {
@@ -403,6 +399,11 @@ hr {
 
 #article-title {
   font-weight: bold;
+}
+
+.bookmark {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .v-md-editor__preview-wrapper {
@@ -443,7 +444,8 @@ hr {
   padding-bottom: 5pt;
   margin: 0;
   display: flex;
-  float: left;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 7pt;
   list-style-type: none;
 }
@@ -466,9 +468,10 @@ hr {
 }
 
 .suggestions {
-  margin-right: 20pt;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .next-article, .prev-article {

@@ -70,6 +70,7 @@ export default {
 <style scoped>
 .article-container {
   max-width: 700pt;
+  width: 100%;
   border-radius: 9px;
   margin-bottom: 30pt;
   border: solid 1px transparent;
