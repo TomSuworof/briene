@@ -319,7 +319,7 @@ export default {
 }
 
 .tag-item-name {
-  color: var(--text-color);
+  color: var(--background-color-contrast);
   padding-right: 3pt;
 }
 
