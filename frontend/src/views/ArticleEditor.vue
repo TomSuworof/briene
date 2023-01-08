@@ -4,14 +4,17 @@
       <div class="editor-wrapper">
         <div>
           <div class="title-wrapper">
-            <input id="title" class="article-header" type="text" placeholder="Title" name="title" required v-model="title"
+            <input id="title" class="article-header" type="text" placeholder="Title" name="title" required
+                   v-model="title"
                    autofocus/>
           </div>
         </div>
         <div class="tag-wrapper">
           <ul class="tags-list">
             <li class="tag-item">
-              <b>Tags:</b>
+              <div class="tag-item-name">
+                <b>Tags:</b>
+              </div>
             </li>
             <li class="tag-item" v-for="tag in tags">
               <div class="tag-item-name">{{ tag }}</div>
@@ -316,6 +319,7 @@ export default {
 }
 
 .tag-item-name {
+  color: var(--text-color);
   padding-right: 3pt;
 }
 
