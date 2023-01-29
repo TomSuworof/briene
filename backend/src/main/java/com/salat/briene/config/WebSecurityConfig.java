@@ -36,28 +36,27 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        return httpSecurity
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .httpBasic()
+                .httpBasic()
                 .and()
-                    .authorizeRequests()
-                    .antMatchers("/api/articles/**",
-                        "/api/auth/**",
+                .authorizeRequests()
+                .antMatchers("/api/articles/**",
+//                        "/api/auth/**",
                         "/api/authors/**",
                         "/api/avatars/**",
                         "/api/bookmarks/**",
                         "/api/comments/**",
                         "/api/search/**",
                         "/api/tags/**").permitAll()
-                    .antMatchers("/api/users/**").authenticated()
-                    .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/users/**").authenticated()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .and()
-                    .csrf().disable()
-                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
-
-        httpSecurity.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return httpSecurity.build();
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }

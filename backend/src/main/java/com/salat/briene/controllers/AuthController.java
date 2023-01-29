@@ -8,6 +8,8 @@ import com.salat.briene.payload.response.JwtResponse;
 import com.salat.briene.payload.response.UserDTO;
 import com.salat.briene.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,12 +17,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "*", methods = RequestMethod.POST)
+@Log4j2
 @Controller
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -30,7 +36,9 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        log.debug("authenticateUser() called. Login request cannot be displayed");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -55,7 +63,9 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody SignupRequest signUpRequest) {
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ResponseEntity<UserDTO> registerUser(@RequestBody SignupRequest signUpRequest) {
+        log.debug("registerUser() called. User info cannot be displayed");
         UserDTO user = userService.saveUser(signUpRequest);
         return ResponseEntity.ok().body(user);
     }

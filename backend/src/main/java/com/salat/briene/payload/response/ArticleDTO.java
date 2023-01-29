@@ -4,6 +4,7 @@ import com.salat.briene.entities.Article;
 import com.salat.briene.entities.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -12,6 +13,7 @@ import java.util.*;
 // It is helpful and recommended using when you need to get a list of articles
 
 @Getter
+@ToString
 @EqualsAndHashCode
 public class ArticleDTO implements ObjectDTO {
     protected final UUID id;

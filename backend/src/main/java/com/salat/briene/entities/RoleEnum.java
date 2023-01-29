@@ -1,11 +1,11 @@
 package com.salat.briene.entities;
 
 import com.salat.briene.exceptions.RoleNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum RoleEnum {
     BLOCKED("delete", "blocked", new Role(0L, "ROLE_BLOCKED")),
     ADMIN("make_admin", "admin", new Role(1L, "ROLE_ADMIN")),

@@ -1,12 +1,20 @@
 package com.salat.briene.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,7 +22,6 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PasswordResetRequest {
-
     @Id
     @NotNull
     @GeneratedValue

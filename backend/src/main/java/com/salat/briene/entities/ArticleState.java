@@ -1,11 +1,13 @@
 package com.salat.briene.entities;
 
 import com.salat.briene.exceptions.IllegalArticleStateException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@AllArgsConstructor
+@ToString
+@RequiredArgsConstructor
 public enum ArticleState {
     PUBLISHED("publish", "published"),
     IN_EDITING("save", "drafts"),

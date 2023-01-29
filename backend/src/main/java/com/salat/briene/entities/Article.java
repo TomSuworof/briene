@@ -2,11 +2,21 @@ package com.salat.briene.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -19,10 +29,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "t_articles")
 @Document(indexName = "articles")
 public class Article {
-
     @Id
     @NotNull
     private UUID id;
@@ -40,6 +50,7 @@ public class Article {
     @Size(min = 1, message = ConstraintViolationMessage.ARTICLE_CONTENT_EMPTY)
     @Column(columnDefinition = "text")
     @Field(type = FieldType.Text)
+    @ToString.Exclude
     private String content;
 
     @Size(max = 500)
@@ -61,15 +72,15 @@ public class Article {
 
     @OneToMany
     @JoinTable(name = "t_articles_comments",
-            joinColumns = { @JoinColumn(name = "article_id") },
-            inverseJoinColumns = { @JoinColumn(name = "comment_id") })
+            joinColumns = {@JoinColumn(name = "article_id")},
+            inverseJoinColumns = {@JoinColumn(name = "comment_id")})
     @org.springframework.data.annotation.Transient
     private Set<Comment> comments;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(name = "t_articles_tags",
-            joinColumns = { @JoinColumn(name = "article_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tags_id") })
+            joinColumns = {@JoinColumn(name = "article_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tags_id")})
     @org.springframework.data.annotation.Transient
     private Set<Tag> tags;
 

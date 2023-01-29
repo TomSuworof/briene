@@ -2,8 +2,10 @@ package com.salat.briene.payload.response;
 
 import com.salat.briene.entities.User;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class AuthorDTO {
     private final String username;
     private final String bio;

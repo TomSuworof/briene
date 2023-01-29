@@ -3,6 +3,7 @@ package com.salat.briene.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "t_tags")
 @NoArgsConstructor
 public class Tag {

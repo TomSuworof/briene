@@ -1,13 +1,27 @@
 package com.salat.briene.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -16,9 +30,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "t_users")
 public class User implements UserDetails {
-
     @Id
     @NotNull
     @GeneratedValue
@@ -36,6 +50,7 @@ public class User implements UserDetails {
     private String bio;
 
     @NotBlank(message = ConstraintViolationMessage.USER_PASSWORD_EMPTY)
+    @ToString.Exclude
     private String password;
 
     @NotEmpty
@@ -43,6 +58,8 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @org.springframework.data.annotation.Transient
+    @ToString.Exclude
+    @Basic(fetch = FetchType.LAZY)
     private String avatar;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -50,18 +67,21 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "bookmarked_by_user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "bookmarked_article_id", referencedColumnName = "id"))
     @org.springframework.data.annotation.Transient
+    @ToString.Exclude
     private Set<Article> bookmarkedArticles;
 
     @ManyToMany
-    @JoinTable(name="t_followers",
-            joinColumns=@JoinColumn(name="author_id"),
-            inverseJoinColumns=@JoinColumn(name="follower_id")
+    @JoinTable(name = "t_followers",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
     @org.springframework.data.annotation.Transient
+    @ToString.Exclude
     private Set<User> followers;
 
     @ManyToMany(mappedBy = "followers")
     @org.springframework.data.annotation.Transient
+    @ToString.Exclude
     private Set<User> followings;
 
     @Override

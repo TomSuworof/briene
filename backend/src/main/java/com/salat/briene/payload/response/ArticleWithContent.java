@@ -2,10 +2,12 @@ package com.salat.briene.payload.response;
 
 import com.salat.briene.entities.Article;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString(callSuper = true)
 public class ArticleWithContent extends ArticleDTO {
-    private final String content;
+    @ToString.Exclude private final String content;
 
     public ArticleWithContent(Article article) {
         super(article);

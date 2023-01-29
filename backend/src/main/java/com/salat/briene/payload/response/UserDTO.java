@@ -3,11 +3,13 @@ package com.salat.briene.payload.response;
 import com.salat.briene.entities.Role;
 import com.salat.briene.entities.User;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Set;
 import java.util.UUID;
 
 @Getter
+@ToString
 public class UserDTO implements ObjectDTO {
     private final UUID id;
     private final String username;

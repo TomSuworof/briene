@@ -2,9 +2,14 @@ package com.salat.briene.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -14,9 +19,9 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "t_comments")
 public class Comment {
-
     @Id
     @NotNull
     private UUID id;
@@ -27,6 +32,7 @@ public class Comment {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @PastOrPresent
@@ -34,9 +40,10 @@ public class Comment {
 
     @ManyToOne
     @JoinTable(name = "t_articles_comments",
-            joinColumns = { @JoinColumn(name = "comment_id") },
-            inverseJoinColumns = { @JoinColumn(name = "article_id") })
+            joinColumns = {@JoinColumn(name = "comment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "article_id")})
     @org.springframework.data.annotation.Transient
+    @ToString.Exclude
     private Article article;
 
     public Comment(String message, User user, Article article) {

@@ -2,16 +2,18 @@ package com.salat.briene.payload.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
+@ToString
 public class JwtResponse {
     private final String type = "Bearer";
 
-    private String token;
+    @ToString.Exclude private String token;
     private UUID id;
     private String username;
     private String email;
