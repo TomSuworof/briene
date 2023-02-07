@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class CommentService {
         return new PageResponseDTO<>(
                 offset > 0 && comments.getTotalElements() > 0,
                 (offset + limit) < comments.getTotalElements(),
-                comments.getContent().stream().map(CommentDTO::new).toList(),
+                comments.getContent().stream().map(CommentDTO::new).collect(Collectors.toList()),
                 comments.getTotalElements());
     }
 

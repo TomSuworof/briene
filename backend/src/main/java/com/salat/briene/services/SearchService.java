@@ -25,6 +25,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -62,7 +63,7 @@ public class SearchService {
                 .map(SearchHit::getContent)
                 .filter(article -> article.getState().equals(ArticleState.PUBLISHED))
                 .map(Article::getId)
-                .toList();
+                .collect(Collectors.toList());
 
         List<Article> articles = articleRepository.findAllById(uuids);
 
@@ -71,7 +72,7 @@ public class SearchService {
                 new PageResponseDTO<>(
                         offset > 0 && articleSearchHits.getTotalHits() > 0,
                         (offset + limit) < articleSearchHits.getTotalHits(),
-                        articles.stream().skip(offset).limit(Math.min(articleSearchHits.getTotalHits(), limit)).map(ArticleDTO::new).toList(),
+                        articles.stream().skip(offset).limit(Math.min(articleSearchHits.getTotalHits(), limit)).map(ArticleDTO::new).collect(Collectors.toList()),
                         articles.size()));
     }
 }

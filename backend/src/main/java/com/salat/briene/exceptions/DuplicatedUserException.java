@@ -8,10 +8,10 @@ public class DuplicatedUserException extends IllegalStateException {
     }
 
     public DuplicatedUserException(String msg) {
-        super("[%s] %s".formatted(USER_EXISTS, msg));
+        super(String.format("[%s] %s", USER_EXISTS, msg));
     }
 
     public DuplicatedUserException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(USER_EXISTS, msg), cause);
+        super(String.format("[%s] %s", USER_EXISTS, msg), cause);
     }
 }

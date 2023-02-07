@@ -8,10 +8,10 @@ public class ArticleNotFoundException extends IllegalStateException {
     }
 
     public ArticleNotFoundException(String msg) {
-        super("[%s] %s".formatted(ARTICLE_NOT_FOUND, msg));
+        super(String.format("[%s] %s", ARTICLE_NOT_FOUND, msg));
     }
 
     public ArticleNotFoundException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(ARTICLE_NOT_FOUND, msg), cause);
+        super(String.format("[%s] %s", ARTICLE_NOT_FOUND, msg), cause);
     }
 }

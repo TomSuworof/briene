@@ -8,10 +8,10 @@ public class DuplicatedArticleException extends IllegalStateException {
     }
 
     public DuplicatedArticleException(String msg) {
-        super("[%s] %s".formatted(ARTICLE_FOUND, msg));
+        super(String.format("[%s] %s", ARTICLE_FOUND, msg));
     }
 
     public DuplicatedArticleException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(ARTICLE_FOUND, msg), cause);
+        super(String.format("[%s] %s", ARTICLE_FOUND, msg), cause);
     }
 }

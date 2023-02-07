@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-public class JwtResponse {
+public class JwtResponse implements ObjectDTO {
     private final String type = "Bearer";
 
     @ToString.Exclude private String token;

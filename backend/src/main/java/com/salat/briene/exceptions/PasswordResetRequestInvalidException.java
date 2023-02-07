@@ -8,10 +8,10 @@ public class PasswordResetRequestInvalidException extends IllegalStateException 
     }
 
     public PasswordResetRequestInvalidException(String msg) {
-        super("[%s] %s".formatted(PASSWORD_RESET_REQUEST_INVALID, msg));
+        super(String.format("[%s] %s", PASSWORD_RESET_REQUEST_INVALID, msg));
     }
 
     public PasswordResetRequestInvalidException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(PASSWORD_RESET_REQUEST_INVALID, msg), cause);
+        super(String.format("[%s] %s", PASSWORD_RESET_REQUEST_INVALID, msg), cause);
     }
 }

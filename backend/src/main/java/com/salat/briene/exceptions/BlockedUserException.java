@@ -8,10 +8,10 @@ public class BlockedUserException extends IllegalStateException {
     }
 
     public BlockedUserException(String msg) {
-        super("[%s] %s".formatted(BLOCKED_USER, msg));
+        super(String.format("[%s] %s", BLOCKED_USER, msg));
     }
 
     public BlockedUserException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(BLOCKED_USER, msg), cause);
+        super(String.format("[%s] %s", BLOCKED_USER, msg), cause);
     }
 }

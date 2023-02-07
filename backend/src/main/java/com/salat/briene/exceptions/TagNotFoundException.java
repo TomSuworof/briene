@@ -8,10 +8,10 @@ public class TagNotFoundException extends IllegalStateException {
     }
 
     public TagNotFoundException(String msg) {
-        super("[%s] %s".formatted(TAG_NOT_FOUND, msg));
+        super(String.format("[%s] %s", TAG_NOT_FOUND, msg));
     }
 
     public TagNotFoundException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(TAG_NOT_FOUND, msg), cause);
+        super(String.format("[%s] %s", TAG_NOT_FOUND, msg), cause);
     }
 }

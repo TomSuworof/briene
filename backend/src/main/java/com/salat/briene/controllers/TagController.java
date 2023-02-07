@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
@@ -50,6 +51,6 @@ public class TagController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ResponseEntity<List<String>> getTagsWithExclusion(@RequestBody List<String> excludedTags) {
         log.debug("getTagsWithExclusion() called. Excluded tags: {}", () -> excludedTags);
-        return ResponseEntity.ok(tagService.getTagsWithExclusion(excludedTags).stream().map(Tag::getName).toList());
+        return ResponseEntity.ok(tagService.getTagsWithExclusion(excludedTags).stream().map(Tag::getName).collect(Collectors.toList()));
     }
 }

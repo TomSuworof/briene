@@ -86,3 +86,9 @@ create table if not exists t_articles_tags
     article_id uuid not null constraint references_to_not_null_article_id references t_articles,
     tags_id    uuid not null constraint references_to_not_null_tags_is references t_tags
 );
+
+create table if not exists t_images
+(
+    id      uuid not null primary key,
+    content text not null
+);

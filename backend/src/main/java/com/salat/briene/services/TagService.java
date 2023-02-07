@@ -33,7 +33,7 @@ public class TagService {
         return new PageResponseDTO<>(
                 offset > 0 && articles.getTotalElements() > 0,
                 (offset + limit) < articles.getTotalElements(),
-                articles.getContent().stream().map(ArticleDTO::new).toList(),
+                articles.getContent().stream().map(ArticleDTO::new).collect(Collectors.toList()),
                 articles.getTotalElements());
     }
 
@@ -45,7 +45,7 @@ public class TagService {
                     .map(tagRepository::findByName)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .toList();
+                    .collect(Collectors.toList());
             tags.removeAll(excludedTags);
         }
 
@@ -58,11 +58,16 @@ public class TagService {
     }
 
     public void saveTags(List<String> tags) {
-        List<String> oldTags = tagRepository.findAll().stream().map(Tag::getName).toList();
-        List<Tag> newTags = tags.stream()
+        List<String> oldTags = tagRepository
+                .findAll()
+                .stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
+        List<Tag> newTags = tags
+                .stream()
                 .filter(tag -> !oldTags.contains(tag))
                 .map(Tag::new) // tag -> new Tag(tag)
-                .toList();
+                .collect(Collectors.toList());
         tagRepository.saveAll(newTags);
     }
 }

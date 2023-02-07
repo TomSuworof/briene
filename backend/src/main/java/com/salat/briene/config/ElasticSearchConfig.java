@@ -1,6 +1,13 @@
 package com.salat.briene.config;
 
-import com.salat.briene.repositories.*;
+import com.salat.briene.repositories.ArticleRepository;
+import com.salat.briene.repositories.ArticleSearchRepository;
+import com.salat.briene.repositories.CommentRepository;
+import com.salat.briene.repositories.ImageRepository;
+import com.salat.briene.repositories.PasswordResetRepository;
+import com.salat.briene.repositories.RoleRepository;
+import com.salat.briene.repositories.TagRepository;
+import com.salat.briene.repositories.UserRepository;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -33,6 +40,7 @@ import java.net.URI;
         includeFilters = @ComponentScan.Filter(classes = {
                 ArticleRepository.class,
                 CommentRepository.class,
+                ImageRepository.class,
                 PasswordResetRepository.class,
                 RoleRepository.class,
                 TagRepository.class,
@@ -55,7 +63,7 @@ public class ElasticSearchConfig extends ElasticsearchConfigurationSupport {
         HttpHost httpHost = new HttpHost(connUri.getHost(), connUri.getPort(), connUri.getScheme());
 
         RestClientBuilder restClientBuilder = RestClient.builder(httpHost)
-                        .setHttpClientConfigCallback(httpAsyncClientBuilder -> httpAsyncClientBuilder
+                .setHttpClientConfigCallback(httpAsyncClientBuilder -> httpAsyncClientBuilder
                         .setDefaultCredentialsProvider(provider)
                         .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy()));
 

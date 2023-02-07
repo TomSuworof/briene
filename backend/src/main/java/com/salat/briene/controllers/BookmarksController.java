@@ -78,10 +78,12 @@ public class BookmarksController {
         Article article = articleService.getArticleByUrl(url);
         log.trace("editBookmarks(). Article with the url: {}", () -> article);
 
-        switch (action.toLowerCase()) {
-            case BOOKMARKS_ACTION_ADD -> bookmarks.add(article);
-            case BOOKMARKS_ACTION_REMOVE -> bookmarks.remove(article);
-            default -> throw new ArticleNotFoundException();
+        if (action.equalsIgnoreCase(BOOKMARKS_ACTION_ADD)) {
+            bookmarks.add(article);
+        } else if (action.equalsIgnoreCase(BOOKMARKS_ACTION_REMOVE)) {
+            bookmarks.remove(article);
+        } else {
+            throw new ArticleNotFoundException();
         }
 
         UserDataRequest newUserData = new UserDataRequest();

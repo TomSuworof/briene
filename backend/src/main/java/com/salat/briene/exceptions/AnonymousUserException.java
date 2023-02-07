@@ -10,10 +10,10 @@ public class AnonymousUserException extends AuthenticationException {
     }
 
     public AnonymousUserException(String msg) {
-        super("[%s] %s".formatted(NON_AUTHORIZED_USER, msg));
+        super(String.format("[%s] %s", NON_AUTHORIZED_USER, msg));
     }
 
     public AnonymousUserException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(NON_AUTHORIZED_USER, msg), cause);
+        super(String.format("[%s] %s", NON_AUTHORIZED_USER, msg), cause);
     }
 }

@@ -10,10 +10,10 @@ public class UserNotFoundException extends UsernameNotFoundException {
     }
 
     public UserNotFoundException(String msg) {
-        super("[%s] %s".formatted(USER_NOT_FOUND, msg));
+        super(String.format("[%s] %s", USER_NOT_FOUND, msg));
     }
 
     public UserNotFoundException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(USER_NOT_FOUND, msg), cause);
+        super(String.format("[%s] %s", USER_NOT_FOUND, msg), cause);
     }
 }

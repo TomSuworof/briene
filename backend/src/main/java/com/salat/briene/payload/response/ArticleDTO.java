@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 // ArticleDTO provides short form of article without content
 // It is helpful and recommended using when you need to get a list of articles
@@ -39,7 +40,7 @@ public class ArticleDTO implements ObjectDTO {
         if (tags == null) {
             this.tags = Collections.emptyList();
         } else {
-            this.tags = tags.stream().map(Tag::getName).toList();
+            this.tags = tags.stream().map(Tag::getName).collect(Collectors.toList());
         }
     }
 }

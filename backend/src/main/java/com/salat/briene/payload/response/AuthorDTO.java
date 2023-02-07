@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class AuthorDTO {
+public class AuthorDTO implements ObjectDTO {
     private final String username;
     private final String bio;
     private final PageResponseDTO<ArticleDTO> articles;

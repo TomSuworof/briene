@@ -8,10 +8,10 @@ public class PasswordResetRequestNotFoundException extends IllegalStateException
     }
 
     public PasswordResetRequestNotFoundException(String msg) {
-        super("[%s] %s".formatted(PASSWORD_RESET_REQUEST_NOT_EXISTS, msg));
+        super(String.format("[%s] %s", PASSWORD_RESET_REQUEST_NOT_EXISTS, msg));
     }
 
     public PasswordResetRequestNotFoundException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(PASSWORD_RESET_REQUEST_NOT_EXISTS, msg), cause);
+        super(String.format("[%s] %s", PASSWORD_RESET_REQUEST_NOT_EXISTS, msg), cause);
     }
 }

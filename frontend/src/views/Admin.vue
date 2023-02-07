@@ -179,8 +179,6 @@ export default {
             this.hasUsersBefore = response.data.hasBefore;
             this.hasUsersAfter = response.data.hasAfter;
             this.loadingUsers = false;
-
-            console.log(this.users)
           })
           .catch(err => {
             console.log(err);

@@ -8,10 +8,10 @@ public class IllegalArticleStateException extends IllegalArgumentException {
     }
 
     public IllegalArticleStateException(String msg) {
-        super("[%s] %s".formatted(ILLEGAL_STATE, msg));
+        super(String.format("[%s] %s", ILLEGAL_STATE, msg));
     }
 
     public IllegalArticleStateException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(ILLEGAL_STATE, msg), cause);
+        super(String.format("[%s] %s", ILLEGAL_STATE, msg), cause);
     }
 }

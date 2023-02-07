@@ -89,6 +89,7 @@
 import VMdEditor from '@kangc/v-md-editor';
 import ArticlesService from "@/api/ArticlesService";
 import TagService from "@/api/TagService";
+import ImageService from "@/api/ImageService";
 
 export default {
   name: "ArticleEditor",
@@ -202,7 +203,11 @@ export default {
     },
     handleUploadImage: async function (event, insertImage, files) {
       let result = await this.toBase64(files[0]);
-      let template = `<br><img loading="lazy" id="base64image" src="${result}"  alt="Image from clipboard"/><br>`;
+
+      let resultImage = await ImageService.uploadImage(result);
+      let resultImageId = resultImage.data.id;
+
+      let template = `<br><img loading="lazy" id="base64image" src=/api/images/get/${resultImageId.toString()} alt="Image from clipboard"/><br>`;
       let cursorPos = document.getElementsByTagName('textarea')[0].selectionStart;
 
       this.content = this.content.substring(0, cursorPos) + template + this.content.substring(cursorPos);

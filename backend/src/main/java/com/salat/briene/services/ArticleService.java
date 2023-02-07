@@ -1,8 +1,12 @@
 package com.salat.briene.services;
 
-import com.salat.briene.entities.*;
-import com.salat.briene.exceptions.DuplicatedArticleException;
+import com.salat.briene.entities.Article;
+import com.salat.briene.entities.ArticleState;
+import com.salat.briene.entities.RoleEnum;
+import com.salat.briene.entities.Tag;
+import com.salat.briene.entities.User;
 import com.salat.briene.exceptions.ArticleNotFoundException;
+import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.PageResponseDTO;
@@ -15,7 +19,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +41,12 @@ public class ArticleService {
     private final AuthorService authorService;
 
     public void saveArticle(Article newArticle) {
-        switch (newArticle.getState()) {
-            case PUBLISHED -> publish(newArticle);
-            case IN_EDITING -> saveDraft(newArticle);
-            default -> throw new IllegalArticleStateException();
+        if (newArticle.getState() == ArticleState.PUBLISHED) {
+            publish(newArticle);
+        } else if (newArticle.getState() == ArticleState.IN_EDITING) {
+            saveDraft(newArticle);
+        } else {
+            throw new IllegalArticleStateException();
         }
     }
 
@@ -187,7 +202,7 @@ public class ArticleService {
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .map(Map.Entry::getKey)
                 .limit(3) // make a parameter
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
@@ -203,7 +218,7 @@ public class ArticleService {
         return new PageResponseDTO<>(
                 offset > 0 && articles.getTotalElements() > 0,
                 (offset + limit) < articles.getTotalElements(),
-                articles.getContent().stream().map(ArticleDTO::new).toList(),
+                articles.getContent().stream().map(ArticleDTO::new).collect(Collectors.toList()),
                 articles.getTotalElements());
     }
 
@@ -230,7 +245,7 @@ public class ArticleService {
         return new PageResponseDTO<>(
                 offset > 0 && articles.getTotalElements() > 0,
                 (offset + limit) < articles.getTotalElements(),
-                articles.getContent().stream().map(ArticleDTO::new).toList(),
+                articles.getContent().stream().map(ArticleDTO::new).collect(Collectors.toList()),
                 articles.getTotalElements());
     }
 

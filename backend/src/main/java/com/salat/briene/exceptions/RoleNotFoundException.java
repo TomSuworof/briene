@@ -8,10 +8,10 @@ public class RoleNotFoundException extends IllegalStateException {
     }
 
     public RoleNotFoundException(String msg) {
-        super("[%s] %s".formatted(ROLE_NOT_FOUND, msg));
+        super(String.format("[%s] %s", ROLE_NOT_FOUND, msg));
     }
 
     public RoleNotFoundException(String msg, Throwable cause) {
-        super("[%s] %s".formatted(ROLE_NOT_FOUND, msg), cause);
+        super(String.format("[%s] %s", ROLE_NOT_FOUND, msg), cause);
     }
 }
