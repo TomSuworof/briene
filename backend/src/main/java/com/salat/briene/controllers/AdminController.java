@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
 package com.salat.briene.controllers;
 
 import com.salat.briene.entities.ArticleState;
@@ -37,14 +40,7 @@ public class AdminController {
         log.debug("getUsersPaginated() called. Limit: {}, offset: {}", limit, offset);
         PageResponseDTO<UserDTO> response = userService.getUsersPaginated(limit, offset);
         log.trace("getUsersPaginated(). Response to send: {}", () -> response);
-
-        if (!response.isHasBefore() && !response.isHasAfter()) {
-            log.trace("getUsersPaginated(). Response contains all users. Response status is OK");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            log.trace("getUsersPaginated(). Response does not contain all users. Response status is PARTIAL_CONTENT");
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/edit_user")
@@ -65,13 +61,6 @@ public class AdminController {
         log.debug("getExercisePaginated() called. State: {}, limit: {}, offset: {}", state, limit, offset);
         PageResponseDTO<ArticleDTO> response = articleService.getPageWithArticlesByState(ArticleState.getFromDescription(state), limit, offset);
         log.trace("getExercisePaginated(). Response to send: {}", () -> response);
-
-        if (!response.isHasBefore() && !response.isHasAfter()) {
-            log.trace("getExercisesPaginated(). Response contains all exercises. Response status is OK");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            log.trace("getExercisesPaginated(). Response does not contain all exercises. Response status is PARTIAL_CONTENT");
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

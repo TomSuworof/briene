@@ -26,6 +26,9 @@ target
 # VSCode
 .vscode
 
+#PVS-Studio
+.PVS-Studio
+
 # logback
 logback.out.xml
 

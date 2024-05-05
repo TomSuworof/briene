@@ -1,17 +1,15 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
 package com.salat.briene.services;
 
-import com.salat.briene.entities.Article;
-import com.salat.briene.entities.ArticleState;
-import com.salat.briene.entities.RoleEnum;
-import com.salat.briene.entities.Tag;
-import com.salat.briene.entities.User;
+import com.salat.briene.entities.*;
 import com.salat.briene.exceptions.ArticleNotFoundException;
 import com.salat.briene.exceptions.DuplicatedArticleException;
 import com.salat.briene.exceptions.IllegalArticleStateException;
 import com.salat.briene.payload.response.ArticleDTO;
 import com.salat.briene.payload.response.PageResponseDTO;
 import com.salat.briene.repositories.ArticleRepository;
-import com.salat.briene.repositories.ArticleSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,26 +17,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final ArticleSearchRepository articleSearchRepository;
 
     private final TagService tagService;
     private final AuthorService authorService;
+    private final SearchService searchService;
 
     public void saveArticle(Article newArticle) {
         if (newArticle.getState() == ArticleState.PUBLISHED) {
@@ -70,11 +59,11 @@ public class ArticleService {
             }
 
             articleRepository.delete(oldArticle);
-            articleSearchRepository.delete(oldArticle);
+            searchService.delete(oldArticle.getId());
         }
 
         articleRepository.save(newArticle);
-        articleSearchRepository.save(newArticle);
+        searchService.save(newArticle);
     }
 
     private void publish(Article newArticle) {
@@ -105,10 +94,10 @@ public class ArticleService {
             newArticle.setId(oldArticle.getId());
 
             articleRepository.delete(oldArticle);
-            articleSearchRepository.delete(oldArticle);
+            searchService.delete(oldArticle.getId());
 
             articleRepository.save(newArticle);
-            articleSearchRepository.save(newArticle);
+            searchService.save(newArticle);
 
             authorService.notifyAboutNewArticle(newArticle);
 
@@ -121,7 +110,7 @@ public class ArticleService {
         }
 
         articleRepository.save(newArticle);
-        articleSearchRepository.save(newArticle);
+        searchService.save(newArticle);
 
         authorService.notifyAboutNewArticle(newArticle);
     }
@@ -129,7 +118,7 @@ public class ArticleService {
     public void deleteArticleById(UUID articleId) {
         if (articleRepository.findById(articleId).isPresent()) {
             articleRepository.deleteArticleById(articleId);
-            articleSearchRepository.deleteById(articleId);
+            searchService.delete(articleId);
         } else {
             throw new ArticleNotFoundException();
         }

@@ -2,9 +2,10 @@ server:
   port: 8080
 
 spring:
-  elasticsearch:
-    rest:
-      uris: ${BONSAI_URL}
+  search:
+    url: ${SEARCH_URL}
+    username: ${SEARCH_USERNAME}
+    password: ${SEARCH_PASSWORD}
 
   datasource:
     driver-class-name: org.postgresql.Driver

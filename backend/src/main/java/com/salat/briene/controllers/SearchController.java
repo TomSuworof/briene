@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
 package com.salat.briene.controllers;
 
 import com.salat.briene.payload.response.SearchResponseDTO;
@@ -28,13 +31,6 @@ public class SearchController {
         log.debug("search() called. Query: {}, limit: {}, offset: {}", () -> query, () -> limit, () -> offset);
         SearchResponseDTO response = searchService.search(query, limit, offset);
         log.trace("search(). Response to send: {}", () -> response);
-
-        if (!response.getPage().isHasBefore() && !response.getPage().isHasAfter()) {
-            log.trace("getArticlesPaginated(). Response contains all articles. Response status is OK");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            log.trace("getArticlesPaginated(). Response does not contain all articles. Response status is PARTIAL_CONTENT");
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
