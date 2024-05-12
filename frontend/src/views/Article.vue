@@ -220,14 +220,20 @@ export default {
           .then(response => {
             this.nextArticle = response.data;
             this.addShortcutsForNextArticle(response.data.url);
-          });
+          })
+          .catch(err => {
+            console.log(err);
+          });;
     },
     getPrevArticle: function (articleUrl) {
       ArticlesService.getPrevArticle(articleUrl)
           .then(response => {
             this.prevArticle = response.data;
             this.addShortcutsForPrevArticle(response.data.url);
-          });
+          })
+          .catch(err => {
+            console.log(err);
+          });;
     },
     addShortcutsForNextArticle: function (articleUrl) {
       this.addShortcutsForSuggestion('ArrowLeft', articleUrl);
