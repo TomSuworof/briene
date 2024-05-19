@@ -33,3 +33,28 @@ everything.
 4. Run npm install: ```npm install```
 5. Run npm serve script: ```npm run serve```
 6. Run [BrieneApplication](backend/src/main/java/com/salat/briene/BrieneApplication.java)
+
+## Code analysis
+
+1. Run build. For example:
+```shell
+mvn clean package -D"net.bytebuddy.experimental=true" -D"maven.test.skip=true" site
+```
+
+2. Run analysis tool. 
+
+### PMD
+
+Run:
+```shell
+mvn pmd:pmd
+```
+
+Open `target/site/pmd.html` to see results of analysis.
+
+### SpotBugs
+
+Run to see result of analysis:
+```shell
+mvn com.github.spotbugs:spotbugs-maven-plugin:gui
+```
