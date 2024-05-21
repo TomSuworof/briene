@@ -20,15 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,14 +42,7 @@ public class ArticlesController {
         log.debug("getArticlesPaginated() called. Limit: {}, offset: {}", limit, offset);
         PageResponseDTO<ArticleDTO> response = articleService.getPageWithArticlesByState(ArticleState.PUBLISHED, limit, offset);
         log.trace("getArticlesPaginated(). Response to send: {}", () -> response);
-
-        if (!response.isHasBefore() && !response.isHasAfter()) {
-            log.trace("getArticlesPaginated(). Response contains all articles. Response status is OK");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            log.trace("getArticlesPaginated(). Response does not contain all articles. Response status is PARTIAL_CONTENT");
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/my_articles")
@@ -73,14 +58,7 @@ public class ArticlesController {
 
         PageResponseDTO<ArticleDTO> response = articleService.getPageWithArticlesByAuthorAndStatePaginated(currentUser, ArticleState.getFromDescription(state), limit, offset);
         log.trace("getMyArticlesPaginated(). Response status: {}", () -> response);
-
-        if (!response.isHasBefore() && !response.isHasAfter()) {
-            log.trace("getMyArticlesPaginated(). Response contains all articles. Response status is OK");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            log.trace("getMyArticlesPaginated(). Response does not contain all articles. Response status is PARTIAL_CONTENT");
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{url}")

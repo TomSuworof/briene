@@ -3,15 +3,13 @@ server:
 
 spring:
   search:
-    url: ${SEARCH_URL}
-    username: ${SEARCH_USERNAME}
-    password: ${SEARCH_PASSWORD}
+    url: ${SEARCH_URL:http://127.0.0.1:9308}
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/briene_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
 
   jpa:
     hibernate:
@@ -28,10 +26,10 @@ spring:
     validateOnMigrate: false
 
   mail:
-    host: ${MAIL_HOST}
+    host: ${MAIL_HOST:}
     port: 465
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     protocol: 'smpts'
 
 logging:
