@@ -36,16 +36,14 @@ everything.
 
 ## Code analysis
 
-1. Run build. For example:
+### PMD
+
+Run build. For example:
 ```shell
 mvn clean package -D"net.bytebuddy.experimental=true" -D"maven.test.skip=true" site
 ```
 
-2. Run analysis tool. 
-
-### PMD
-
-Run:
+Run PMD:
 ```shell
 mvn pmd:pmd
 ```
@@ -54,7 +52,12 @@ Open `target/site/pmd.html` to see results of analysis.
 
 ### SpotBugs
 
-Run to see result of analysis:
+Run build. For example:
+```shell
+mvn clean package -D"net.bytebuddy.experimental=true" -D"maven.test.skip=true" site
+```
+
+Run SpotBugs GUI to see result of analysis:
 ```shell
 mvn com.github.spotbugs:spotbugs-maven-plugin:gui
 ```
