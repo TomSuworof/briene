@@ -101,6 +101,12 @@
             <artifactId>manticoresearch</artifactId>
             <version>3.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.owasp.jbrofuzz</groupId>
+            <artifactId>jbrofuzz-core</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
