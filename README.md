@@ -1,4 +1,4 @@
-# briene
+# `<briene>`
 
 ## About project
 
@@ -10,11 +10,11 @@ everything.
 
 * Backend
   * Spring (Boot, JPA, Security)
-  * Spring ElasticSearch (+ Heroku Bonsai as cloud search)
-  * PostgreSQL 
+  * Manticore search
+  * PostgreSQL
   * Lombok
-  * Flyway 
-  * JSON Web Token 
+  * Flyway
+  * JSON Web Token
   * Hibernate (Validator)
 
 
@@ -27,12 +27,16 @@ everything.
 
 ## Quick start guide
 
+Run
+```bash
+docker compose up
+```
+
+## Manual start guide
+
 1. Clone this repo
-2. Run Maven build: ```mvn clean install```
-3. Change directory to frontend: ```cd frontend```
-4. Run npm install: ```npm install```
-5. Run npm serve script: ```npm run serve```
-6. Run [BrieneApplication](backend/src/main/java/com/salat/briene/BrieneApplication.java)
+2. Run backend: ```cd backend```,  adjust PostgreSQL and Manticore paths via environment variables and run ```mvn spring-boot:run```.
+3. Run frontend: in [`frontend/vue.config.js`](./frontend/vue.config.js) change API path from `briene-backend` to `localhost` and run `npm run serve` in `frontend` directory
 
 ## Code analysis
 

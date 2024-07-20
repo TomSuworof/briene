@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT -jar --add-opens java.base/java.util=ALL-UNNAMED backend/target/backend-1.0.0.jar

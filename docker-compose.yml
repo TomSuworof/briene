@@ -1,0 +1,48 @@
+version: '1.0'
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: "briene_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+
+  manticore:
+    image: manticoresearch/manticore
+    container_name: manticore
+    environment:
+      - EXTRA=1
+    restart: always
+    ports:
+      - "9306:9306"
+      - "9308:9308"
+    ulimits:
+      nproc: 65535
+      nofile:
+         soft: 65535
+         hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+
+  briene-frontend:
+    container_name: briene-frontend
+    ports:
+      - "8080:8080"
+    build:
+      dockerfile: frontend/Dockerfile
+
+  briene-backend:
+    container_name: briene-backend
+    ports:
+      - "8081:8081"
+    build:
+      dockerfile: backend/Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/briene_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SEARCH_URL=http://manticore:9308

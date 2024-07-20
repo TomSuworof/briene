@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   search:
@@ -21,10 +21,11 @@ spring:
             non_contextual_creation: true
 
   flyway:
-    locations: 'classpath:db/migration'
+    locations: classpath:db/migration
     baselineOnMigrate: true
     validateOnMigrate: false
 
+  # Optional, not required for startup, but preferred for production, because it will send confirmation emails
   mail:
     host: ${MAIL_HOST:}
     port: 465

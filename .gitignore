@@ -25,6 +25,7 @@ target
 
 # VSCode
 .vscode
+.factorypath
 
 #PVS-Studio
 .PVS-Studio
@@ -47,6 +48,9 @@ frontend/tests/unit/coverage
 frontend/yarn-error.log
 frontend/yarn.lock
 frontend/package-lock.json
+
+# Manticore
+data/
 
 security/target/
 selenium-debug.log
