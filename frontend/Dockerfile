@@ -4,4 +4,4 @@ COPY ./frontend ./
 RUN npm i
 EXPOSE 8080
 
-CMD [ "npm", "run", "serve" ]
+CMD [ "npm", "run", "serve-docker" ]

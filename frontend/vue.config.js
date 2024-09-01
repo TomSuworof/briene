@@ -3,7 +3,7 @@ module.exports = {
         port: 8080,
         proxy: {
             '^/api': {
-                target: 'http://briene-backend:8081', // change to localhost, if not running in docker
+                target: process.env.NODE_ENV === 'docker' ? 'http://briene-backend:8081' : "http://localhost:8081",
                 ws: true,
                 changeOrigin: true
             }

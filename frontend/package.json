@@ -5,7 +5,8 @@
   "description": "Frontend side of briene",
   "author": "Tom Suworof",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve-localhost": "vue-cli-service serve",
+    "serve-docker": "vue-cli-service serve NODE_ENV=docker",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "clean": "rm -rf node_modules target"
